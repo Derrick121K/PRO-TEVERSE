@@ -1,4 +1,4 @@
-﻿"use client"
+"use client"
 
 import { useState } from "react"
 import Link from "next/link"
@@ -59,7 +59,7 @@ export function Navigation() {
               Export
             </Button>
           </Link>
-          <Link href="/studio">
+          <Link href="/pro-studio">
             <Button className="bg-neon-cyan text-background hover:bg-neon-cyan/90 glow-cyan">
               Launch Studio
             </Button>
@@ -98,7 +98,7 @@ export function Navigation() {
               <Button variant="ghost" className="w-full justify-center text-muted-foreground">
                 Sign In
               </Button>
-              <Link href="/studio" className="w-full">
+              <Link href="/pro-studio" className="w-full">
                 <Button className="w-full bg-neon-cyan text-background hover:bg-neon-cyan/90">
                   Launch Studio
                 </Button>
