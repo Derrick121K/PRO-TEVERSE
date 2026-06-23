@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 import Link from "next/link"
 import { useState, useEffect } from "react"
@@ -51,7 +51,7 @@ const quickStartTemplates = [
   { id: 'ai', name: 'GossipAI-PROD Song', description: 'Let GossipAI-PROD create your track', icon: Wand2, color: '#9b59b6', bpm: 120 },
 ]
 
-const STORAGE_KEY = 'pro-teeverse-projects'
+const STORAGE_KEY = 'PRO-TEVERSE-projects'
 
 export default function DashboardPage() {
   const { tracks } = useDAWStore()
@@ -95,7 +95,7 @@ export default function DashboardPage() {
               </div>
             </div>
             <div>
-              <h1 className="text-xl font-bold gradient-text">PRO-TEEVERSE</h1>
+              <h1 className="text-xl font-bold gradient-text">PRO-TEVERSE</h1>
               <p className="text-[10px] text-muted-foreground">GossipAI-PROD Music Production</p>
             </div>
           </Link>
@@ -321,7 +321,7 @@ export default function DashboardPage() {
                 <Share2 className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
                 <h3 className="text-lg font-medium text-foreground mb-2">Share Your Music</h3>
                 <p className="text-sm text-muted-foreground mb-4">
-                  Join the PRO-TEEVERSE community, share your tracks, and discover new music.
+                  Join the PRO-TEVERSE community, share your tracks, and discover new music.
                 </p>
                 <Button className="bg-neon-cyan text-background">
                   <Upload className="h-4 w-4 mr-2" />

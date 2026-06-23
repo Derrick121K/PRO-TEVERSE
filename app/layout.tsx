@@ -1,9 +1,9 @@
-import type { Metadata } from 'next'
+﻿import type { Metadata } from 'next'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'PRO-TEEVERSE | GossipAI-PROD Music Production',
+  title: 'PRO-TEVERSE | GossipAI-PROD Music Production',
   description:
     'Create professional music with GossipAI-PROD. Full DAW experience with piano roll, mixer, effects, and intelligent composition assistance.',
   generator: 'v0.app',
@@ -41,3 +41,4 @@ export default function RootLayout({
     </html>
   )
 }
+

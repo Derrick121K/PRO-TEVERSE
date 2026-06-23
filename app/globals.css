@@ -1,9 +1,9 @@
-@import 'tailwindcss';
+﻿@import 'tailwindcss';
 @import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 
-/* PRO-TEEVERSE Dark Theme - Music Production Platform */
+/* PRO-TEVERSE Dark Theme - Music Production Platform */
 :root {
   --background: oklch(0.07 0.01 260);
   --foreground: oklch(0.95 0.01 260);
@@ -39,7 +39,7 @@
   --sidebar-border: oklch(0.22 0.02 260);
   --sidebar-ring: oklch(0.75 0.18 195);
   
-  /* PRO-TEEVERSE Custom Colors */
+  /* PRO-TEVERSE Custom Colors */
   --neon-cyan: oklch(0.8 0.18 195);
   --neon-purple: oklch(0.65 0.25 300);
   --neon-pink: oklch(0.7 0.22 330);
@@ -125,7 +125,7 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
   
-  /* PRO-TEEVERSE Custom Colors */
+  /* PRO-TEVERSE Custom Colors */
   --color-neon-cyan: var(--neon-cyan);
   --color-neon-purple: var(--neon-purple);
   --color-neon-pink: var(--neon-pink);
@@ -209,7 +209,7 @@
     border-radius: var(--radius);
   }
 
-  /* FL20-inspired studio chrome (keeps PRO-TEEVERSE identity). */
+  /* FL20-inspired studio chrome (keeps PRO-TEVERSE identity). */
   .fl20-shell {
     --surface-1: oklch(0.095 0.012 260);
     --surface-2: oklch(0.13 0.016 260);
@@ -274,3 +274,4 @@
     border: 1px solid #000;
   }
 }
+

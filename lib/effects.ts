@@ -1,4 +1,4 @@
-// Audio Effects for PRO-TEEVERSE DAW
+﻿// Audio Effects for PRO-TEVERSE DAW
 
 // Create impulse response for reverb
 export function createReverbImpulse(
@@ -258,3 +258,4 @@ export const effectParamRanges = {
     depth: { min: 0, max: 1, step: 0.01, default: 0.6 }
   }
 }
+

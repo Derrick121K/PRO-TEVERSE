@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 import { useCallback } from 'react'
 import { useDAWStore, type Track } from './daw-store'
@@ -32,8 +32,8 @@ interface ProjectData {
   metronomeVolume?: number
 }
 
-const STORAGE_KEY = 'pro-teeverse-projects'
-const CURRENT_PROJECT_KEY = 'pro-teeverse-current'
+const STORAGE_KEY = 'PRO-TEVERSE-projects'
+const CURRENT_PROJECT_KEY = 'PRO-TEVERSE-current'
 
 export function useProjectManager() {
   // Save current project to localStorage
@@ -132,7 +132,7 @@ export function useProjectManager() {
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = `pro-teeverse-project-${Date.now()}.json`
+    a.download = `PRO-TEVERSE-project-${Date.now()}.json`
     a.click()
     URL.revokeObjectURL(url)
 
@@ -270,3 +270,4 @@ function writeString(view: DataView, offset: number, str: string) {
     view.setUint8(offset + i, str.charCodeAt(i))
   }
 }
+

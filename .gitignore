@@ -37,3 +37,9 @@ project-snapshot*.txt
 *.tsbuildinfo
 package.backup.before-root-fix.json
 tsconfig.backup.before-root-fix.json
+
+# Runtime check logs
+runtime-route-check*.txt
+
+# Runtime check logs
+runtime-route-check*.txt

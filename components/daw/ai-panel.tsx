@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
@@ -32,7 +32,7 @@ const aiFeatures: AIFeature[] = [
   {
     id: 'producer',
     name: 'GossipAI-PROD Producer',
-    description: 'One session: drums, melody & bass — mixed for your project',
+    description: 'One session: drums, melody & bass â€” mixed for your project',
     icon: Headphones,
     color: '#a855f7',
   },
@@ -226,7 +226,7 @@ export function AIPanel() {
     if (!usesRemoteApi) {
       await new Promise((resolve) => setTimeout(resolve, 800 + Math.random() * 1000))
     } else if (featureId === 'text-to-music') {
-      setGeneratingHint('Suno may take 1–3 minutes…')
+      setGeneratingHint('Suno may take 1â€“3 minutesâ€¦')
     }
 
     let result = ''
@@ -261,7 +261,7 @@ export function AIPanel() {
           },
         ])
         setGeneratedNotes([])
-        result = `Session ready: drums, melody & bass · ${selectedProducerGenre} @ ${useDAWStore.getState().bpm} BPM`
+        result = `Session ready: drums, melody & bass Â· ${selectedProducerGenre} @ ${useDAWStore.getState().bpm} BPM`
         break
       }
       case 'text-to-music':
@@ -484,7 +484,7 @@ export function AIPanel() {
           GossipAI-PROD Producer
         </span>
         <span className="text-[9px] text-muted-foreground/80 ml-2 hidden sm:inline">
-          PRO-TEEVERSE Suno + offline fallback
+          PRO-TEVERSE Suno + offline fallback
         </span>
       </div>
 
@@ -730,7 +730,7 @@ export function AIPanel() {
               <span className="text-xs font-medium text-foreground">Pro Tip</span>
             </div>
             <p className="text-[10px] text-muted-foreground leading-relaxed">
-              For Text to Music, describe genre, mood, instruments, and tempo. With PRO-TEEVERSE Suno running,
+              For Text to Music, describe genre, mood, instruments, and tempo. With PRO-TEVERSE Suno running,
               generation can take a few minutes.
             </p>
           </div>
@@ -739,3 +739,4 @@ export function AIPanel() {
     </div>
   )
 }
+

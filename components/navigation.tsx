@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 import { useState } from "react"
 import Link from "next/link"
@@ -26,12 +26,12 @@ export function Navigation() {
         <Link href="/" className="flex items-center gap-3">
           <Image
             src="/logo.png"
-            alt="PRO-TEEVERSE Logo"
+            alt="PRO-TEVERSE Logo"
             width={48}
             height={48}
             className="h-12 w-12 object-contain"
           />
-          <span className="text-xl font-bold gradient-text">PRO-TEEVERSE</span>
+          <span className="text-xl font-bold gradient-text">PRO-TEVERSE</span>
         </Link>
 
         {/* Desktop Navigation */}
@@ -110,3 +110,4 @@ export function Navigation() {
     </header>
   )
 }
+

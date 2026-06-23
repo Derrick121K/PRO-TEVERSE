@@ -1,4 +1,4 @@
-import { FLPFile } from '@holzchopf/flp-file'
+﻿import { FLPFile } from '@holzchopf/flp-file'
 
 /** FLPEventTypeRaw.WordTempo */
 const EV_WORD_TEMPO = 66
@@ -184,7 +184,7 @@ export function parseFlpPlaylistHints(buffer: ArrayBuffer): FlpPlaylistHint[] {
     .sort((a, b) => a.startBeats - b.startBeats)
 }
 
-const FLP_INDEX_KEY = 'pro-teeverse-flp-library'
+const FLP_INDEX_KEY = 'PRO-TEVERSE-flp-library'
 
 export interface SavedFlpEntry {
   id: string
@@ -219,3 +219,4 @@ export function saveFlpToLibrary(fileName: string, summary: FlpProjectSummary): 
 export function clearFlpLibrary() {
   localStorage.removeItem(FLP_INDEX_KEY)
 }
+

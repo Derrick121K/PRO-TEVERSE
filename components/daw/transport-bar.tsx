@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 import { useEffect, useRef } from "react"
 import Link from "next/link"
@@ -81,12 +81,12 @@ export function TransportBar() {
       <Link 
         href="/" 
         className="flex items-center gap-1.5 mr-2"
-        aria-label="PRO-TEEVERSE Home"
+        aria-label="PRO-TEVERSE Home"
       >
         <div className="relative">
           <Disc3 className="h-5 w-5 text-neon-cyan" aria-hidden="true" />
         </div>
-        <span className="text-xs font-semibold gradient-text tracking-wide hidden 2xl:block">PRO-TEEVERSE</span>
+        <span className="text-xs font-semibold gradient-text tracking-wide hidden 2xl:block">PRO-TEVERSE</span>
       </Link>
 
       {/* Panel Toggle Buttons */}
@@ -387,3 +387,4 @@ export function TransportBar() {
     </div>
   )
 }
+

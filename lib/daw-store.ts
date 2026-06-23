@@ -1,4 +1,4 @@
-import { create } from 'zustand'
+﻿import { create } from 'zustand'
 import { persist, createJSONStorage, type StateStorage } from 'zustand/middleware'
 import { audioEngine, tracksToTrackData, type TrackData } from './audio-engine'
 import * as dawHistory from './daw-undo'
@@ -70,7 +70,7 @@ export interface Effect {
   params: Record<string, number>
 }
 
-/** Per-track ADSR for poly/mono synth voices (seconds; sustain 0–1). */
+/** Per-track ADSR for poly/mono synth voices (seconds; sustain 0â€“1). */
 export type TrackEnvelope = {
   attack: number
   decay: number
@@ -322,7 +322,7 @@ export const useDAWStore = create<DAWState>()(
   pianoRollOpen: false,
   pianoRollClipId: null,
 
-  // Transport — audioEngine.start is driven by `AudioEngineSync` when `isPlaying` is true
+  // Transport â€” audioEngine.start is driven by `AudioEngineSync` when `isPlaying` is true
   play: async () => {
     const state = get()
     await audioEngine.initialize()
@@ -1073,7 +1073,7 @@ export const useDAWStore = create<DAWState>()(
   closePianoRoll: () => set({ pianoRollOpen: false, pianoRollClipId: null })
     }),
     {
-      name: 'pro-teeverse-daw',
+      name: 'PRO-TEVERSE-daw',
       partialize: (s) => ({
         tracks: s.tracks,
         bpm: s.bpm,
@@ -1177,3 +1177,4 @@ export const useDAWStore = create<DAWState>()(
     }
   )
 )
+

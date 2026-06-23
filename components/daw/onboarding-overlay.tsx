@@ -1,9 +1,9 @@
-"use client"
+﻿"use client"
 
 import { useEffect, useMemo, useState } from "react"
 import { Button } from "@/components/ui/button"
 
-const ONBOARDING_KEY = "pro-teeverse-onboarding-v2"
+const ONBOARDING_KEY = "PRO-TEVERSE-onboarding-v2"
 
 const STEPS = [
   {
@@ -94,3 +94,4 @@ export function OnboardingOverlay() {
     </div>
   )
 }
+

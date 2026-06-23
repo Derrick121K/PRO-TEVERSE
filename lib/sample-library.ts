@@ -1,4 +1,4 @@
-// Sample Library Integration for PRO-TEEVERSE
+﻿// Sample Library Integration for PRO-TEVERSE
 // Provides access to Freesound.org API and local samples
 
 export interface Sample {
@@ -37,7 +37,7 @@ const localSamples: Sample[] = [
   {
     id: 'kick-core',
     name: 'Core Kick',
-    description: 'Pro-Teeverse core kick drum',
+    description: 'PRO-TEVERSE core kick drum',
     duration: 0.5,
     sampleRate: 44100,
     channels: 2,
@@ -53,7 +53,7 @@ const localSamples: Sample[] = [
   {
     id: 'snare-core',
     name: 'Core Snare',
-    description: 'Pro-Teeverse core snare drum',
+    description: 'PRO-TEVERSE core snare drum',
     duration: 0.3,
     sampleRate: 44100,
     channels: 2,
@@ -69,7 +69,7 @@ const localSamples: Sample[] = [
   {
     id: 'hihat-core',
     name: 'Core Hi-Hat',
-    description: 'Pro-Teeverse core hi-hat',
+    description: 'PRO-TEVERSE core hi-hat',
     duration: 0.4,
     sampleRate: 44100,
     channels: 2,
@@ -85,7 +85,7 @@ const localSamples: Sample[] = [
   {
     id: 'clap-core',
     name: 'Core Clap',
-    description: 'Pro-Teeverse core clap',
+    description: 'PRO-TEVERSE core clap',
     duration: 0.3,
     sampleRate: 44100,
     channels: 2,
@@ -547,3 +547,4 @@ export async function loadSampleAsAudioBuffer(
     return null
   }
 }
+

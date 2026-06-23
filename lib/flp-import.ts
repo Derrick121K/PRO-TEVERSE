@@ -1,4 +1,4 @@
-import type { Track } from "./daw-store"
+﻿import type { Track } from "./daw-store"
 import {
   parseFlpChannelSampleRefs,
   parseFlpPlaylistHints,
@@ -6,7 +6,7 @@ import {
   type FlpProjectSummary,
 } from "./flp-view"
 
-export const FLP_IMPORT_SESSION_KEY = "pro-teeverse-flp-import-v1"
+export const FLP_IMPORT_SESSION_KEY = "PRO-TEVERSE-flp-import-v1"
 
 export type FlpImportPayload = {
   summary: FlpProjectSummary
@@ -130,3 +130,4 @@ export function buildSampleMapFromFiles(files: File[]): SampleFileMap {
   }
   return map
 }
+

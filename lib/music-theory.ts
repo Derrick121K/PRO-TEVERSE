@@ -1,4 +1,4 @@
-// Advanced Music Theory Library for PRO-TEEVERSE
+﻿// Advanced Music Theory Library for PRO-TEVERSE
 
 // Note frequencies (A4 = 440Hz)
 export const NOTE_FREQUENCIES: Record<string, number> = {
@@ -109,13 +109,13 @@ export const CHORD_PROGRESSIONS: Record<string, { name: string; degrees: number[
   'ii-V-I': { name: 'Jazz Basic', degrees: [1, 4, 0], roman: ['ii', 'V', 'I'] },
   'I-vi-ii-V': { name: 'Circle', degrees: [0, 5, 1, 4], roman: ['I', 'vi', 'ii', 'V'] },
   'I-IV-vi-V': { name: 'Andalusian', degrees: [0, 3, 5, 4], roman: ['I', 'IV', 'vi', 'V'] },
-  'IV-vii°-iii-vi': { name: 'Jazz Minor', degrees: [3, 6, 2, 5], roman: ['IV', 'vii°', 'iii', 'vi'] },
+  'IV-viiÂ°-iii-vi': { name: 'Jazz Minor', degrees: [3, 6, 2, 5], roman: ['IV', 'viiÂ°', 'iii', 'vi'] },
   
   // Minor
   'i-iv-v-i': { name: 'Minor Basic', degrees: [0, 3, 4, 0], roman: ['i', 'iv', 'V', 'i'] },
   'i-VI-III-VII': { name: 'Rock Minor', degrees: [0, 5, 2, 6], roman: ['i', 'VI', 'III', 'VII'] },
   'i-vi-iv-v': { name: 'Latin Minor', degrees: [0, 5, 3, 4], roman: ['i', 'vi', 'iv', 'V'] },
-  'i-iv-vii°-III': { name: 'Dark Minor', degrees: [0, 3, 6, 2], roman: ['i', 'iv', 'vii°', 'III'] },
+  'i-iv-viiÂ°-III': { name: 'Dark Minor', degrees: [0, 3, 6, 2], roman: ['i', 'iv', 'viiÂ°', 'III'] },
   
   // Hip Hop/R&B
   'I-vi-IV-V-rnb': { name: 'R&B', degrees: [0, 5, 3, 4], roman: ['I', 'vi', 'IV', 'V'] },

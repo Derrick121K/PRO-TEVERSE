@@ -1,12 +1,12 @@
-# PRO-TEEVERSE
+﻿# PRO-TEVERSE
 
-Browser DAW inspired by FL Studio: playlist, channel rack, piano roll, mixer, and transport — built with Next.js and Tone.js.
+Browser DAW inspired by FL Studio: playlist, channel rack, piano roll, mixer, and transport â€” built with Next.js and Tone.js.
 
 ## Quick start
 
 ```bash
 npm install
-npm run engine:build-kit   # optional: extracts nkosi.zip → public/sounds/nkosi
+npm run engine:build-kit   # optional: extracts nkosi.zip â†’ public/sounds/nkosi
 npm run dev
 ```
 
@@ -16,7 +16,7 @@ Open [http://localhost:3000/studio](http://localhost:3000/studio).
 
 ## FL Studio panel map
 
-| FL Studio | PRO-TEEVERSE |
+| FL Studio | PRO-TEVERSE |
 |-----------|----------------|
 | Playlist | Track list + timeline (`/studio`) |
 | Channel rack | Step sequencer + patterns |
@@ -24,23 +24,23 @@ Open [http://localhost:3000/studio](http://localhost:3000/studio).
 | Mixer | Mixer dock panel |
 | Transport | Top transport bar |
 | Patterns | Pattern tabs above channel rack |
-| `.flp` files | `/fl-studio` → Open in Studio |
+| `.flp` files | `/fl-studio` â†’ Open in Studio |
 
 ## Studio shortcuts
 
-- **Space** — play / pause  
-- **Enter** — stop (finalizes master recording when armed)  
-- **R** — arm / disarm record  
-- **L** — loop  
-- **1–4** — tool views (studio, chords, pattern, record)
+- **Space** â€” play / pause  
+- **Enter** â€” stop (finalizes master recording when armed)  
+- **R** â€” arm / disarm record  
+- **L** â€” loop  
+- **1â€“4** â€” tool views (studio, chords, pattern, record)
 
 ## Recording
 
 1. Press **R** to arm record.  
-2. Press **Play** — master output is captured.  
-3. Press **Stop** — a **Mixdown** audio clip is added on the timeline.  
+2. Press **Play** â€” master output is captured.  
+3. Press **Stop** â€” a **Mixdown** audio clip is added on the timeline.  
 
-MIDI record: arm record, open piano roll on a MIDI clip, enable MIDI input. Vocals: **Record** tab → vocal recorder.
+MIDI record: arm record, open piano roll on a MIDI clip, enable MIDI input. Vocals: **Record** tab â†’ vocal recorder.
 
 ## Patterns
 
@@ -50,7 +50,7 @@ MIDI record: arm record, open piano roll on a MIDI clip, enable MIDI input. Voca
 
 ## Export
 
-`/export` — WAV mixdown (MIDI synth + timeline audio clips), per-track stems, Standard MIDI File.
+`/export` â€” WAV mixdown (MIDI synth + timeline audio clips), per-track stems, Standard MIDI File.
 
 ## Limits (vs desktop FL Studio)
 
@@ -68,20 +68,21 @@ npm run engine:build-kit
 
 Outputs:
 
-- `public/sounds/nkosi/*.wav` — kick, snare, hat, clap  
-- `public/sounds/nkosi/project/*` — demo timeline samples  
+- `public/sounds/nkosi/*.wav` â€” kick, snare, hat, clap  
+- `public/sounds/nkosi/project/*` â€” demo timeline samples  
 - `lib/system-engine-manifest.json`  
 - `lib/system-engine-project.json`
 
 Fallback drums also live at `public/sounds/kick.wav` etc.
 
-## AI / PRO-TEEVERSE Suno (Text to Music)
+## AI / PRO-TEVERSE Suno (Text to Music)
 
 Full songs use the **bundled Suno service** in [`services/suno-api`](services/suno-api) (upstream [gcui-art/suno-api](https://github.com/gcui-art/suno-api): Playwright + 2Captcha + Suno cookie).
 
-1. Copy `services/suno-api/.env.example` → `.env` and add `SUNO_COOKIE` + `TWOCAPTCHA_KEY` ([docs/SUNO_DEPLOY.md](docs/SUNO_DEPLOY.md)).
+1. Copy `services/suno-api/.env.example` â†’ `.env` and add `SUNO_COOKIE` + `TWOCAPTCHA_KEY` ([docs/SUNO_DEPLOY.md](docs/SUNO_DEPLOY.md)).
 2. `npm run suno:install` then `npm run suno:dev` (port **3001**).
 3. `SUNO_API_URL=http://localhost:3001` in `.env.local` (default in `.env.example`).
-4. `npm run dev` → studio **Text to Music** adds an **audio clip** on the timeline.
+4. `npm run dev` â†’ studio **Text to Music** adds an **audio clip** on the timeline.
 
 Without a running Suno service, Text to Music falls back to offline MIDI patterns.
+

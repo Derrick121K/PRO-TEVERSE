@@ -1,4 +1,4 @@
-// PRO-TEEVERSE DAW — Tone.js (Web Audio API) engine: per-track buses, insert FX, FL-style instruments.
+﻿// PRO-TEVERSE DAW â€” Tone.js (Web Audio API) engine: per-track buses, insert FX, FL-style instruments.
 // Single shared AudioContext via Tone; interactive latency hint reduces input/scheduler lag.
 
 import * as Tone from 'tone'
@@ -587,7 +587,7 @@ class AudioEngine {
         velocity
       )
     } catch {
-      /* scheduler collision — skip */
+      /* scheduler collision â€” skip */
     }
   }
 
@@ -1077,3 +1077,4 @@ function writeWavString(view: DataView, offset: number, str: string) {
 export const audioEngine = new AudioEngine()
 
 export type { OscillatorType }
+

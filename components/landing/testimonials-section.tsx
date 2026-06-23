@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 import { Star } from "lucide-react"
 
@@ -7,7 +7,7 @@ const testimonials = [
     name: "Marcus Chen",
     role: "Electronic Producer | 50K+ monthly listeners",
     avatar: "MC",
-    content: "PRO-TEEVERSE has completely transformed my workflow. GossipAI-PROD tools are incredible - I can generate entire drum patterns in seconds. Perfect for both sketching ideas and professional production.",
+    content: "PRO-TEVERSE has completely transformed my workflow. GossipAI-PROD tools are incredible - I can generate entire drum patterns in seconds. Perfect for both sketching ideas and professional production.",
     rating: 5
   },
   {
@@ -28,7 +28,7 @@ const testimonials = [
     name: "Aisha Williams",
     role: "Hip-Hop Producer | Grammy Winner",
     avatar: "AW",
-    content: "The piano roll is incredibly intuitive and responsive. The audio engine quality is studio-grade. I&apos;ve produced some of my biggest hits using PRO-TEEVERSE.",
+    content: "The piano roll is incredibly intuitive and responsive. The audio engine quality is studio-grade. I&apos;ve produced some of my biggest hits using PRO-TEVERSE.",
     rating: 5
   }
 ]
@@ -43,7 +43,7 @@ export function TestimonialsSection() {
             Loved by <span className="gradient-text">Producers</span> Worldwide
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
-            Join thousands of artists creating amazing music with PRO-TEEVERSE.
+            Join thousands of artists creating amazing music with PRO-TEVERSE.
           </p>
         </div>
 
@@ -85,3 +85,4 @@ export function TestimonialsSection() {
     </section>
   )
 }
+

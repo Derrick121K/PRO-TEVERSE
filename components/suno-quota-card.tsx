@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 import { useEffect, useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
@@ -38,11 +38,11 @@ export function SunoQuotaCard() {
       <CardHeader>
         <CardTitle className="text-lg flex items-center gap-2">
           <Music className="h-5 w-5 text-neon-purple" />
-          PRO-TEEVERSE Suno
+          PRO-TEVERSE Suno
         </CardTitle>
         <CardDescription>
           Bundled service in <code className="text-xs">services/suno-api</code>. Run{" "}
-          <code className="text-xs">npm run suno:dev</code> — see{" "}
+          <code className="text-xs">npm run suno:dev</code> â€” see{" "}
           <code className="text-xs">docs/SUNO_DEPLOY.md</code>.
         </CardDescription>
       </CardHeader>
@@ -50,7 +50,7 @@ export function SunoQuotaCard() {
         {loading && (
           <p className="flex items-center gap-2 text-muted-foreground">
             <Loader2 className="h-4 w-4 animate-spin" />
-            Checking PRO-TEEVERSE Suno…
+            Checking PRO-TEVERSE Sunoâ€¦
           </p>
         )}
         {!loading && data && !data.configured && (
@@ -96,3 +96,4 @@ export function SunoQuotaCard() {
     </Card>
   )
 }
+

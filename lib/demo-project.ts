@@ -1,9 +1,9 @@
-import { useDAWStore, type Track } from "./daw-store"
+﻿import { useDAWStore, type Track } from "./daw-store"
 import systemEngineProject from "./system-engine-project.json"
 import { parseFlpChannelSampleRefs, parseFlpPlaylistHints } from "./flp-view"
 
-const DEMO_PROJECT_KEY = "pro-teeverse-demo-seeded-v2"
-const SYSTEM_PROJECT_APPLIED_KEY = "pro-teeverse-system-project-applied-v1"
+const DEMO_PROJECT_KEY = "PRO-TEVERSE-demo-seeded-v2"
+const SYSTEM_PROJECT_APPLIED_KEY = "PRO-TEVERSE-system-project-applied-v1"
 
 type SystemEngineProjectClip = {
   name: string
@@ -294,3 +294,4 @@ export function seedDemoProjectIfNeeded() {
     localStorage.setItem(SYSTEM_PROJECT_APPLIED_KEY, "1")
   }
 }
+

@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 import Link from "next/link"
 import Image from "next/image"
@@ -72,7 +72,7 @@ export function FooterSection() {
                 <Disc3 className="h-8 w-8 text-neon-cyan" />
                 <div className="absolute inset-0 blur-md bg-neon-cyan/30 rounded-full" />
               </div>
-              <span className="text-lg font-bold gradient-text">PRO-TEEVERSE</span>
+              <span className="text-lg font-bold gradient-text">PRO-TEVERSE</span>
             </Link>
             <p className="text-sm text-muted-foreground mb-4">
               The future of music production is here.
@@ -115,7 +115,7 @@ export function FooterSection() {
         {/* Bottom Bar */}
         <div className="mt-12 pt-8 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-sm text-muted-foreground">
-            &copy; {new Date().getFullYear()} PRO-TEEVERSE. All rights reserved.
+            &copy; {new Date().getFullYear()} PRO-TEVERSE. All rights reserved.
           </p>
           <p className="text-sm text-muted-foreground">
             Made with passion for music creators everywhere.
@@ -125,3 +125,4 @@ export function FooterSection() {
     </footer>
   )
 }
+
