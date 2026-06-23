@@ -1,0 +1,10 @@
+# PRO-TEEVERSE + bundled Suno API service
+services:
+  suno-api:
+    build:
+      context: ./services/suno-api
+    ports:
+      - "3001:3000"
+    env_file:
+      - ./services/suno-api/.env
+    restart: unless-stopped

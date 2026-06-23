@@ -1,0 +1,22 @@
+{
+  "generatedBy": "engine/system_engine.py",
+  "sourceZip": "nkosi.zip",
+  "coreKit": {
+    "kick": {
+      "url": "/sounds/nkosi/kick.wav",
+      "source": "aertee kick.wav"
+    },
+    "snare": {
+      "url": "/sounds/nkosi/snare.wav",
+      "source": "043_50S1_2.wav"
+    },
+    "hihat": {
+      "url": "/sounds/nkosi/hihat.wav",
+      "source": "Bracke CH 1.wav"
+    },
+    "clap": {
+      "url": "/sounds/nkosi/clap.wav",
+      "source": "Audio clipboard_57.wav"
+    }
+  }
+}

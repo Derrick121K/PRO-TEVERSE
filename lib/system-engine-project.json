@@ -1,0 +1,214 @@
+{
+  "generatedBy": "engine/system_engine.py",
+  "sourceZip": "nkosi.zip",
+  "bpm": 120,
+  "flpUrl": "/sounds/nkosi/project/nkosi.flp",
+  "samples": [
+    {
+      "source": "]tira_11.wav",
+      "url": "/sounds/nkosi/project/01-tira-11.wav",
+      "durationSec": 0.8594,
+      "knownDuration": true
+    },
+    {
+      "source": "BASS_EfEm_C2.wav",
+      "url": "/sounds/nkosi/project/02-bass-efem-c2.wav",
+      "durationSec": 0.2383,
+      "knownDuration": true
+    },
+    {
+      "source": "# sbucardo_da_dj & 031_amp_bobs,scretch nd bhongo blue-nayi lebhenga (3)_2.wav",
+      "url": "/sounds/nkosi/project/03-sbucardo-da-dj-031-amp-bobs-scretch-nd-bhongo-blue-nayi-lebhenga-3-2.wav",
+      "durationSec": 0.6427,
+      "knownDuration": true
+    },
+    {
+      "source": "Arcando Uplifters 14.wav",
+      "url": "/sounds/nkosi/project/04-arcando-uplifters-14.wav",
+      "durationSec": 29.7674,
+      "knownDuration": true
+    },
+    {
+      "source": "Andile_Tee_Game_Over_(main_mix)_2.wav",
+      "url": "/sounds/nkosi/project/05-andile-tee-game-over-main-mix-2.wav",
+      "durationSec": 3.7444,
+      "knownDuration": true
+    },
+    {
+      "source": "aertee kick.wav",
+      "url": "/sounds/nkosi/project/06-aertee-kick.wav",
+      "durationSec": 2.0,
+      "knownDuration": false
+    },
+    {
+      "source": "Bracke CH 1.wav",
+      "url": "/sounds/nkosi/project/07-bracke-ch-1.wav",
+      "durationSec": 2.0,
+      "knownDuration": false
+    },
+    {
+      "source": "Bdrum1.wav",
+      "url": "/sounds/nkosi/project/08-bdrum1.wav",
+      "durationSec": 0.3019,
+      "knownDuration": true
+    },
+    {
+      "source": "05 Track 5 (3).wav",
+      "url": "/sounds/nkosi/project/09-05-track-5-3.wav",
+      "durationSec": 2.0,
+      "knownDuration": false
+    },
+    {
+      "source": "Brk_K1_8.wav",
+      "url": "/sounds/nkosi/project/10-brk-k1-8.wav",
+      "durationSec": 0.2344,
+      "knownDuration": true
+    },
+    {
+      "source": "043_50S1_2.wav",
+      "url": "/sounds/nkosi/project/11-043-50s1-2.wav",
+      "durationSec": 1.0977,
+      "knownDuration": true
+    },
+    {
+      "source": "Bhampa_16.wav",
+      "url": "/sounds/nkosi/project/12-bhampa-16.wav",
+      "durationSec": 1.2582,
+      "knownDuration": true
+    },
+    {
+      "source": "Audio clipboard_57.wav",
+      "url": "/sounds/nkosi/project/13-audio-clipboard-57.wav",
+      "durationSec": 0.1989,
+      "knownDuration": true
+    },
+    {
+      "source": "Hlala Phans - Part_1.wav",
+      "url": "/sounds/nkosi/project/14-hlala-phans-part-1.wav",
+      "durationSec": 2.0,
+      "knownDuration": false
+    },
+    {
+      "source": "PRO-TEE[ASAMBE BOY;;;;;].mp3",
+      "url": "/sounds/nkosi/project/15-pro-tee-asambe-boy.mp3",
+      "durationSec": 2.0,
+      "knownDuration": false
+    },
+    {
+      "source": "Piano Electric (1).wav",
+      "url": "/sounds/nkosi/project/16-piano-electric-1.wav",
+      "durationSec": 2.0,
+      "knownDuration": false
+    },
+    {
+      "source": "Piano Electric (2).wav",
+      "url": "/sounds/nkosi/project/17-piano-electric-2.wav",
+      "durationSec": 2.0,
+      "knownDuration": false
+    },
+    {
+      "source": "Piano Electric (3).wav",
+      "url": "/sounds/nkosi/project/18-piano-electric-3.wav",
+      "durationSec": 2.0,
+      "knownDuration": false
+    },
+    {
+      "source": "Piano Electric (4).wav",
+      "url": "/sounds/nkosi/project/19-piano-electric-4.wav",
+      "durationSec": 2.0,
+      "knownDuration": false
+    },
+    {
+      "source": "Piano Electric (5).wav",
+      "url": "/sounds/nkosi/project/20-piano-electric-5.wav",
+      "durationSec": 2.0,
+      "knownDuration": false
+    },
+    {
+      "source": "Piano Electric (6).wav",
+      "url": "/sounds/nkosi/project/21-piano-electric-6.wav",
+      "durationSec": 2.0,
+      "knownDuration": false
+    },
+    {
+      "source": "Piano Electric (7).wav",
+      "url": "/sounds/nkosi/project/22-piano-electric-7.wav",
+      "durationSec": 2.0,
+      "knownDuration": false
+    }
+  ],
+  "trackPlan": [
+    {
+      "name": "Nkosi Main",
+      "color": "#8b5cf6",
+      "clips": [
+        {
+          "name": "Main 1",
+          "audioUrl": "/sounds/nkosi/project/04-arcando-uplifters-14.wav",
+          "start": 0,
+          "duration": 59.53
+        },
+        {
+          "name": "Main 2",
+          "audioUrl": "/sounds/nkosi/project/05-andile-tee-game-over-main-mix-2.wav",
+          "start": 8,
+          "duration": 7.49
+        },
+        {
+          "name": "Main 3",
+          "audioUrl": "/sounds/nkosi/project/12-bhampa-16.wav",
+          "start": 16,
+          "duration": 2.52
+        }
+      ]
+    },
+    {
+      "name": "Nkosi Drums",
+      "color": "#00d4ff",
+      "clips": [
+        {
+          "name": "Drum 1",
+          "audioUrl": "/sounds/nkosi/project/06-aertee-kick.wav",
+          "start": 0,
+          "duration": 4.0
+        },
+        {
+          "name": "Drum 2",
+          "audioUrl": "/sounds/nkosi/project/08-bdrum1.wav",
+          "start": 4,
+          "duration": 0.6
+        }
+      ]
+    },
+    {
+      "name": "Nkosi FX",
+      "color": "#10b981",
+      "clips": [
+        {
+          "name": "FX 1",
+          "audioUrl": "/sounds/nkosi/project/01-tira-11.wav",
+          "start": 0,
+          "duration": 1.72
+        },
+        {
+          "name": "FX 2",
+          "audioUrl": "/sounds/nkosi/project/02-bass-efem-c2.wav",
+          "start": 8,
+          "duration": 0.5
+        },
+        {
+          "name": "FX 3",
+          "audioUrl": "/sounds/nkosi/project/03-sbucardo-da-dj-031-amp-bobs-scretch-nd-bhongo-blue-nayi-lebhenga-3-2.wav",
+          "start": 16,
+          "duration": 1.29
+        },
+        {
+          "name": "FX 4",
+          "audioUrl": "/sounds/nkosi/project/07-bracke-ch-1.wav",
+          "start": 24,
+          "duration": 4.0
+        }
+      ]
+    }
+  ]
+}

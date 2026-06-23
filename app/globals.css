@@ -1,0 +1,276 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+@custom-variant dark (&:is(.dark *));
+
+/* PRO-TEEVERSE Dark Theme - Music Production Platform */
+:root {
+  --background: oklch(0.07 0.01 260);
+  --foreground: oklch(0.95 0.01 260);
+  --card: oklch(0.12 0.015 260);
+  --card-foreground: oklch(0.95 0.01 260);
+  --popover: oklch(0.1 0.015 260);
+  --popover-foreground: oklch(0.95 0.01 260);
+  --primary: oklch(0.75 0.18 195);
+  --primary-foreground: oklch(0.1 0.01 260);
+  --secondary: oklch(0.18 0.02 260);
+  --secondary-foreground: oklch(0.9 0.01 260);
+  --muted: oklch(0.15 0.015 260);
+  --muted-foreground: oklch(0.6 0.02 260);
+  --accent: oklch(0.65 0.22 300);
+  --accent-foreground: oklch(0.98 0.01 260);
+  --destructive: oklch(0.55 0.22 25);
+  --destructive-foreground: oklch(0.98 0.01 260);
+  --border: oklch(0.22 0.02 260);
+  --input: oklch(0.15 0.015 260);
+  --ring: oklch(0.75 0.18 195);
+  --chart-1: oklch(0.75 0.18 195);
+  --chart-2: oklch(0.65 0.22 300);
+  --chart-3: oklch(0.7 0.2 330);
+  --chart-4: oklch(0.6 0.15 140);
+  --chart-5: oklch(0.7 0.18 60);
+  --radius: 0.625rem;
+  --sidebar: oklch(0.1 0.015 260);
+  --sidebar-foreground: oklch(0.95 0.01 260);
+  --sidebar-primary: oklch(0.75 0.18 195);
+  --sidebar-primary-foreground: oklch(0.1 0.01 260);
+  --sidebar-accent: oklch(0.18 0.02 260);
+  --sidebar-accent-foreground: oklch(0.95 0.01 260);
+  --sidebar-border: oklch(0.22 0.02 260);
+  --sidebar-ring: oklch(0.75 0.18 195);
+  
+  /* PRO-TEEVERSE Custom Colors */
+  --neon-cyan: oklch(0.8 0.18 195);
+  --neon-purple: oklch(0.65 0.25 300);
+  --neon-pink: oklch(0.7 0.22 330);
+  --surface-1: oklch(0.1 0.015 260);
+  --surface-2: oklch(0.14 0.02 260);
+  --surface-3: oklch(0.18 0.02 260);
+  /* FL-style DAW panels: subtle inset top edge */
+  --daw-panel-inset: inset 0 1px 0 0 rgba(255, 255, 255, 0.045);
+}
+
+.dark {
+  --background: oklch(0.07 0.01 260);
+  --foreground: oklch(0.95 0.01 260);
+  --card: oklch(0.12 0.015 260);
+  --card-foreground: oklch(0.95 0.01 260);
+  --popover: oklch(0.1 0.015 260);
+  --popover-foreground: oklch(0.95 0.01 260);
+  --primary: oklch(0.75 0.18 195);
+  --primary-foreground: oklch(0.1 0.01 260);
+  --secondary: oklch(0.18 0.02 260);
+  --secondary-foreground: oklch(0.9 0.01 260);
+  --muted: oklch(0.15 0.015 260);
+  --muted-foreground: oklch(0.6 0.02 260);
+  --accent: oklch(0.65 0.22 300);
+  --accent-foreground: oklch(0.98 0.01 260);
+  --destructive: oklch(0.55 0.22 25);
+  --destructive-foreground: oklch(0.98 0.01 260);
+  --border: oklch(0.22 0.02 260);
+  --input: oklch(0.15 0.015 260);
+  --ring: oklch(0.75 0.18 195);
+  --chart-1: oklch(0.75 0.18 195);
+  --chart-2: oklch(0.65 0.22 300);
+  --chart-3: oklch(0.7 0.2 330);
+  --chart-4: oklch(0.6 0.15 140);
+  --chart-5: oklch(0.7 0.18 60);
+  --sidebar: oklch(0.1 0.015 260);
+  --sidebar-foreground: oklch(0.95 0.01 260);
+  --sidebar-primary: oklch(0.75 0.18 195);
+  --sidebar-primary-foreground: oklch(0.1 0.01 260);
+  --sidebar-accent: oklch(0.18 0.02 260);
+  --sidebar-accent-foreground: oklch(0.95 0.01 260);
+  --sidebar-border: oklch(0.22 0.02 260);
+  --sidebar-ring: oklch(0.75 0.18 195);
+}
+
+@theme inline {
+  --font-sans: 'Geist', 'Geist Fallback';
+  --font-mono: 'Geist Mono', 'Geist Mono Fallback';
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  
+  /* PRO-TEEVERSE Custom Colors */
+  --color-neon-cyan: var(--neon-cyan);
+  --color-neon-purple: var(--neon-purple);
+  --color-neon-pink: var(--neon-pink);
+  --color-surface-1: var(--surface-1);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--surface-1);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--surface-3);
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--neon-cyan);
+  }
+}
+
+@layer utilities {
+  /* Glassmorphism */
+  .glass {
+    background: oklch(0.1 0.015 260 / 0.8);
+    backdrop-filter: blur(12px);
+    border: 1px solid oklch(1 0 0 / 0.1);
+  }
+  
+  .glass-strong {
+    background: oklch(0.12 0.015 260 / 0.9);
+    backdrop-filter: blur(20px);
+    border: 1px solid oklch(1 0 0 / 0.15);
+  }
+  
+  /* Neon Glow Effects */
+  .glow-cyan {
+    box-shadow: 0 0 20px oklch(0.8 0.18 195 / 0.3),
+                0 0 40px oklch(0.8 0.18 195 / 0.1);
+  }
+  
+  .glow-purple {
+    box-shadow: 0 0 20px oklch(0.65 0.25 300 / 0.3),
+                0 0 40px oklch(0.65 0.25 300 / 0.1);
+  }
+  
+  .glow-pink {
+    box-shadow: 0 0 20px oklch(0.7 0.22 330 / 0.3),
+                0 0 40px oklch(0.7 0.22 330 / 0.1);
+  }
+  
+  .text-glow-cyan {
+    text-shadow: 0 0 10px oklch(0.8 0.18 195 / 0.5),
+                 0 0 20px oklch(0.8 0.18 195 / 0.3);
+  }
+  
+  /* Gradient Text */
+  .gradient-text {
+    background: linear-gradient(135deg, var(--neon-cyan) 0%, var(--neon-purple) 50%, var(--neon-pink) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  /* DAW Panel Styles */
+  .daw-panel {
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+
+  /* FL20-inspired studio chrome (keeps PRO-TEEVERSE identity). */
+  .fl20-shell {
+    --surface-1: oklch(0.095 0.012 260);
+    --surface-2: oklch(0.13 0.016 260);
+    --surface-3: oklch(0.17 0.02 260);
+  }
+
+  .fl20-shell [role="toolbar"] {
+    background: linear-gradient(180deg, oklch(0.145 0.018 260), oklch(0.11 0.015 260));
+    border-bottom: 1px solid color-mix(in oklch, var(--border) 80%, black);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  }
+
+  .fl20-shell .bg-surface-2 {
+    box-shadow: var(--daw-panel-inset);
+  }
+
+  .fl20-shell .text-neon-cyan {
+    color: oklch(0.79 0.15 195);
+  }
+
+  .fl20-shell .bg-surface-1 {
+    background-color: color-mix(in oklch, var(--surface-1) 95%, black);
+  }
+
+  .fl20-shell .bg-surface-2 {
+    background-color: color-mix(in oklch, var(--surface-2) 94%, black);
+  }
+
+  .fl20-shell .bg-surface-3 {
+    background-color: color-mix(in oklch, var(--surface-3) 92%, black);
+  }
+  
+  .daw-panel-header {
+    background: var(--surface-2);
+    border-bottom: 1px solid var(--border);
+    padding: 0.5rem 1rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--muted-foreground);
+  }
+  
+  /* Level Meter Gradient */
+  .meter-gradient {
+    background: linear-gradient(to top, 
+      oklch(0.6 0.2 145) 0%,
+      oklch(0.7 0.2 100) 70%,
+      oklch(0.65 0.25 30) 85%,
+      oklch(0.6 0.25 25) 100%
+    );
+  }
+  
+  /* Piano Key Styles */
+  .piano-white-key {
+    background: linear-gradient(to bottom, #fff 0%, #e8e8e8 100%);
+    border: 1px solid #ccc;
+  }
+  
+  .piano-black-key {
+    background: linear-gradient(to bottom, #333 0%, #111 100%);
+    border: 1px solid #000;
+  }
+}
