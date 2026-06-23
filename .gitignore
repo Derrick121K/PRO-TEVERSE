@@ -28,3 +28,12 @@ project-snapshot.txt
 build-output.txt
 lint-output.txt
 security-output.txt
+
+# Local generated logs/backups
+build-output*.txt
+lint-output*.txt
+security-output*.txt
+project-snapshot*.txt
+*.tsbuildinfo
+package.backup.before-root-fix.json
+tsconfig.backup.before-root-fix.json
