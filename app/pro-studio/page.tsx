@@ -1,8 +1,11 @@
 "use client"
 
 import type { LucideIcon } from "lucide-react"
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import Link from "next/link"
+import type { ZipStudioProject } from "@/lib/zip-studio/types"
+import { ZIP_STUDIO_SESSION_KEY } from "@/lib/zip-studio/types"
+import { buildZipProjectPrompt, summarizeZipProject } from "@/lib/zip-studio/project-tools"
 import {
   Bot,
   Boxes,
@@ -138,6 +141,26 @@ export default function ProStudioPage() {
   const [selectedCategory, setSelectedCategory] = useState<PluginCategory | "All">("All")
   const [bpm, setBpm] = useState(112)
   const [key, setKey] = useState("C minor")
+  const [zipProject, setZipProject] = useState<ZipStudioProject | null>(null)
+  const [aiPrompt, setAiPrompt] = useState("")
+
+  useEffect(() => {
+    const saved =
+      sessionStorage.getItem(ZIP_STUDIO_SESSION_KEY) ||
+      localStorage.getItem(ZIP_STUDIO_SESSION_KEY)
+
+    if (!saved) return
+
+    try {
+      const parsed = JSON.parse(saved) as ZipStudioProject
+      setZipProject(parsed)
+      setBpm(parsed.bpm || 112)
+      setKey(parsed.key || "C minor")
+      setAiPrompt(buildZipProjectPrompt(parsed))
+    } catch {
+      setZipProject(null)
+    }
+  }, [])
 
   const visiblePlugins = useMemo(() => {
     if (selectedCategory === "All") return plugins
@@ -203,12 +226,16 @@ export default function ProStudioPage() {
 
             <div className="rounded-3xl border border-white/10 bg-black/30 p-4">
               <p className="text-xs uppercase tracking-[0.25em] text-slate-500">Project Mode</p>
-              <p className="mt-3 text-lg font-bold text-emerald-300">Pattern + Playlist</p>
+              <p className="mt-3 text-lg font-bold text-emerald-300">
+                {zipProject ? "ZIP Project Loaded" : "Pattern + Playlist"}
+              </p>
             </div>
 
             <div className="rounded-3xl border border-white/10 bg-black/30 p-4">
               <p className="text-xs uppercase tracking-[0.25em] text-slate-500">AI Mode</p>
-              <p className="mt-3 text-lg font-bold text-cyan-300">Co-Producer Ready</p>
+              <p className="mt-3 text-lg font-bold text-cyan-300">
+                {zipProject ? `${zipProject.tracks.length} ZIP Tracks` : "Co-Producer Ready"}
+              </p>
             </div>
           </div>
         </div>
@@ -270,7 +297,7 @@ export default function ProStudioPage() {
                         <span className={`h-3 w-3 rounded-full ${channel.color}`} />
                         <div>
                           <p className="font-semibold">{channel.name}</p>
-                          <p className="text-xs text-slate-500">{channel.type} Â· {channel.plugin}</p>
+                          <p className="text-xs text-slate-500">{channel.type} Ãƒâ€šÃ‚Â· {channel.plugin}</p>
                         </div>
                       </div>
                       <button className="rounded-xl border border-white/10 px-3 py-1 text-xs text-slate-300 hover:bg-white/10">
@@ -410,6 +437,20 @@ export default function ProStudioPage() {
                 Use AI to generate patterns, improve arrangements and match imported ZIP project sounds.
               </p>
 
+              {zipProject && (
+                <div className="mt-5 rounded-2xl border border-emerald-400/20 bg-emerald-400/10 p-4">
+                  <p className="font-bold text-emerald-200">Imported ZIP Project Loaded</p>
+                  <p className="mt-2 text-sm text-slate-300">
+                    {zipProject.projectName} Â· {summarizeZipProject(zipProject).activeTracks} active tracks Â· BPM {zipProject.bpm} Â· {zipProject.key}
+                  </p>
+                  <textarea
+                    value={aiPrompt}
+                    onChange={(event) => setAiPrompt(event.target.value)}
+                    className="mt-3 min-h-36 w-full rounded-2xl border border-white/10 bg-slate-950 p-3 text-sm text-slate-200"
+                  />
+                </div>
+              )}
+
               <div className="mt-5 grid gap-3 md:grid-cols-2">
                 {[
                   ["Generate Pattern", "Create drums, bass, chords and melody in the selected key."],
@@ -459,7 +500,9 @@ export default function ProStudioPage() {
               Next Engine Step
             </p>
             <p className="mt-2 text-sm leading-6 text-slate-300">
-              Connect ZIP Studio tracks into this workspace and add a Web Audio mix renderer so edits produce a real WAV preview.
+              {zipProject
+                ? `${zipProject.projectName} is connected. Next: render active ZIP tracks into a WAV mix preview.`
+                : "Connect ZIP Studio tracks into this workspace and add a Web Audio mix renderer so edits produce a real WAV preview."}
             </p>
           </div>
         </aside>

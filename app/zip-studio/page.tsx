@@ -3,6 +3,7 @@
 import { useMemo, useState, useRef, useEffect } from "react"
 import Link from "next/link"
 import JSZip from "jszip"
+import { ZIP_STUDIO_SESSION_KEY } from "@/lib/zip-studio/types"
 
 type ZipAudioTrack = {
   id: string
@@ -159,7 +160,8 @@ export default function ZipStudioPage() {
   function saveToBrowserStudio() {
     const meta = buildMeta()
 
-    sessionStorage.setItem("proteverse-zip-project", JSON.stringify(meta))
+    sessionStorage.setItem(ZIP_STUDIO_SESSION_KEY, JSON.stringify(meta))
+    localStorage.setItem(ZIP_STUDIO_SESSION_KEY, JSON.stringify(meta))
     setStatus("Saved editable ZIP project layer to this browser session.")
   }
 
@@ -354,7 +356,7 @@ export default function ZipStudioPage() {
                         </p>
                         <h3 className="break-all text-lg font-semibold">{track.name}</h3>
                         <p className="break-all text-xs text-slate-400">
-                          {track.path} · {formatBytes(track.size)}
+                          {track.path} Ã‚Â· {formatBytes(track.size)}
                         </p>
                       </div>
 
