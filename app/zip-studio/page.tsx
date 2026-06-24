@@ -1,8 +1,9 @@
 "use client"
 
-import { useMemo, useState, useRef, useEffect } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import Link from "next/link"
 import JSZip from "jszip"
+import { encodeWavFromAudioBuffer } from "@/lib/audio/wav"
 import { ZIP_STUDIO_SESSION_KEY } from "@/lib/zip-studio/types"
 
 type ZipAudioTrack = {
@@ -12,6 +13,7 @@ type ZipAudioTrack = {
   size: number
   type: string
   url: string
+  blob: Blob
   volume: number
   muted: boolean
   startSeconds: number
@@ -93,6 +95,7 @@ export default function ZipStudioPage() {
   const [originalZip, setOriginalZip] = useState<JSZip | null>(null)
   const [status, setStatus] = useState("Open a ZIP project to begin.")
   const [isExporting, setIsExporting] = useState(false)
+  const [isRendering, setIsRendering] = useState(false)
 
   const activeTracks = useMemo(() => tracks.filter((track) => !track.muted), [tracks])
   const totalSize = useMemo(() => tracks.reduce((sum, track) => sum + track.size, 0), [tracks])
@@ -134,6 +137,7 @@ export default function ZipStudioPage() {
         size: blob.size,
         type: blob.type || `audio/${getExtension(entry.name).replace(".", "")}`,
         url: URL.createObjectURL(blob),
+        blob,
         volume: previous?.volume ?? 100,
         muted: previous?.muted ?? false,
         startSeconds: previous?.startSeconds ?? 0,
@@ -157,14 +161,6 @@ export default function ZipStudioPage() {
     )
   }
 
-  function saveToBrowserStudio() {
-    const meta = buildMeta()
-
-    sessionStorage.setItem(ZIP_STUDIO_SESSION_KEY, JSON.stringify(meta))
-    localStorage.setItem(ZIP_STUDIO_SESSION_KEY, JSON.stringify(meta))
-    setStatus("Saved editable ZIP project layer to this browser session.")
-  }
-
   function buildMeta(): ZipProjectMeta {
     return {
       app: "PRO-TEVERSE",
@@ -184,6 +180,14 @@ export default function ZipStudioPage() {
         notes: track.notes,
       })),
     }
+  }
+
+  function saveToBrowserStudio() {
+    const meta = buildMeta()
+
+    sessionStorage.setItem(ZIP_STUDIO_SESSION_KEY, JSON.stringify(meta))
+    localStorage.setItem(ZIP_STUDIO_SESSION_KEY, JSON.stringify(meta))
+    setStatus("Saved editable ZIP project layer to Pro Studio.")
   }
 
   async function exportModifiedZip() {
@@ -243,6 +247,78 @@ export default function ZipStudioPage() {
     }
   }
 
+  async function renderWavMix() {
+    if (!tracks.length) {
+      setStatus("Open a ZIP project first.")
+      return
+    }
+
+    setIsRendering(true)
+    setStatus("Rendering WAV mix preview...")
+
+    try {
+      const audioContext = new AudioContext()
+      const decodedTracks: Array<{ track: ZipAudioTrack; decoded: AudioBuffer }> = []
+
+      for (const track of tracks) {
+        if (track.muted) continue
+
+        const arrayBuffer = await track.blob.arrayBuffer()
+        const decoded = await audioContext.decodeAudioData(arrayBuffer.slice(0))
+        decodedTracks.push({ track, decoded })
+      }
+
+      await audioContext.close()
+
+      if (!decodedTracks.length) {
+        setStatus("No active tracks to render.")
+        return
+      }
+
+      const sampleRate = decodedTracks[0].decoded.sampleRate
+      const maxDuration = Math.max(
+        ...decodedTracks.map(({ track, decoded }) => track.startSeconds + decoded.duration)
+      )
+
+      const offlineContext = new OfflineAudioContext(
+        2,
+        Math.ceil(maxDuration * sampleRate),
+        sampleRate
+      )
+
+      for (const { track, decoded } of decodedTracks) {
+        const source = offlineContext.createBufferSource()
+        const gain = offlineContext.createGain()
+
+        source.buffer = decoded
+        gain.gain.value = Math.max(0, track.volume / 100)
+
+        source.connect(gain)
+        gain.connect(offlineContext.destination)
+        source.start(track.startSeconds)
+      }
+
+      const rendered = await offlineContext.startRendering()
+      const wavBlob = encodeWavFromAudioBuffer(rendered)
+      const url = URL.createObjectURL(wavBlob)
+      const link = document.createElement("a")
+
+      link.href = url
+      link.download = `${projectName || "proteverse-mix"}-mix-preview.wav`
+      document.body.appendChild(link)
+      link.click()
+      link.remove()
+
+      URL.revokeObjectURL(url)
+      setStatus("WAV mix preview exported successfully.")
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Failed to render WAV mix."
+      setStatus(message)
+    } finally {
+      setIsRendering(false)
+    }
+  }
+
   return (
     <main className="min-h-screen bg-slate-950 text-white">
       <section className="mx-auto flex w-full max-w-7xl flex-col gap-6 px-4 py-8">
@@ -253,16 +329,25 @@ export default function ZipStudioPage() {
               <h1 className="text-3xl font-bold">ZIP Studio</h1>
               <p className="mt-2 max-w-3xl text-sm text-slate-300">
                 Open ZIP music projects, preserve FLP files, preview real WAV/MP3 samples,
-                edit track settings, and export a modified ZIP project.
+                edit track settings, render a WAV mix, and export a modified ZIP project.
               </p>
             </div>
 
-            <Link
-              href="/studio"
-              className="rounded-xl border border-cyan-400/40 px-4 py-2 text-sm text-cyan-200 hover:bg-cyan-400/10"
-            >
-              Open Main Studio
-            </Link>
+            <div className="flex flex-wrap gap-2">
+              <Link
+                href="/pro-studio"
+                className="rounded-xl bg-cyan-400 px-4 py-2 text-sm font-bold text-slate-950"
+              >
+                Open Pro Studio
+              </Link>
+
+              <Link
+                href="/studio"
+                className="rounded-xl border border-cyan-400/40 px-4 py-2 text-sm text-cyan-200 hover:bg-cyan-400/10"
+              >
+                Classic Studio
+              </Link>
+            </div>
           </div>
 
           <div className="rounded-2xl border border-white/10 bg-black/30 p-4">
@@ -324,6 +409,14 @@ export default function ZipStudioPage() {
             </button>
 
             <button
+              onClick={() => void renderWavMix()}
+              disabled={!tracks.length || isRendering}
+              className="mt-3 w-full rounded-xl bg-fuchsia-500 px-4 py-2 font-semibold text-white disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {isRendering ? "Rendering..." : "Render WAV Mix"}
+            </button>
+
+            <button
               onClick={() => void exportModifiedZip()}
               disabled={!tracks.length || isExporting}
               className="mt-3 w-full rounded-xl bg-emerald-500 px-4 py-2 font-semibold text-slate-950 disabled:cursor-not-allowed disabled:opacity-50"
@@ -340,7 +433,7 @@ export default function ZipStudioPage() {
 
             {!tracks.length ? (
               <div className="mt-5 rounded-2xl border border-dashed border-white/20 p-8 text-center text-slate-400">
-                Upload `nkosi.zip` or another music ZIP to see and edit its audio files.
+                Upload nkosi.zip or another music ZIP to see and edit its audio files.
               </div>
             ) : (
               <div className="mt-5 space-y-4">
@@ -356,7 +449,7 @@ export default function ZipStudioPage() {
                         </p>
                         <h3 className="break-all text-lg font-semibold">{track.name}</h3>
                         <p className="break-all text-xs text-slate-400">
-                          {track.path} Ã‚Â· {formatBytes(track.size)}
+                          {track.path} · {formatBytes(track.size)}
                         </p>
                       </div>
 
