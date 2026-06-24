@@ -143,6 +143,22 @@ export default function ProStudioPage() {
   const [key, setKey] = useState("C minor")
   const [zipProject, setZipProject] = useState<ZipStudioProject | null>(null)
   const [aiPrompt, setAiPrompt] = useState("")
+  const [aiStatus, setAiStatus] = useState("Load a ZIP project, then generate a matching pattern.")
+  const [aiResult, setAiResult] = useState<{
+    title?: string | null
+    source?: string
+    notes?: unknown[]
+    pattern?: unknown[]
+    matchedZipProject?: {
+      projectName: string
+      sourceZipName: string
+      trackCount: number
+      activeTrackCount: number
+      bpm: number
+      key: string
+    } | null
+  } | null>(null)
+  const [isAiGenerating, setIsAiGenerating] = useState(false)
 
   useEffect(() => {
     const saved =
@@ -167,6 +183,48 @@ export default function ProStudioPage() {
     return plugins.filter((plugin) => plugin.category === selectedCategory)
   }, [selectedCategory])
 
+  async function generateZipMatchedPattern() {
+    if (!zipProject) {
+      setAiStatus("Open ZIP Studio, upload a ZIP, and click Save Editable Layer first.")
+      return
+    }
+
+    setIsAiGenerating(true)
+    setAiStatus("Generating pattern that matches your imported ZIP project...")
+
+    try {
+      const response = await fetch("/api/ai/generate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          mode: "full",
+          prompt: aiPrompt,
+          bpm: zipProject.bpm,
+          key: zipProject.key,
+          bars: 4,
+          energy: 82,
+          complexity: 72,
+          zipProject,
+        }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data?.error || "AI generation failed")
+      }
+
+      setAiResult(data)
+      setAiStatus("ZIP-matched AI pattern generated successfully.")
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "AI generation failed"
+      setAiStatus(message)
+    } finally {
+      setIsAiGenerating(false)
+    }
+  }
   return (
     <main className="min-h-screen bg-[#050713] text-white">
       <section className="border-b border-white/10 bg-[radial-gradient(circle_at_top_left,rgba(34,211,238,0.18),transparent_35%),radial-gradient(circle_at_top_right,rgba(168,85,247,0.18),transparent_30%)]">
@@ -297,7 +355,7 @@ export default function ProStudioPage() {
                         <span className={`h-3 w-3 rounded-full ${channel.color}`} />
                         <div>
                           <p className="font-semibold">{channel.name}</p>
-                          <p className="text-xs text-slate-500">{channel.type} Ãƒâ€šÃ‚Â· {channel.plugin}</p>
+                          <p className="text-xs text-slate-500">{channel.type} ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· {channel.plugin}</p>
                         </div>
                       </div>
                       <button className="rounded-xl border border-white/10 px-3 py-1 text-xs text-slate-300 hover:bg-white/10">
@@ -441,13 +499,37 @@ export default function ProStudioPage() {
                 <div className="mt-5 rounded-2xl border border-emerald-400/20 bg-emerald-400/10 p-4">
                   <p className="font-bold text-emerald-200">Imported ZIP Project Loaded</p>
                   <p className="mt-2 text-sm text-slate-300">
-                    {zipProject.projectName} Â· {summarizeZipProject(zipProject).activeTracks} active tracks Â· BPM {zipProject.bpm} Â· {zipProject.key}
+                    {zipProject.projectName} Ãƒâ€šÃ‚Â· {summarizeZipProject(zipProject).activeTracks} active tracks Ãƒâ€šÃ‚Â· BPM {zipProject.bpm} Ãƒâ€šÃ‚Â· {zipProject.key}
                   </p>
                   <textarea
                     value={aiPrompt}
                     onChange={(event) => setAiPrompt(event.target.value)}
                     className="mt-3 min-h-36 w-full rounded-2xl border border-white/10 bg-slate-950 p-3 text-sm text-slate-200"
                   />
+
+                  <button
+                    onClick={() => void generateZipMatchedPattern()}
+                    disabled={isAiGenerating}
+                    className="mt-3 rounded-2xl bg-cyan-400 px-4 py-2 text-sm font-bold text-slate-950 disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    {isAiGenerating ? "Generating..." : "Generate ZIP-Matched Pattern"}
+                  </button>
+
+                  <p className="mt-3 text-sm text-slate-300">{aiStatus}</p>
+
+                  {aiResult && (
+                    <div className="mt-3 rounded-2xl border border-white/10 bg-black/30 p-4">
+                      <p className="font-bold text-cyan-200">{aiResult.title || "AI Pattern"}</p>
+                      <p className="mt-1 text-sm text-slate-300">
+                        Source: {aiResult.source || "unknown"} Â· Notes: {aiResult.notes?.length || 0} Â· Pattern groups: {aiResult.pattern?.length || 0}
+                      </p>
+                      {aiResult.matchedZipProject && (
+                        <p className="mt-1 text-xs text-emerald-200">
+                          Matched {aiResult.matchedZipProject.activeTrackCount}/{aiResult.matchedZipProject.trackCount} active ZIP tracks from {aiResult.matchedZipProject.sourceZipName}
+                        </p>
+                      )}
+                    </div>
+                  )}
                 </div>
               )}
 
