@@ -6,6 +6,7 @@ import Link from "next/link"
 import type { ZipStudioProject } from "@/lib/zip-studio/types"
 import { ZIP_STUDIO_SESSION_KEY } from "@/lib/zip-studio/types"
 import { buildZipProjectPrompt, summarizeZipProject } from "@/lib/zip-studio/project-tools"
+import { generateZipMatchedPatternLocally } from "@/lib/local-engine/zip-pattern"
 import {
   Bot,
   Boxes,
@@ -190,41 +191,21 @@ export default function ProStudioPage() {
     }
 
     setIsAiGenerating(true)
-    setAiStatus("Generating pattern that matches your imported ZIP project...")
+    setAiStatus("Generating offline pattern from your imported ZIP project...")
 
     try {
-      const response = await fetch("/api/ai/generate", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          mode: "full",
-          prompt: aiPrompt,
-          bpm: zipProject.bpm,
-          key: zipProject.key,
-          bars: 4,
-          energy: 82,
-          complexity: 72,
-          zipProject,
-        }),
-      })
-
-      const data = await response.json()
-
-      if (!response.ok) {
-        throw new Error(data?.error || "AI generation failed")
-      }
+      const data = generateZipMatchedPatternLocally(zipProject, aiPrompt)
 
       setAiResult(data)
-      setAiStatus("ZIP-matched AI pattern generated successfully.")
+      setAiStatus("Offline ZIP-matched pattern generated successfully. No API was used.")
     } catch (error) {
-      const message = error instanceof Error ? error.message : "AI generation failed"
+      const message = error instanceof Error ? error.message : "Offline AI generation failed"
       setAiStatus(message)
     } finally {
       setIsAiGenerating(false)
     }
   }
+
   return (
     <main className="min-h-screen bg-[#050713] text-white">
       <section className="border-b border-white/10 bg-[radial-gradient(circle_at_top_left,rgba(34,211,238,0.18),transparent_35%),radial-gradient(circle_at_top_right,rgba(168,85,247,0.18),transparent_30%)]">
@@ -355,7 +336,7 @@ export default function ProStudioPage() {
                         <span className={`h-3 w-3 rounded-full ${channel.color}`} />
                         <div>
                           <p className="font-semibold">{channel.name}</p>
-                          <p className="text-xs text-slate-500">{channel.type} ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· {channel.plugin}</p>
+                          <p className="text-xs text-slate-500">{channel.type} ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· {channel.plugin}</p>
                         </div>
                       </div>
                       <button className="rounded-xl border border-white/10 px-3 py-1 text-xs text-slate-300 hover:bg-white/10">
@@ -499,7 +480,7 @@ export default function ProStudioPage() {
                 <div className="mt-5 rounded-2xl border border-emerald-400/20 bg-emerald-400/10 p-4">
                   <p className="font-bold text-emerald-200">Imported ZIP Project Loaded</p>
                   <p className="mt-2 text-sm text-slate-300">
-                    {zipProject.projectName} Ãƒâ€šÃ‚Â· {summarizeZipProject(zipProject).activeTracks} active tracks Ãƒâ€šÃ‚Â· BPM {zipProject.bpm} Ãƒâ€šÃ‚Â· {zipProject.key}
+                    {zipProject.projectName} ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· {summarizeZipProject(zipProject).activeTracks} active tracks ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· BPM {zipProject.bpm} ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· {zipProject.key}
                   </p>
                   <textarea
                     value={aiPrompt}
@@ -521,7 +502,7 @@ export default function ProStudioPage() {
                     <div className="mt-3 rounded-2xl border border-white/10 bg-black/30 p-4">
                       <p className="font-bold text-cyan-200">{aiResult.title || "AI Pattern"}</p>
                       <p className="mt-1 text-sm text-slate-300">
-                        Source: {aiResult.source || "unknown"} Â· Notes: {aiResult.notes?.length || 0} Â· Pattern groups: {aiResult.pattern?.length || 0}
+                        Source: {aiResult.source || "unknown"} Ã‚Â· Notes: {aiResult.notes?.length || 0} Ã‚Â· Pattern groups: {aiResult.pattern?.length || 0}
                       </p>
                       {aiResult.matchedZipProject && (
                         <p className="mt-1 text-xs text-emerald-200">
