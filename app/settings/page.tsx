@@ -2,7 +2,6 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { SunoQuotaCard } from "@/components/suno-quota-card"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -55,7 +54,7 @@ export default function SettingsPage() {
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Link href="/dashboard">
-              <Button variant="ghost" size="sm">← Back</Button>
+              <Button variant="ghost" size="sm">â† Back</Button>
             </Link>
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-neon-cyan to-neon-purple flex items-center justify-center">
@@ -100,7 +99,12 @@ export default function SettingsPage() {
           </TabsList>
 
           <TabsContent value="general" className="space-y-6">
-            <SunoQuotaCard />
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
+              <h2 className="text-lg font-bold text-white">Offline Mode</h2>
+              <p className="mt-2 text-sm text-slate-300">
+                PRO-TEVERSE now runs music generation locally. No cloud AI or Suno API is required.
+              </p>
+            </div>
 
             <Card className="bg-surface-1 border-border">
               <CardHeader>
