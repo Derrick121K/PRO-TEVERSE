@@ -1,4 +1,4 @@
-﻿"use client"
+"use client"
 
 import { useEffect, useRef } from "react"
 import Link from "next/link"
@@ -313,12 +313,12 @@ export function TransportBar() {
       </div>
 
       {/* Home Button */}
-      <Link href="/dashboard">
+      <Link href="/pro-studio">
         <Button 
           variant="ghost" 
           size="sm" 
           className="h-8 text-muted-foreground hover:text-foreground"
-          aria-label="Go to dashboard"
+          aria-label="Go to Pro Studio"
         >
           <Home className="h-4 w-4" aria-hidden="true" />
         </Button>

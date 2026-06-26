@@ -29,7 +29,7 @@ import { Mic, Guitar, Zap, Layout } from "lucide-react"
 
 type ToolView = "studio" | "chords" | "pattern" | "record"
 
-/** Must stay in sync with `quickStartTemplates` on the dashboard (BPM for `/studio?template=…`). */
+/** Must stay in sync with `quickStartTemplates` on the dashboard (BPM for `/studio?template=â€¦`). */
 const TEMPLATE_BPM: Record<string, number> = {
   trap: 140,
   lofi: 85,
@@ -279,7 +279,7 @@ export default function StudioPage() {
               </span>
               <span className="w-px h-3 bg-border" />
               <span className="text-[10px]">
-                {tracks.length} tr · {tracks.reduce((a, t) => a + t.clips.length, 0)} clips
+                {tracks.length} tr Â· {tracks.reduce((a, t) => a + t.clips.length, 0)} clips
               </span>
             </>
           )}

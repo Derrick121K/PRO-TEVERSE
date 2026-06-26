@@ -96,7 +96,7 @@ export default function FlStudioPage() {
       <header className="border-b border-border bg-surface-1">
         <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link
-            href="/dashboard"
+            href="/pro-studio"
             className="text-muted-foreground hover:text-foreground text-sm flex items-center gap-2"
           >
             <ChevronLeft className="h-4 w-4" />
@@ -140,7 +140,7 @@ export default function FlStudioPage() {
                 e.target.value = ""
               }}
             />
-            {busy && <p className="text-xs text-muted-foreground">Reading…</p>}
+            {busy && <p className="text-xs text-muted-foreground">Readingâ€¦</p>}
           </CardContent>
         </Card>
 
@@ -168,9 +168,9 @@ export default function FlStudioPage() {
                     <div className="text-muted-foreground">Channels</div>
                     <div>{summary.channelCnt}</div>
                     <div className="text-muted-foreground">Tempo (BPM)</div>
-                    <div>{summary.bpm != null ? summary.bpm : "—"}</div>
+                    <div>{summary.bpm != null ? summary.bpm : "â€”"}</div>
                     <div className="text-muted-foreground">Title</div>
-                    <div>{summary.title || "—"}</div>
+                    <div>{summary.title || "â€”"}</div>
                   </dl>
                   <div className="pt-3 border-t border-border/60 space-y-2">
                     <p className="text-xs text-muted-foreground">
@@ -242,8 +242,8 @@ export default function FlStudioPage() {
                   >
                     <span className="font-medium truncate">{e.fileName}</span>
                     <span className="text-xs text-muted-foreground">
-                      {e.summary.bpm != null ? `${e.summary.bpm} BPM` : "BPM n/a"} ·{" "}
-                      {e.summary.channelCnt} ch · {new Date(e.addedAt).toLocaleString()}
+                      {e.summary.bpm != null ? `${e.summary.bpm} BPM` : "BPM n/a"} Â·{" "}
+                      {e.summary.channelCnt} ch Â· {new Date(e.addedAt).toLocaleString()}
                     </span>
                   </li>
                 ))}

@@ -376,8 +376,8 @@ export default function AICreatorPage() {
       <header className="border-b border-border bg-surface-1">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Link href="/dashboard">
-              <Button variant="ghost" size="sm">← Back</Button>
+            <Link href="/pro-studio">
+              <Button variant="ghost" size="sm">â† Back</Button>
             </Link>
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-neon-purple to-neon-cyan flex items-center justify-center">
@@ -521,9 +521,9 @@ export default function AICreatorPage() {
                   {/* Song Info */}
                   <div className="flex items-center gap-4 text-sm text-muted-foreground">
                     <span>BPM: {generatedSong.bpm}</span>
-                    <span>•</span>
+                    <span>â€¢</span>
                     <span>{generatedSong.timeSignature[0]}/{generatedSong.timeSignature[1]}</span>
-                    <span>•</span>
+                    <span>â€¢</span>
                     <span>{generatedSong.sections.length} sections</span>
                   </div>
 
@@ -586,10 +586,10 @@ export default function AICreatorPage() {
                   GossipAI-PROD analyzes your selected genre and mood to generate a complete song structure with multiple sections, each containing drums, bass, melody, and chord tracks.
                 </p>
                 <ul className="text-xs text-muted-foreground space-y-1">
-                  <li>• Select genre for style-specific patterns</li>
-                  <li>• Mood affects intensity and note density</li>
-                  <li>• Choose structure for section arrangement</li>
-                  <li>• Generated songs are fully editable</li>
+                  <li>â€¢ Select genre for style-specific patterns</li>
+                  <li>â€¢ Mood affects intensity and note density</li>
+                  <li>â€¢ Choose structure for section arrangement</li>
+                  <li>â€¢ Generated songs are fully editable</li>
                 </ul>
               </CardContent>
             </Card>

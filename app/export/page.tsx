@@ -158,9 +158,9 @@ export default function ExportPage() {
       <header className="border-b border-border bg-surface-1">
         <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Link href="/dashboard">
+            <Link href="/pro-studio">
               <Button variant="ghost" size="sm">
-                ← Back
+                â† Back
               </Button>
             </Link>
             <div className="flex items-center gap-3">
@@ -204,7 +204,7 @@ export default function ExportPage() {
                   className="bg-surface-2 border-border max-w-md"
                 />
                 <p className="text-xs text-muted-foreground mt-2">
-                  {tracks.length} tracks · {bpm} BPM · ~{durationBeats.toFixed(0)} beats
+                  {tracks.length} tracks Â· {bpm} BPM Â· ~{durationBeats.toFixed(0)} beats
                 </p>
               </CardContent>
             </Card>
@@ -244,7 +244,7 @@ export default function ExportPage() {
             <Card className="bg-surface-1 border-border">
               <CardHeader>
                 <CardTitle className="text-lg">MIDI</CardTitle>
-                <CardDescription>Standard MIDI file — one file track per DAW track that has notes</CardDescription>
+                <CardDescription>Standard MIDI file â€” one file track per DAW track that has notes</CardDescription>
               </CardHeader>
               <CardContent>
                 <Button variant="outline" disabled={isExporting} onClick={() => runExport("midi")}>
@@ -260,7 +260,7 @@ export default function ExportPage() {
                   <div className="space-y-4">
                     <div className="flex items-center gap-3">
                       <Loader2 className="h-6 w-6 text-neon-cyan animate-spin" />
-                      <span className="text-foreground">Exporting…</span>
+                      <span className="text-foreground">Exportingâ€¦</span>
                     </div>
                     <Progress value={exportProgress} className="h-2" />
                     <p className="text-xs text-muted-foreground text-center">{exportProgress}%</p>
@@ -297,7 +297,7 @@ export default function ExportPage() {
                 {!isCloudProjectConfigured() ? (
                   <p className="text-sm text-muted-foreground">
                     Supabase env vars are not set. Use local JSON via{" "}
-                    <Link href="/dashboard" className="text-neon-cyan underline">
+                    <Link href="/pro-studio" className="text-neon-cyan underline">
                       dashboard
                     </Link>{" "}
                     or download from your own backup flow.
@@ -364,7 +364,7 @@ export default function ExportPage() {
             <Card className="bg-surface-1 border-border">
               <CardHeader>
                 <CardTitle className="text-lg">Local JSON</CardTitle>
-                <CardDescription>File export still works from the dashboard project list and code paths.</CardDescription>
+                <CardDescription>File export still works from the Pro Studio project list and code paths.</CardDescription>
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-muted-foreground mb-2">
