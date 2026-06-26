@@ -17,7 +17,7 @@ export function DawPreviewSection() {
             Experience the <span className="gradient-text">Power</span>
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
-            A full-featured DAW right in your browser. No downloads, no installation.
+            A full-featured offline-first DAW prepared for desktop installation, local sound libraries, and project export.
           </p>
         </div>
 

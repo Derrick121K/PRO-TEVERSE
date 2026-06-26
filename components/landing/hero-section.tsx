@@ -33,7 +33,7 @@ export function HeroSection() {
 
         {/* Main Headline */}
         <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6">
-          <span className="text-foreground">The Future of</span>
+          <span className="text-foreground">The Future of Offline</span>
           <br />
           <span className="gradient-text text-glow-cyan">Music Production</span>
         </h1>
@@ -41,7 +41,7 @@ export function HeroSection() {
         {/* Subheadline */}
         <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed">
           Create professional-quality music with tools powered by GossipAI-PROD, real-time collaboration,
-          and a full-featured DAW right in your browser.
+          ZIP project editing, sound libraries, and a desktop-ready DAW.
         </p>
 
         {/* CTA Buttons */}

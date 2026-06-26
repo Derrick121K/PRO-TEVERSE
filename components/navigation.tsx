@@ -11,11 +11,11 @@ export function Navigation() {
 
   const navLinks = [
     { href: "#features", label: "Features" },
-    { href: "#pricing", label: "Pricing" },
-    { href: "#testimonials", label: "Testimonials" },
+    { href: "#pricing", label: "Sound Library" },
+    { href: "#testimonials", label: "ZIP Studio" },
     { href: "/dashboard", label: "Dashboard" },
     { href: "/studio", label: "Studio" },
-    { href: "/ai-creator", label: "GossipAI-PROD Creator" },
+    { href: "/ai-creator", label: "AI Producer" },
     { href: "/settings", label: "Settings" },
   ]
 

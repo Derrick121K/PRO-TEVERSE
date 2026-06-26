@@ -1,4 +1,4 @@
-﻿"use client"
+"use client"
 
 import Link from "next/link"
 import Image from "next/image"
@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button"
 const footerLinks = {
   Product: [
     { label: "Features", href: "#features" },
-    { label: "Pricing", href: "#pricing" },
+    { label: "Sound Library", href: "/sound-library" },
     { label: "Studio", href: "/studio" },
     { label: "Download", href: "#" },
   ],
@@ -75,7 +75,7 @@ export function FooterSection() {
               <span className="text-lg font-bold gradient-text">PRO-TEVERSE</span>
             </Link>
             <p className="text-sm text-muted-foreground mb-4">
-              The future of music production is here.
+              The offline desktop future of music production is here.
             </p>
             {/* Social Links */}
             <div className="flex gap-3">
