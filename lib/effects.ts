@@ -1,4 +1,4 @@
-﻿// Audio Effects for PRO-TEVERSE DAW
+// Audio Effects for PRO-TEVERSE DAW
 
 // Create impulse response for reverb
 export function createReverbImpulse(

@@ -1,4 +1,4 @@
-﻿export type ZipStudioTrack = {
+export type ZipStudioTrack = {
   name: string
   path: string
   volume: number

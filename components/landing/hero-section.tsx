@@ -28,19 +28,19 @@ export function HeroSection() {
         {/* Badge */}
         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-8">
           <Sparkles className="h-4 w-4 text-neon-cyan" />
-          <span className="text-sm text-muted-foreground">GossipAI-PROD Music Production</span>
+          <span className="text-sm text-muted-foreground">Offline AI Music Production</span>
         </div>
 
         {/* Main Headline */}
         <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6">
-          <span className="text-foreground">The Future of Offline</span>
+          <span className="text-foreground">The Future of Offline Offline</span>
           <br />
           <span className="gradient-text text-glow-cyan">Music Production</span>
         </h1>
 
         {/* Subheadline */}
         <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed">
-          Create professional-quality music with tools powered by GossipAI-PROD, real-time collaboration,
+          Create professional-quality music with tools powered by Offline AI, local ZIP project editing,
           ZIP project editing, sound libraries, and a desktop-ready DAW.
         </p>
 
@@ -67,7 +67,7 @@ export function HeroSection() {
           {[
             { value: "100K+", label: "Producers" },
             { value: "1M+", label: "Tracks Created" },
-            { value: "5+", label: "GossipAI-PROD Producer" },
+            { value: "5+", label: "Offline AI Producer" },
             { value: "24/7", label: "Cloud Access" },
           ].map((stat) => (
             <div key={stat.label} className="text-center">

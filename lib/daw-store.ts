@@ -1,4 +1,4 @@
-﻿import { create } from 'zustand'
+import { create } from 'zustand'
 import { persist, createJSONStorage, type StateStorage } from 'zustand/middleware'
 import { audioEngine, tracksToTrackData, type TrackData } from './audio-engine'
 import * as dawHistory from './daw-undo'

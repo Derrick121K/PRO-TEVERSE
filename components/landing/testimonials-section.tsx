@@ -1,4 +1,4 @@
-﻿"use client"
+"use client"
 
 import { Star } from "lucide-react"
 
@@ -7,14 +7,14 @@ const testimonials = [
     name: "Marcus Chen",
     role: "Electronic Producer | 50K+ monthly listeners",
     avatar: "MC",
-    content: "PRO-TEVERSE has completely transformed my workflow. GossipAI-PROD tools are incredible - I can generate entire drum patterns in seconds. Perfect for both sketching ideas and professional production.",
+    content: "PRO-TEVERSE has completely transformed my workflow. Offline AI tools are incredible - I can generate entire drum patterns in seconds. Perfect for both sketching ideas and professional production.",
     rating: 5
   },
   {
     name: "Sarah Johnson",
     role: "Film Composer | Oscar-nominated",
     avatar: "SJ",
-    content: "Finally, a browser-based DAW that doesn&apos;t compromise on features. The synthesis engine and MIDI editing capabilities rival desktop DAWs at a fraction of the cost.",
+    content: "Finally, a offline-first DAW that doesn&apos;t compromise on features. The synthesis engine and MIDI editing capabilities rival desktop DAWs at a fraction of the cost.",
     rating: 5
   },
   {

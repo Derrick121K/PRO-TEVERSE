@@ -1,13 +1,13 @@
-﻿import type { Metadata } from 'next'
+import type { Metadata } from 'next'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'PRO-TEVERSE | GossipAI-PROD Music Production',
+  title: 'PRO-TEVERSE | Offline AI Music Production',
   description:
-    'Create professional music with GossipAI-PROD. Full DAW experience with piano roll, mixer, effects, and intelligent composition assistance.',
+    'Create professional music with Offline AI. Full DAW experience with piano roll, mixer, effects, and intelligent composition assistance.',
   generator: 'v0.app',
-  keywords: ['music production', 'DAW', 'GossipAI-PROD', 'beat maker', 'piano roll', 'mixing'],
+  keywords: ['music production', 'DAW', 'Offline AI', 'beat maker', 'piano roll', 'mixing'],
   icons: {
     icon: [
       {

@@ -140,7 +140,7 @@ export default function FlStudioPage() {
                 e.target.value = ""
               }}
             />
-            {busy && <p className="text-xs text-muted-foreground">Readingâ€¦</p>}
+            {busy && <p className="text-xs text-muted-foreground">ReadingÃ¢â‚¬Â¦</p>}
           </CardContent>
         </Card>
 
@@ -168,9 +168,9 @@ export default function FlStudioPage() {
                     <div className="text-muted-foreground">Channels</div>
                     <div>{summary.channelCnt}</div>
                     <div className="text-muted-foreground">Tempo (BPM)</div>
-                    <div>{summary.bpm != null ? summary.bpm : "â€”"}</div>
+                    <div>{summary.bpm != null ? summary.bpm : "Ã¢â‚¬â€"}</div>
                     <div className="text-muted-foreground">Title</div>
-                    <div>{summary.title || "â€”"}</div>
+                    <div>{summary.title || "Ã¢â‚¬â€"}</div>
                   </dl>
                   <div className="pt-3 border-t border-border/60 space-y-2">
                     <p className="text-xs text-muted-foreground">
@@ -242,8 +242,8 @@ export default function FlStudioPage() {
                   >
                     <span className="font-medium truncate">{e.fileName}</span>
                     <span className="text-xs text-muted-foreground">
-                      {e.summary.bpm != null ? `${e.summary.bpm} BPM` : "BPM n/a"} Â·{" "}
-                      {e.summary.channelCnt} ch Â· {new Date(e.addedAt).toLocaleString()}
+                      {e.summary.bpm != null ? `${e.summary.bpm} BPM` : "BPM n/a"} Ã‚Â·{" "}
+                      {e.summary.channelCnt} ch Ã‚Â· {new Date(e.addedAt).toLocaleString()}
                     </span>
                   </li>
                 ))}

@@ -54,7 +54,7 @@ export default function SettingsPage() {
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Link href="/pro-studio">
-              <Button variant="ghost" size="sm">ÃƒÂ¢Ã¢â‚¬Â Ã‚Â Back</Button>
+              <Button variant="ghost" size="sm">ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â Ãƒâ€šÃ‚Â Back</Button>
             </Link>
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-neon-cyan to-neon-purple flex items-center justify-center">
@@ -164,8 +164,8 @@ export default function SettingsPage() {
               <CardContent className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <Label className="text-foreground">GossipAI-PROD suggestions</Label>
-                    <p className="text-xs text-muted-foreground">Show GossipAI-PROD-powered suggestions</p>
+                    <Label className="text-foreground">Offline AI suggestions</Label>
+                    <p className="text-xs text-muted-foreground">Show offline AI-powered suggestions</p>
                   </div>
                   <Switch defaultChecked />
                 </div>

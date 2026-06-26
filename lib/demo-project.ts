@@ -1,4 +1,4 @@
-﻿import { useDAWStore, type Track } from "./daw-store"
+import { useDAWStore, type Track } from "./daw-store"
 import systemEngineProject from "./system-engine-project.json"
 import { parseFlpChannelSampleRefs, parseFlpPlaylistHints } from "./flp-view"
 

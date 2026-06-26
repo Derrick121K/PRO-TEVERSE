@@ -240,7 +240,7 @@ function generateChords(sectionDuration: number, intensity: number): Note[] {
 export default function AICreatorPage() {
   const { addTrack, addClip, tracks, play, pause, isPlaying } = useDAWStore()
   
-  const [songName, setSongName] = useState('My GossipAI-PROD Song')
+  const [songName, setSongName] = useState('My PRO-TEVERSE Song')
   const [genre, setGenre] = useState('Electronic')
   const [mood, setMood] = useState('Chill')
   const [bpm, setBpm] = useState(120)
@@ -377,15 +377,15 @@ export default function AICreatorPage() {
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Link href="/pro-studio">
-              <Button variant="ghost" size="sm">â† Back</Button>
+              <Button variant="ghost" size="sm">Ã¢â€ Â Back</Button>
             </Link>
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-neon-purple to-neon-cyan flex items-center justify-center">
                 <Wand2 className="h-6 w-6 text-background" />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-foreground">GossipAI-PROD Song Creator</h1>
-                <p className="text-[10px] text-muted-foreground">Generate complete songs with GossipAI-PROD</p>
+                <h1 className="text-xl font-bold text-foreground">Offline AI Song Creator</h1>
+                <p className="text-[10px] text-muted-foreground">Generate complete songs with Offline AI</p>
               </div>
             </div>
           </div>
@@ -497,7 +497,7 @@ export default function AICreatorPage() {
                   ) : (
                     <>
                       <Sparkles className="h-5 w-5 mr-2" />
-                      Generate Song with GossipAI-PROD
+                      Generate Song Locally
                     </>
                   )}
                 </Button>
@@ -521,9 +521,9 @@ export default function AICreatorPage() {
                   {/* Song Info */}
                   <div className="flex items-center gap-4 text-sm text-muted-foreground">
                     <span>BPM: {generatedSong.bpm}</span>
-                    <span>â€¢</span>
+                    <span>Ã¢â‚¬Â¢</span>
                     <span>{generatedSong.timeSignature[0]}/{generatedSong.timeSignature[1]}</span>
-                    <span>â€¢</span>
+                    <span>Ã¢â‚¬Â¢</span>
                     <span>{generatedSong.sections.length} sections</span>
                   </div>
 
@@ -583,13 +583,13 @@ export default function AICreatorPage() {
                   How it works
                 </h3>
                 <p className="text-sm text-muted-foreground">
-                  GossipAI-PROD analyzes your selected genre and mood to generate a complete song structure with multiple sections, each containing drums, bass, melody, and chord tracks.
+                  Offline AI analyzes your selected genre and mood to generate a complete song structure with multiple sections, each containing drums, bass, melody, and chord tracks.
                 </p>
                 <ul className="text-xs text-muted-foreground space-y-1">
-                  <li>â€¢ Select genre for style-specific patterns</li>
-                  <li>â€¢ Mood affects intensity and note density</li>
-                  <li>â€¢ Choose structure for section arrangement</li>
-                  <li>â€¢ Generated songs are fully editable</li>
+                  <li>Ã¢â‚¬Â¢ Select genre for style-specific patterns</li>
+                  <li>Ã¢â‚¬Â¢ Mood affects intensity and note density</li>
+                  <li>Ã¢â‚¬Â¢ Choose structure for section arrangement</li>
+                  <li>Ã¢â‚¬Â¢ Generated songs are fully editable</li>
                 </ul>
               </CardContent>
             </Card>

@@ -1,4 +1,4 @@
-﻿export type SoundLibraryItem = {
+export type SoundLibraryItem = {
   id: string
   name: string
   category: "drums" | "bass" | "keys" | "vocals" | "fx" | "loops"

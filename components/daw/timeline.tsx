@@ -460,7 +460,7 @@ export function Timeline() {
                     className="px-1.5 py-0.5 text-[10px] uppercase tracking-wide truncate font-mono"
                     style={{ color: clip.color }}
                   >
-                    {isAudio ? '♪ ' : ''}{clip.name}
+                    {isAudio ? 'â™ª ' : ''}{clip.name}
                   </div>
 
                   {/* Mini Note Preview */}

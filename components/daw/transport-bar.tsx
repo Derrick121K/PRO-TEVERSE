@@ -120,7 +120,7 @@ export function TransportBar() {
                   : "text-muted-foreground border-border/60 hover:bg-surface-3"
               }`}
               onClick={() => toggleDock("producer")}
-              aria-label="Toggle GossipAI-PROD Producer panel"
+              aria-label="Toggle Offline AI Producer panel"
               aria-pressed={dockPanels.producer}
             >
               <Sparkles className="h-4 w-4" aria-hidden="true" />

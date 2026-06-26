@@ -1,4 +1,4 @@
-﻿// Advanced Music Theory Library for PRO-TEVERSE
+// Advanced Music Theory Library for PRO-TEVERSE
 
 // Note frequencies (A4 = 440Hz)
 export const NOTE_FREQUENCIES: Record<string, number> = {

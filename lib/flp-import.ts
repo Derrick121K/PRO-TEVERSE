@@ -1,4 +1,4 @@
-﻿import type { Track } from "./daw-store"
+import type { Track } from "./daw-store"
 import {
   parseFlpChannelSampleRefs,
   parseFlpPlaylistHints,

@@ -45,7 +45,7 @@ export function Mixer() {
 
   return (
     <div className="h-full flex flex-col bg-surface-1 border-l border-border">
-      {/* Mute: channel silent. Solo: if any S is on, only solo tracks (and master) are heard — see `audio-engine` rebuild. */}
+      {/* Mute: channel silent. Solo: if any S is on, only solo tracks (and master) are heard â€” see `audio-engine` rebuild. */}
       <div className="h-8 bg-surface-2 border-b border-border flex items-center px-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
         <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
           Mixer

@@ -243,7 +243,7 @@ export function StepSequencer({ compact = false }: Props) {
                   className="h-6 w-6 p-0 ml-0.5 text-muted-foreground hover:text-destructive"
                   onClick={() => clearStepRow(row.id)}
                 >
-                  ×
+                  Ã—
                 </Button>
               </div>
             ))}

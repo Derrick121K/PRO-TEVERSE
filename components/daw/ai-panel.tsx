@@ -30,7 +30,7 @@ interface AIFeature {
 const aiFeatures: AIFeature[] = [
   {
     id: "producer",
-    name: "GossipAI-PROD Producer",
+    name: "Offline AI Producer",
     description: "Offline session: drums, melody and bass mixed for your project",
     icon: Headphones,
     color: "#a855f7",
@@ -469,7 +469,7 @@ export function AIPanel() {
       <div className="flex h-8 items-center border-b border-border bg-surface-2 px-3">
         <Headphones className="mr-2 h-4 w-4 text-neon-purple" aria-hidden />
         <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-          GossipAI-PROD Producer
+          Offline AI Producer
         </span>
         <span className="ml-2 hidden text-[9px] text-muted-foreground/80 sm:inline">
           PRO-TEVERSE offline engine

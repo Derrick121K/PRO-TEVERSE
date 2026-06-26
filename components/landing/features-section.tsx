@@ -12,8 +12,8 @@ import {
 const features = [
   {
     icon: Wand2,
-    title: "GossipAI-PROD Composition Engine",
-    description: "Generate melodies, drum patterns, and full arrangements with GossipAI-PROD. Transform ideas into music in seconds with our proprietary neural networks.",
+    title: "Offline AI Composition Engine",
+    description: "Generate melodies, drum patterns, and full arrangements with Offline AI. Transform ideas into music in seconds with our local offline generation tools.",
     color: "text-neon-cyan",
     glow: "glow-cyan"
   },
@@ -69,7 +69,7 @@ export function FeaturesSection() {
             Everything You Need to <span className="gradient-text">Create</span>
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
-            Professional music production tools powered by GossipAI-PROD,
+            Professional music production tools powered by Offline AI,
             all accessible from your browser.
           </p>
         </div>

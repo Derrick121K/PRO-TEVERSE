@@ -1,4 +1,4 @@
-﻿import type { ZipStudioProject } from "@/lib/zip-studio/types"
+import type { ZipStudioProject } from "@/lib/zip-studio/types"
 
 type LocalPatternStep = {
   trackName: string

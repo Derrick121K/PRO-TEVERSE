@@ -449,7 +449,7 @@ export default function ZipStudioPage() {
                         </p>
                         <h3 className="break-all text-lg font-semibold">{track.name}</h3>
                         <p className="break-all text-xs text-slate-400">
-                          {track.path} · {formatBytes(track.size)}
+                          {track.path} Â· {formatBytes(track.size)}
                         </p>
                       </div>
 

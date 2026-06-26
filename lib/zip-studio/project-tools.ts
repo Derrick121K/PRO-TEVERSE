@@ -1,4 +1,4 @@
-﻿import type { ZipStudioProject } from "./types"
+import type { ZipStudioProject } from "./types"
 
 export function buildZipProjectPrompt(project: ZipStudioProject) {
   const trackNames = project.tracks

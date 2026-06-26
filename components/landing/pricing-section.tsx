@@ -30,7 +30,7 @@ const plans = [
     features: [
       "Unlimited projects",
       "500+ premium instruments",
-      "Advanced GossipAI-PROD composition",
+      "Advanced offline AI composition",
       "Lossless export (WAV/FLAC)",
       "100GB cloud storage",
       "Real-time collaboration",

@@ -160,7 +160,7 @@ export default function ExportPage() {
           <div className="flex items-center gap-4">
             <Link href="/pro-studio">
               <Button variant="ghost" size="sm">
-                â† Back
+                Ã¢â€ Â Back
               </Button>
             </Link>
             <div className="flex items-center gap-3">
@@ -204,7 +204,7 @@ export default function ExportPage() {
                   className="bg-surface-2 border-border max-w-md"
                 />
                 <p className="text-xs text-muted-foreground mt-2">
-                  {tracks.length} tracks Â· {bpm} BPM Â· ~{durationBeats.toFixed(0)} beats
+                  {tracks.length} tracks Ã‚Â· {bpm} BPM Ã‚Â· ~{durationBeats.toFixed(0)} beats
                 </p>
               </CardContent>
             </Card>
@@ -244,7 +244,7 @@ export default function ExportPage() {
             <Card className="bg-surface-1 border-border">
               <CardHeader>
                 <CardTitle className="text-lg">MIDI</CardTitle>
-                <CardDescription>Standard MIDI file â€” one file track per DAW track that has notes</CardDescription>
+                <CardDescription>Standard MIDI file Ã¢â‚¬â€ one file track per DAW track that has notes</CardDescription>
               </CardHeader>
               <CardContent>
                 <Button variant="outline" disabled={isExporting} onClick={() => runExport("midi")}>
@@ -260,7 +260,7 @@ export default function ExportPage() {
                   <div className="space-y-4">
                     <div className="flex items-center gap-3">
                       <Loader2 className="h-6 w-6 text-neon-cyan animate-spin" />
-                      <span className="text-foreground">Exportingâ€¦</span>
+                      <span className="text-foreground">ExportingÃ¢â‚¬Â¦</span>
                     </div>
                     <Progress value={exportProgress} className="h-2" />
                     <p className="text-xs text-muted-foreground text-center">{exportProgress}%</p>

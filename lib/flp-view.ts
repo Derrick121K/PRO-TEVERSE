@@ -1,4 +1,4 @@
-﻿import { FLPFile } from '@holzchopf/flp-file'
+import { FLPFile } from '@holzchopf/flp-file'
 
 /** FLPEventTypeRaw.WordTempo */
 const EV_WORD_TEMPO = 66

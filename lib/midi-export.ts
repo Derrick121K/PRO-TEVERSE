@@ -2,7 +2,7 @@ import { Midi } from '@tonejs/midi'
 import type { Track } from './daw-store'
 
 /**
- * One DAW track → one Standard MIDI File track. Times use clip + note (beats) → seconds via BPM.
+ * One DAW track â†’ one Standard MIDI File track. Times use clip + note (beats) â†’ seconds via BPM.
  */
 export function exportProjectToMidi(tracks: Track[], bpm: number): Uint8Array {
   const midi = new Midi()

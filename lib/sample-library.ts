@@ -1,4 +1,4 @@
-﻿// Sample Library Integration for PRO-TEVERSE
+// Sample Library Integration for PRO-TEVERSE
 // Provides access to Freesound.org API and local samples
 
 export interface Sample {
