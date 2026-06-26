@@ -1,21 +1,32 @@
 "use client"
 
+import Link from "next/link"
 import { useMemo, useRef, useState } from "react"
-import { FolderOpen, Headphones, Library, Pause, Play, Search, ShieldCheck } from "lucide-react"
+import {
+  ArrowRight,
+  FolderOpen,
+  Headphones,
+  Library,
+  Pause,
+  Play,
+  Search,
+  ShieldCheck,
+} from "lucide-react"
 import {
   soundLibraryCategories,
   soundLibraryManifest,
   type SoundLibraryItem,
 } from "@/lib/sound-library/manifest"
+import {
+  canPreviewSoundPath,
+  createSelectedSound,
+  SOUND_LIBRARY_SELECTED_KEY,
+} from "@/lib/sound-library/selected-sound"
 
 const categories: Array<"all" | SoundLibraryItem["category"]> = [
   "all",
   ...soundLibraryCategories,
 ]
-
-function canPreview(path: string) {
-  return /\.(wav|mp3|ogg|m4a|aac|flac)$/i.test(path)
-}
 
 function labelCategory(category: string) {
   return category.charAt(0).toUpperCase() + category.slice(1)
@@ -25,6 +36,7 @@ export function SampleBrowser() {
   const [query, setQuery] = useState("")
   const [category, setCategory] = useState<"all" | SoundLibraryItem["category"]>("all")
   const [playingId, setPlayingId] = useState<string | null>(null)
+  const [sentId, setSentId] = useState<string | null>(null)
   const [message, setMessage] = useState("Add legal audio files to the folders, then register them in the manifest.")
   const audioRef = useRef<HTMLAudioElement | null>(null)
 
@@ -53,7 +65,7 @@ export function SampleBrowser() {
   }
 
   async function playPreview(item: SoundLibraryItem) {
-    if (!canPreview(item.path)) {
+    if (!canPreviewSoundPath(item.path)) {
       setMessage(`${item.name} is a placeholder. Add a real .wav, .mp3 or .ogg file before previewing.`)
       return
     }
@@ -83,6 +95,17 @@ export function SampleBrowser() {
     }
   }
 
+  function sendToProStudio(item: SoundLibraryItem) {
+    const selected = createSelectedSound(item)
+    const payload = JSON.stringify(selected)
+
+    localStorage.setItem(SOUND_LIBRARY_SELECTED_KEY, payload)
+    sessionStorage.setItem(SOUND_LIBRARY_SELECTED_KEY, payload)
+
+    setSentId(item.id)
+    setMessage(`${item.name} sent to Pro Studio. Open Pro Studio to use it.`)
+  }
+
   return (
     <section className="min-h-screen bg-slate-950 px-6 py-8 text-white">
       <div className="mx-auto max-w-7xl">
@@ -102,7 +125,7 @@ export function SampleBrowser() {
               </div>
               <p className="mt-4 max-w-3xl text-sm leading-6 text-slate-300">
                 Browse legal offline sounds for drums, bass, keys, vocals, FX and loops.
-                Only add sounds you own or sounds with a license that allows redistribution.
+                Send sounds to Pro Studio to prepare them for sampler tracks and patterns.
               </p>
             </div>
 
@@ -147,8 +170,9 @@ export function SampleBrowser() {
 
           <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
             {filteredItems.map((item) => {
-              const previewable = canPreview(item.path)
+              const previewable = canPreviewSoundPath(item.path)
               const isPlaying = playingId === item.id
+              const isSent = sentId === item.id
 
               return (
                 <article
@@ -190,6 +214,24 @@ export function SampleBrowser() {
                       Placeholder file. Replace with a legal audio file and update the manifest path.
                     </p>
                   )}
+
+                  <div className="mt-4 grid gap-2 sm:grid-cols-2">
+                    <button
+                      onClick={() => sendToProStudio(item)}
+                      className="rounded-2xl border border-cyan-400/30 bg-cyan-400/10 px-3 py-2 text-sm font-bold text-cyan-100 transition hover:bg-cyan-400/20"
+                    >
+                      {isSent ? "Sent" : "Send to Pro Studio"}
+                    </button>
+
+                    <Link
+                      href="/pro-studio"
+                      onClick={() => sendToProStudio(item)}
+                      className="flex items-center justify-center gap-2 rounded-2xl bg-cyan-400 px-3 py-2 text-sm font-bold text-slate-950 transition hover:bg-cyan-300"
+                    >
+                      Open Studio
+                      <ArrowRight className="h-4 w-4" />
+                    </Link>
+                  </div>
                 </article>
               )
             })}
