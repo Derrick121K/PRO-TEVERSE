@@ -54,7 +54,7 @@ export default function SettingsPage() {
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Link href="/dashboard">
-              <Button variant="ghost" size="sm">â† Back</Button>
+              <Button variant="ghost" size="sm">Ã¢â€ Â Back</Button>
             </Link>
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-neon-cyan to-neon-purple flex items-center justify-center">
@@ -102,7 +102,7 @@ export default function SettingsPage() {
             <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
               <h2 className="text-lg font-bold text-white">Offline Mode</h2>
               <p className="mt-2 text-sm text-slate-300">
-                PRO-TEVERSE now runs music generation locally. No cloud AI or Suno API is required.
+                PRO-TEVERSE now runs music generation locally. No cloud API is required.
               </p>
             </div>
 

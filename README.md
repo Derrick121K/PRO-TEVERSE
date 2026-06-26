@@ -1,4 +1,4 @@
-﻿# PRO-TEVERSE
+# PRO-TEVERSE
 
 Browser DAW inspired by FL Studio: playlist, channel rack, piano roll, mixer, and transport â€” built with Next.js and Tone.js.
 
@@ -75,14 +75,15 @@ Outputs:
 
 Fallback drums also live at `public/sounds/kick.wav` etc.
 
-## AI / PRO-TEVERSE Suno (Text to Music)
+## PRO-TEVERSE Offline Desktop Mode
 
-Full songs use the **bundled Suno service** in [`services/suno-api`](services/suno-api) (upstream [gcui-art/suno-api](https://github.com/gcui-art/suno-api): Playwright + 2Captcha + Suno cookie).
+PRO-TEVERSE is now designed as an offline-first music studio. Music generation, ZIP project editing, WAV rendering, and pattern generation run locally without cloud APIs.
 
-1. Copy `services/suno-api/.env.example` â†’ `.env` and add `SUNO_COOKIE` + `TWOCAPTCHA_KEY` ([docs/SUNO_DEPLOY.md](docs/SUNO_DEPLOY.md)).
-2. `npm run suno:install` then `npm run suno:dev` (port **3001**).
-3. `SUNO_API_URL=http://localhost:3001` in `.env.local` (default in `.env.example`).
-4. `npm run dev` â†’ studio **Text to Music** adds an **audio clip** on the timeline.
-
-Without a running Suno service, Text to Music falls back to offline MIDI patterns.
-
+Core offline features:
+- Local AI pattern generation
+- ZIP project import
+- FLP preservation
+- WAV/MP3 sample preview
+- WAV mix rendering
+- Local project workflow
+- Desktop packaging preparation
