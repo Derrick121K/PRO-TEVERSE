@@ -10,12 +10,13 @@ export function Navigation() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   const navLinks = [
-    { href: "#features", label: "Features" },
-    { href: "#pricing", label: "Sound Library" },
-    { href: "#testimonials", label: "ZIP Studio" },
-    { href: "/dashboard", label: "Dashboard" },
+    { href: "/", label: "Home" },
+    { href: "/sound-library", label: "Sound Library" },
+    { href: "/zip-studio", label: "ZIP Studio" },
+    { href: "/pro-studio", label: "Pro Studio" },
     { href: "/studio", label: "Studio" },
     { href: "/ai-creator", label: "AI Producer" },
+  { href: "/export", label: "Export" },
     { href: "/settings", label: "Settings" },
   ]
 
