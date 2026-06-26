@@ -1,4 +1,4 @@
-// PRO-TEVERSE DAW â€” Tone.js (Web Audio API) engine: per-track buses, insert FX, FL-style instruments.
+// PRO-TEVERSE DAW Ã¢â‚¬â€ Tone.js (Web Audio API) engine: per-track buses, insert FX, FL-style instruments.
 // Single shared AudioContext via Tone; interactive latency hint reduces input/scheduler lag.
 
 import * as Tone from 'tone'
@@ -293,8 +293,16 @@ class AudioEngine {
       this.masterEffect = new Tone.Gain(0.8)
       this.masterEffect.connect(this.analyser)
       this.analyser.toDestination()
-      this.recorder = new Tone.Recorder()
-      this.masterEffect.connect(this.recorder)
+      const rawContext = Tone.getContext().rawContext
+      const isOfflineContext =
+        typeof OfflineAudioContext !== "undefined" && rawContext instanceof OfflineAudioContext
+
+      if (!isOfflineContext) {
+        this.recorder = new Tone.Recorder()
+        this.masterEffect.connect(this.recorder)
+      } else {
+        this.recorder = null
+      }
       this.metronomeVoice = new Tone.MetalSynth({
         envelope: { attack: 0.001, decay: 0.02, release: 0.01 },
         harmonicity: 3.1,
@@ -587,7 +595,7 @@ class AudioEngine {
         velocity
       )
     } catch {
-      /* scheduler collision â€” skip */
+      /* scheduler collision Ã¢â‚¬â€ skip */
     }
   }
 
@@ -1010,7 +1018,17 @@ class AudioEngine {
               const safeNoteDurSec = Number.isFinite(noteDurSec) ? Math.max(0.05, noteDurSec) : 0.25
               const safeVelocity = Number.isFinite(vel) ? Math.min(1, Math.max(0.01, vel)) : 0.8
 
-              s.triggerAttackRelease(noteName, safeNoteDurSec, safeStartTime, safeVelocity)
+              try {
+                s.triggerAttackRelease(noteName, safeNoteDurSec, safeStartTime, safeVelocity)
+              } catch (error) {
+                console.warn("Skipped note during offline export", {
+                  noteName,
+                  safeNoteDurSec,
+                  safeStartTime,
+                  safeVelocity,
+                  error,
+                })
+              }
             }
           }
         }
