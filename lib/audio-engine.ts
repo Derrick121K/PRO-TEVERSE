@@ -1,4 +1,4 @@
-// PRO-TEVERSE DAW ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â Tone.js (Web Audio API) engine: per-track buses, insert FX, FL-style instruments.
+// PRO-TEVERSE DAW ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â Tone.js (Web Audio API) engine: per-track buses, insert FX, FL-style instruments.
 // Single shared AudioContext via Tone; interactive latency hint reduces input/scheduler lag.
 
 import * as Tone from 'tone'
@@ -595,7 +595,7 @@ class AudioEngine {
         velocity
       )
     } catch {
-      /* scheduler collision ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â skip */
+      /* scheduler collision ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â skip */
     }
   }
 
@@ -675,7 +675,19 @@ class AudioEngine {
     const vel = Math.max(0.1, Math.min(1, velocity / 127))
     const dur = `${Math.max(0.1, Math.min(10, duration))}n`
     const s = this.getOrCreateVoice(trackId, instrument)
-    s.triggerAttackRelease(noteName, dur, startTime, vel)
+    const releasableVoice = s as ToneTrackInstrument & { releaseAll?: (time?: number) => void }
+    if (this.isPreviewId(trackId) && typeof releasableVoice.releaseAll === "function") {
+      try {
+        releasableVoice.releaseAll(Tone.now())
+      } catch {
+        /* prevent preview voice buildup */
+      }
+    }
+
+    const safePreviewStartTime =
+      typeof startTime === "number" && Number.isFinite(startTime) ? startTime : Tone.now()
+
+    this.safeTrigger(s, noteName, dur, safePreviewStartTime, vel)
     return `n-${Date.now()}`
   }
 
@@ -743,12 +755,19 @@ class AudioEngine {
     const dur = `${Math.max(0.1, Math.min(10, duration))}n`
     const vel = Math.max(0.1, Math.min(1, velocity / 127))
     const s = this.getOrCreateVoice(trackId, 'pad') as Tone.PolySynth
-    s.triggerAttackRelease(
-      notes as Parameters<Tone.PolySynth['triggerAttackRelease']>[0],
-      dur,
-      Tone.now(),
-      vel
-    )
+    const chordNotes = notes.slice(0, 6)
+
+    try {
+      s.releaseAll(Tone.now())
+      s.triggerAttackRelease(
+        chordNotes as Parameters<Tone.PolySynth['triggerAttackRelease']>[0],
+        dur,
+        Tone.now(),
+        vel
+      )
+    } catch {
+      /* prevent chord preview voice overflow */
+    }
     return `chord-${Date.now()}`
   }
 
