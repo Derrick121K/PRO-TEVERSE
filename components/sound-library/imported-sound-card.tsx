@@ -2,7 +2,8 @@
 
 import Link from "next/link"
 import { useEffect, useRef, useState } from "react"
-import { ArrowRight, FolderOpen, Pause, Play, ShieldCheck, Trash2 } from "lucide-react"
+import { ArrowRight, FolderOpen, Pause, Play, PlusCircle, ShieldCheck, Trash2 } from "lucide-react"
+import { useDAWStore } from "@/lib/daw-store"
 import {
   canPreviewSoundPath,
   SOUND_LIBRARY_SELECTED_KEY,
@@ -72,6 +73,42 @@ export function ImportedSoundCard() {
     }
   }
 
+  function addToStudioTrack() {
+    if (!sound) return
+
+    const store = useDAWStore.getState()
+    const previewable = canPreviewSoundPath(sound.path)
+
+    store.addTrack("audio", sound.name, "lead")
+
+    const nextState = useDAWStore.getState()
+    const newTrack = nextState.tracks[nextState.tracks.length - 1]
+
+    if (!newTrack) {
+      setMessage("Could not create the audio track.")
+      return
+    }
+
+    nextState.addClip(newTrack.id, {
+      trackId: newTrack.id,
+      name: sound.name,
+      start: 0,
+      duration: sound.bpm ? 4 : 2,
+      color: "#22d3ee",
+      notes: [],
+      audioUrl: previewable ? sound.path : undefined,
+      clipType: "audio",
+    })
+
+    nextState.selectTrack(newTrack.id)
+
+    setMessage(
+      previewable
+        ? `${sound.name} was added as an audio clip in Pro Studio.`
+        : `${sound.name} was added as a placeholder audio track. Add a real audio file to hear it.`
+    )
+  }
+
   function clearSound() {
     stopPreview()
     localStorage.removeItem(SOUND_LIBRARY_SELECTED_KEY)
@@ -113,16 +150,24 @@ export function ImportedSoundCard() {
             </button>
 
             <button
+              onClick={addToStudioTrack}
+              className="flex items-center justify-center gap-2 rounded-xl border border-cyan-400/30 bg-cyan-400/10 px-3 py-2 text-sm font-bold text-cyan-100 hover:bg-cyan-400/20"
+            >
+              <PlusCircle className="h-4 w-4" />
+              Add Track
+            </button>
+
+            <button
               onClick={clearSound}
-              className="flex items-center justify-center gap-2 rounded-xl border border-white/10 px-3 py-2 text-sm font-bold text-slate-200 hover:bg-white/10"
+              className="flex items-center justify-center gap-2 rounded-xl border border-white/10 px-3 py-2 text-sm font-bold text-slate-200 hover:bg-white/10 sm:col-span-2"
             >
               <Trash2 className="h-4 w-4" />
-              Clear
+              Clear Selected Sound
             </button>
           </div>
 
           <p className="rounded-xl border border-white/10 bg-black/20 px-3 py-2 text-xs text-slate-300">
-            Next step: convert this selected sound into a real sampler/audio track inside the DAW store.
+            This creates an audio track and clip in the DAW store. Real playback needs a real audio file path, not a README placeholder.
           </p>
         </div>
       ) : (
