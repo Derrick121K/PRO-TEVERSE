@@ -1,94 +1,58 @@
 "use client"
 
-import { useState } from "react"
 import Link from "next/link"
-import Image from "next/image"
-import { Menu, X } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { usePathname } from "next/navigation"
+import { Music2 } from "lucide-react"
 
-const navLinks = [
-  { href: "/", label: "Home" },
-  { href: "/studio", label: "Studio" },
-  { href: "/pro-studio", label: "Pro Studio" },
-  { href: "/zip-studio", label: "ZIP Studio" },
-  { href: "/sound-library", label: "Sound Library" },
-  { href: "/ai-creator", label: "AI Producer" },
-  { href: "/export", label: "Export" },
-  { href: "/settings", label: "Settings" },
+const navItems = [
+  { label: "Home", href: "/" },
+  { label: "Studio", href: "/studio" },
+  { label: "Settings", href: "/settings" },
 ]
 
 export function Navigation() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const pathname = usePathname()
 
   return (
-    <header className="fixed left-0 right-0 top-0 z-50 border-b border-white/10 bg-background/90 backdrop-blur-xl">
-      <nav className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 lg:px-8">
-        <Link href="/" className="flex shrink-0 items-center gap-3">
-          <Image
-            src="/logo.png"
-            alt="PRO-TEVERSE Logo"
-            width={44}
-            height={44}
-            className="h-11 w-11 object-contain"
-            priority
-          />
-          <span className="text-lg font-black tracking-wide gradient-text md:text-xl">
-            PRO-TEVERSE
-          </span>
+    <header className="sticky top-0 z-50 border-b border-white/10 bg-slate-950/90 backdrop-blur-xl">
+      <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4">
+        <Link href="/" className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-cyan-400 text-slate-950">
+            <Music2 className="h-5 w-5" />
+          </div>
+          <div>
+            <p className="text-sm font-black tracking-wide text-white">PRO-TEVERSE</p>
+            <p className="text-xs text-slate-400">One Offline Studio</p>
+          </div>
         </Link>
 
-        <div className="hidden flex-1 items-center justify-center gap-4 xl:flex">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="whitespace-nowrap text-xs font-semibold text-muted-foreground transition-colors hover:text-foreground 2xl:text-sm"
-            >
-              {link.label}
-            </Link>
-          ))}
-        </div>
+        <div className="hidden items-center gap-2 md:flex">
+          {navItems.map((item) => {
+            const active = pathname === item.href
 
-        <div className="hidden shrink-0 items-center gap-3 xl:flex">
-          <Link href="/pro-studio">
-            <Button className="bg-neon-cyan px-5 text-background hover:bg-neon-cyan/90 glow-cyan">
-              Launch Studio
-            </Button>
-          </Link>
-        </div>
-
-        <button
-          type="button"
-          className="rounded-xl border border-white/10 p-2 text-muted-foreground hover:text-foreground xl:hidden"
-          onClick={() => setMobileMenuOpen((open) => !open)}
-          aria-label="Toggle navigation menu"
-        >
-          {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-        </button>
-      </nav>
-
-      {mobileMenuOpen && (
-        <div className="border-t border-white/10 bg-background/95 px-6 py-4 backdrop-blur-xl xl:hidden">
-          <div className="grid gap-2">
-            {navLinks.map((link) => (
+            return (
               <Link
-                key={link.href}
-                href={link.href}
-                className="rounded-xl px-3 py-2 text-sm font-semibold text-muted-foreground transition-colors hover:bg-white/5 hover:text-foreground"
-                onClick={() => setMobileMenuOpen(false)}
+                key={item.href}
+                href={item.href}
+                className={`rounded-xl px-4 py-2 text-sm font-bold transition ${
+                  active
+                    ? "bg-cyan-400 text-slate-950"
+                    : "text-slate-300 hover:bg-white/10 hover:text-white"
+                }`}
               >
-                {link.label}
+                {item.label}
               </Link>
-            ))}
-
-            <Link href="/pro-studio" onClick={() => setMobileMenuOpen(false)}>
-              <Button className="mt-3 w-full bg-neon-cyan text-background hover:bg-neon-cyan/90">
-                Launch Studio
-              </Button>
-            </Link>
-          </div>
+            )
+          })}
         </div>
-      )}
+
+        <Link
+          href="/studio"
+          className="rounded-xl bg-cyan-400 px-4 py-2 text-sm font-black text-slate-950 hover:bg-cyan-300"
+        >
+          Launch Studio
+        </Link>
+      </nav>
     </header>
   )
 }

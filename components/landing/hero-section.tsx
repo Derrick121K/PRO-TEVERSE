@@ -27,7 +27,7 @@ export function HeroSection() {
         </p>
 
         <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row">
-          <Link href="/pro-studio">
+          <Link href="/studio">
             <Button className="h-14 rounded-2xl bg-neon-cyan px-8 text-base font-bold text-background hover:bg-neon-cyan/90 glow-cyan">
               Launch Studio
               <ArrowRight className="ml-2 h-5 w-5" />

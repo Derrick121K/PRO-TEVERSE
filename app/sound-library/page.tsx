@@ -1,5 +1,5 @@
-import { SampleBrowser } from "@/components/sound-library/sample-browser"
+import { redirect } from "next/navigation"
 
-export default function SoundLibraryPage() {
-  return <SampleBrowser />
+export default function RedirectToStudio() {
+  redirect("/studio")
 }
