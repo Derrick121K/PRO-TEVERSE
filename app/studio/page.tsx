@@ -1,444 +1,632 @@
 "use client"
 
-import { useEffect, useState, useCallback } from "react"
-import { usePathname, useRouter } from "next/navigation"
-import { useDAWStore } from "@/lib/daw-store"
-import { audioEngine } from "@/lib/audio-engine"
-import { TransportBar } from "@/components/daw/transport-bar"
-import { StudioWorkspace } from "@/components/daw/studio-workspace"
-import { Browser } from "@/components/daw/browser"
-import { AudioEngineSync } from "@/components/daw/audio-engine-sync"
-import { StudioAudioHealth } from "@/components/daw/studio-audio-health"
-import { loadFlpImportFromSession, clearFlpImportSession } from "@/lib/flp-import"
-import { AIPanel } from "@/components/daw/ai-panel"
-import { Mixer } from "@/components/daw/mixer"
-import { VocalRecorder } from "@/components/daw/vocal-recorder"
-import { ChordPanel } from "@/components/daw/chord-panel"
-import { PatternEditor } from "@/components/daw/pattern-editor"
-import { OnboardingOverlay } from "@/components/daw/onboarding-overlay"
-import { seedDemoProjectIfNeeded } from "@/lib/demo-project"
-import { useProjectManager } from "@/lib/project-manager"
-import { autoSaveCurrentDawToCloud, isCloudProjectConfigured } from "@/lib/cloud-daw-project"
+import { useMemo, useRef, useState } from "react"
 import {
-  ResizableHandle,
-  ResizablePanel,
-  ResizablePanelGroup,
-} from "@/components/ui/resizable"
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Mic, Guitar, Zap, Layout } from "lucide-react"
+  Download,
+  FileAudio,
+  FolderOpen,
+  Music2,
+  Pause,
+  Play,
+  Save,
+  ShieldCheck,
+  SlidersHorizontal,
+  Square,
+  Trash2,
+  Upload,
+  Wand2,
+} from "lucide-react"
 
-type ToolView = "studio" | "chords" | "pattern" | "record"
+type AudioTrack = {
+  id: string
+  name: string
+  fileName: string
+  audioUrl?: string
+  duration?: number
+  volume: number
+  pan: number
+  muted: boolean
+  solo: boolean
+  createdAt: string
+}
 
-/** Must stay in sync with `quickStartTemplates` on the dashboard (BPM for `/studio?template=Ã¢â‚¬Â¦`). */
-const TEMPLATE_BPM: Record<string, number> = {
-  trap: 140,
-  lofi: 85,
-  house: 128,
-  ambient: 70,
-  hiphop: 90,
+type StepRow = {
+  id: string
+  name: string
+  role: "kick" | "clap" | "hat" | "bass" | "chord" | "melody"
+  steps: boolean[]
+}
+
+const stepCount = 16
+
+const emptySteps = () => Array.from({ length: stepCount }, () => false)
+
+const presetRows: StepRow[] = [
+  {
+    id: "kick",
+    name: "Kick",
+    role: "kick",
+    steps: [true, false, false, false, true, false, false, false, true, false, false, false, true, false, false, false],
+  },
+  {
+    id: "clap",
+    name: "Clap",
+    role: "clap",
+    steps: [false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, false],
+  },
+  {
+    id: "hat",
+    name: "Hi-Hat",
+    role: "hat",
+    steps: [false, false, true, false, false, false, true, false, false, false, true, false, false, false, true, false],
+  },
+  {
+    id: "bass",
+    name: "Bass / Log Drum",
+    role: "bass",
+    steps: [true, false, false, true, false, false, true, false, true, false, false, true, false, true, false, false],
+  },
+  {
+    id: "chord",
+    name: "Chords",
+    role: "chord",
+    steps: [true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false],
+  },
+  {
+    id: "melody",
+    name: "Melody",
+    role: "melody",
+    steps: emptySteps(),
+  },
+]
+
+const supportedAudioExtensions = /\.(wav|mp3|ogg|m4a|aac|flac)$/i
+
+function makeId() {
+  if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
+    return crypto.randomUUID()
+  }
+
+  return `id-${Date.now()}-${Math.random().toString(16).slice(2)}`
+}
+
+function cleanFileName(fileName: string) {
+  return fileName.replace(/\.[^.]+$/, "").replace(/[_-]+/g, " ").trim() || "Imported Audio"
+}
+
+function formatSeconds(seconds?: number) {
+  if (!seconds || !Number.isFinite(seconds)) return "Unknown"
+  const mins = Math.floor(seconds / 60)
+  const secs = Math.round(seconds % 60).toString().padStart(2, "0")
+  return `${mins}:${secs}`
 }
 
 export default function StudioPage() {
-  const router = useRouter()
-  const pathname = usePathname()
-  const {
-    tracks,
-    bpm,
-    isPlaying,
-    currentBeat,
-    dockPanels,
-    dockSizes,
-    setDockSize,
-    simpleMode,
-    stepSequencer,
-  } = useDAWStore()
-  const { quickSave } = useProjectManager()
-  const [toolView, setToolView] = useState<ToolView>("studio")
+  const fileInputRef = useRef<HTMLInputElement | null>(null)
+  const previewAudioRef = useRef<HTMLAudioElement | null>(null)
 
-  const handleKeyDown = useCallback((e: KeyboardEvent) => {
-    const target = e.target as HTMLElement | null
-    if (
-      target instanceof HTMLInputElement ||
-      target instanceof HTMLTextAreaElement ||
-      target instanceof HTMLSelectElement ||
-      target?.isContentEditable
-    ) {
-      return
-    }
-    const state = useDAWStore.getState()
-    const isMod = e.ctrlKey || e.metaKey
-    if (e.code === "Space" && !isMod) {
-      e.preventDefault()
-      state.isPlaying ? state.pause() : state.play()
-      return
-    }
-    if (e.key === "Enter" && !isMod) {
-      e.preventDefault()
-      state.stop()
-      return
-    }
-    if (e.key.toLowerCase() === "r" && !isMod) {
-      e.preventDefault()
-      state.toggleRecord()
-      return
-    }
-    if (e.key.toLowerCase() === "l" && !isMod) {
-      e.preventDefault()
-      state.toggleLoop()
-      return
-    }
-    if (e.key === "1" && !isMod) {
-      e.preventDefault()
-      setToolView("studio")
-    } else if (!simpleMode && e.key === "2" && !isMod) {
-      e.preventDefault()
-      setToolView("chords")
-    } else if (!simpleMode && e.key === "3" && !isMod) {
-      e.preventDefault()
-      setToolView("pattern")
-    } else if (!simpleMode && e.key === "4" && !isMod) {
-      e.preventDefault()
-      setToolView("record")
-    }
-    if (isMod && e.key === "z" && !e.shiftKey) {
-      e.preventDefault()
-      state.undo()
-    } else if (isMod && (e.key === "y" || (e.key === "z" && e.shiftKey))) {
-      e.preventDefault()
-      state.redo()
-    }
-  }, [simpleMode])
+  const [bpm, setBpm] = useState(112)
+  const [songKey, setSongKey] = useState("C minor")
+  const [projectName, setProjectName] = useState("PRO-TEVERSE Offline Project")
+  const [tracks, setTracks] = useState<AudioTrack[]>([])
+  const [rows, setRows] = useState<StepRow[]>(presetRows)
+  const [playingTrackId, setPlayingTrackId] = useState<string | null>(null)
+  const [isTransportPlaying, setIsTransportPlaying] = useState(false)
+  const [message, setMessage] = useState("Ready. Import audio, build a pattern, then export your project.")
 
-  useEffect(() => {
-    window.addEventListener("keydown", handleKeyDown)
-    return () => window.removeEventListener("keydown", handleKeyDown)
-  }, [handleKeyDown])
-
-  useEffect(() => {
-    void audioEngine.initialize()
-    seedDemoProjectIfNeeded()
-    const flp = loadFlpImportFromSession()
-    if (flp?.tracks?.length) {
-      useDAWStore.getState().applyFlpImport(flp.tracks, flp.bpm)
-      clearFlpImportSession()
-    }
-    return () => {
-      audioEngine.stop()
-    }
-  }, [])
-
-  useEffect(() => {
-    if (typeof window === "undefined") return
-    const sp = new URLSearchParams(window.location.search)
-    let changed = false
-    const t = sp.get("template")
-    if (t) {
-      const bpm = TEMPLATE_BPM[t]
-      if (bpm != null) {
-        useDAWStore.getState().setBpm(bpm)
-      }
-      sp.delete("template")
-      changed = true
-    }
-    if (sp.get("panel") === "ai") {
-      useDAWStore.getState().setDockOpen("producer", true)
-      sp.delete("panel")
-      changed = true
-    }
-    if (!changed) return
-    const qs = sp.toString()
-    router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false })
-  }, [router, pathname])
-
-  useEffect(() => {
-    if (simpleMode && toolView !== "studio") {
-      setToolView("studio")
-    }
-  }, [simpleMode, toolView])
-
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      quickSave()
-      if (isCloudProjectConfigured()) {
-        void autoSaveCurrentDawToCloud("Autosave")
-      }
-    }, 1500)
-    return () => clearTimeout(timeout)
-  }, [tracks, bpm, stepSequencer, quickSave])
-
-  const formatPosition = (beats: number) => {
-    const bars = Math.floor(beats / 4) + 1
-    const beat = Math.floor(beats % 4) + 1
-    const tick = Math.floor((beats % 1) * 100)
-    return `${bars.toString().padStart(3, "0")}:${beat}:${tick.toString().padStart(2, "0")}`
-  }
-
-  const formatTime = (beats: number, tBpm: number) => {
-    const seconds = (beats / tBpm) * 60
-    const mins = Math.floor(seconds / 60)
-    const secs = Math.floor(seconds % 60)
-    const ms = Math.floor((seconds % 1) * 1000)
-    return `${mins}:${secs.toString().padStart(2, "0")}.${ms.toString().padStart(3, "0")}`
-  }
-
-  const leftOpen = dockPanels.browser
-  const producerVisible = !simpleMode && dockPanels.producer && toolView === "studio"
-  const mixerVisible = !simpleMode && dockPanels.mixer
-  const rightOpen = producerVisible || mixerVisible
-  const leftSize = leftOpen ? dockSizes.browser : 0
-  const rightSize = rightOpen
-    ? producerVisible && mixerVisible
-      ? Math.max(dockSizes.producer, dockSizes.mixer)
-      : producerVisible
-        ? dockSizes.producer
-        : dockSizes.mixer
-    : 0
-  const mainSize = Math.max(40, 100 - leftSize - rightSize)
-
-  const handleHorizontalLayout = useCallback(
-    (sizes: number[]) => {
-      let i = 0
-      if (leftOpen) {
-        setDockSize("browser", sizes[i] ?? dockSizes.browser)
-        i += 1
-      }
-      i += 1 // main
-      if (rightOpen) {
-        const right = sizes[i]
-        if (right != null) {
-          if (producerVisible) setDockSize("producer", right)
-          if (mixerVisible) setDockSize("mixer", right)
-        }
-      }
-    },
-    [dockSizes.browser, leftOpen, mixerVisible, producerVisible, rightOpen, setDockSize]
+  const activeStepCount = useMemo(
+    () => rows.reduce((total, row) => total + row.steps.filter(Boolean).length, 0),
+    [rows]
   )
 
+  function stopPreview() {
+    if (previewAudioRef.current) {
+      previewAudioRef.current.pause()
+      previewAudioRef.current.currentTime = 0
+    }
+
+    setPlayingTrackId(null)
+  }
+
+  async function importAudio(file: File) {
+    if (!supportedAudioExtensions.test(file.name)) {
+      setMessage("Unsupported file. Please use WAV, MP3, OGG, M4A, AAC or FLAC.")
+      return
+    }
+
+    const audioUrl = URL.createObjectURL(file)
+    const id = makeId()
+
+    const track: AudioTrack = {
+      id,
+      name: cleanFileName(file.name),
+      fileName: file.name,
+      audioUrl,
+      volume: 0.8,
+      pan: 0,
+      muted: false,
+      solo: false,
+      createdAt: new Date().toISOString(),
+    }
+
+    setTracks((current) => [...current, track])
+    setMessage(`${file.name} imported as an audio track.`)
+
+    const audio = new Audio(audioUrl)
+    audio.onloadedmetadata = () => {
+      setTracks((current) =>
+        current.map((item) =>
+          item.id === id ? { ...item, duration: audio.duration } : item
+        )
+      )
+    }
+  }
+
+  async function playTrack(track: AudioTrack) {
+    if (!track.audioUrl) {
+      setMessage("This track has no playable audio. Re-import the local file.")
+      return
+    }
+
+    if (playingTrackId === track.id) {
+      stopPreview()
+      return
+    }
+
+    stopPreview()
+
+    const audio = new Audio(track.audioUrl)
+    audio.volume = track.muted ? 0 : track.volume
+    previewAudioRef.current = audio
+    setPlayingTrackId(track.id)
+    setMessage(`Playing ${track.name}`)
+
+    audio.onended = () => {
+      setPlayingTrackId(null)
+      setMessage("Playback stopped.")
+    }
+
+    try {
+      await audio.play()
+    } catch {
+      setPlayingTrackId(null)
+      setMessage("Playback failed. Try another audio file.")
+    }
+  }
+
+  function toggleStep(rowId: string, index: number) {
+    setRows((current) =>
+      current.map((row) =>
+        row.id === rowId
+          ? {
+              ...row,
+              steps: row.steps.map((step, stepIndex) =>
+                stepIndex === index ? !step : step
+              ),
+            }
+          : row
+      )
+    )
+  }
+
+  function clearPattern() {
+    setRows((current) => current.map((row) => ({ ...row, steps: emptySteps() })))
+    setMessage("Pattern cleared.")
+  }
+
+  function loadAmapianoPreset() {
+    setRows(presetRows)
+    setBpm(112)
+    setSongKey("C minor")
+    setMessage("Amapiano starter pattern loaded.")
+  }
+
+  function updateTrack(trackId: string, updates: Partial<AudioTrack>) {
+    setTracks((current) =>
+      current.map((track) => (track.id === trackId ? { ...track, ...updates } : track))
+    )
+  }
+
+  function removeTrack(trackId: string) {
+    if (playingTrackId === trackId) stopPreview()
+    setTracks((current) => current.filter((track) => track.id !== trackId))
+    setMessage("Track removed.")
+  }
+
+  function saveProject() {
+    const payload = {
+      projectName,
+      bpm,
+      songKey,
+      rows,
+      tracks: tracks.map((track) => ({
+        ...track,
+        audioUrl: undefined,
+        note: "Local audio files must be re-imported because browsers cannot permanently store file paths.",
+      })),
+      savedAt: new Date().toISOString(),
+    }
+
+    localStorage.setItem("proteverse-one-studio-project", JSON.stringify(payload, null, 2))
+    setMessage("Project saved locally in this browser.")
+  }
+
+  function exportProjectJson() {
+    const payload = {
+      app: "PRO-TEVERSE",
+      version: "one-studio-rebuild",
+      projectName,
+      bpm,
+      songKey,
+      pattern: rows,
+      tracks: tracks.map((track) => ({
+        id: track.id,
+        name: track.name,
+        fileName: track.fileName,
+        duration: track.duration,
+        volume: track.volume,
+        pan: track.pan,
+        muted: track.muted,
+        solo: track.solo,
+        createdAt: track.createdAt,
+      })),
+      exportedAt: new Date().toISOString(),
+      legalNotice:
+        "This project export does not include copyrighted audio files. Keep proof of licensing for all samples.",
+    }
+
+    const blob = new Blob([JSON.stringify(payload, null, 2)], {
+      type: "application/json",
+    })
+
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement("a")
+    link.href = url
+    link.download = `${projectName.replace(/[^a-z0-9]+/gi, "-").toLowerCase()}-project.json`
+    link.click()
+    URL.revokeObjectURL(url)
+
+    setMessage("Project JSON exported.")
+  }
+
   return (
-    <div className="fl20-shell relative h-screen flex flex-col bg-background overflow-hidden">
-      <AudioEngineSync />
-      <OnboardingOverlay />
-      <TransportBar />
-      <StudioAudioHealth />
-
-      <div className="h-11 bg-[oklch(0.12_0.02_260)] border-b border-border/90 flex items-center justify-between px-3 shrink-0">
-        {simpleMode ? (
-          <div className="h-8 px-3 flex items-center rounded border border-border/80 bg-surface-1/90">
-            <Layout className="h-3.5 w-3.5 mr-1 text-neon-cyan" />
-            <span className="text-[11px] text-foreground">Studio (Simple)</span>
+    <main className="min-h-screen bg-slate-950 text-white">
+      <section className="border-b border-white/10 bg-black/30 px-4 py-4 backdrop-blur-xl">
+        <div className="mx-auto flex max-w-7xl flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <div>
+            <p className="text-xs uppercase tracking-[0.35em] text-cyan-300">
+              PRO-TEVERSE One Studio
+            </p>
+            <h1 className="mt-2 text-3xl font-black">Offline Music Studio</h1>
+            <p className="mt-1 text-sm text-slate-400">
+              One clean workspace for import, pattern making, timeline, mixer and export.
+            </p>
           </div>
-        ) : (
-          <Tabs
-            value={toolView}
-            onValueChange={(v) => setToolView(v as ToolView)}
-            className="h-full w-auto"
-          >
-            <TabsList className="h-8 bg-surface-1/90 border border-border/80 p-0.5">
-              <TabsTrigger
-                value="studio"
-                className="text-[10px] h-7 px-2.5 data-[state=active]:bg-surface-3 data-[state=active]:text-neon-cyan"
-              >
-                <Layout className="h-3.5 w-3.5 mr-1" />
-                Studio
-              </TabsTrigger>
-              <TabsTrigger
-                value="chords"
-                className="text-[10px] h-7 px-2.5 data-[state=active]:bg-surface-3"
-              >
-                <Guitar className="h-3.5 w-3.5 mr-1" />
-                Chords
-              </TabsTrigger>
-              <TabsTrigger
-                value="pattern"
-                className="text-[10px] h-7 px-2.5 data-[state=active]:bg-surface-3"
-              >
-                <Zap className="h-3.5 w-3.5 mr-1" />
-                Pattern
-              </TabsTrigger>
-              <TabsTrigger
-                value="record"
-                className="text-[10px] h-7 px-2.5 data-[state=active]:bg-surface-3"
-              >
-                <Mic className="h-3.5 w-3.5 mr-1" />
-                Record
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
-        )}
 
-        <div className="flex items-center gap-4 text-xs text-muted-foreground">
-          <span className="font-mono text-neon-cyan/90">{bpm} BPM</span>
-          {!simpleMode && (
-            <>
-              <span className="w-px h-3 bg-border" />
-              <span className="font-mono text-foreground/90 tabular-nums">
-                {formatPosition(currentBeat)}
-              </span>
-              <span className="text-muted-foreground/80 tabular-nums text-[10px]">
-                {formatTime(currentBeat, bpm)}
-              </span>
-              <span className="w-px h-3 bg-border" />
-              <span className="text-[10px]">
-                {tracks.length} tr Ã‚Â· {tracks.reduce((a, t) => a + t.clips.length, 0)} clips
-              </span>
-            </>
-          )}
-          <span
-            className={`text-[9px] px-1.5 py-0.5 rounded ${
-              isPlaying ? "bg-neon-cyan/15 text-neon-cyan" : "bg-surface-2"
-            }`}
-          >
-            {isPlaying ? "PLAY" : "STOP"}
-          </span>
-        </div>
-      </div>
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              onClick={() => {
+                setIsTransportPlaying(true)
+                setMessage("Transport started. Pattern playback engine is the next step.")
+              }}
+              className="inline-flex items-center gap-2 rounded-xl bg-emerald-400 px-4 py-2 text-sm font-bold text-slate-950 hover:bg-emerald-300"
+            >
+              <Play className="h-4 w-4" />
+              Play
+            </button>
 
-      {toolView === "record" ? (
-        <div className="flex-1 overflow-hidden min-h-0">
-          <VocalRecorder />
-        </div>
-      ) : toolView === "chords" ? (
-        <div className="flex-1 flex overflow-hidden min-h-0">
-          <ResizablePanelGroup direction="horizontal" className="flex-1" onLayout={handleHorizontalLayout}>
-            {leftOpen && (
-              <>
-                <ResizablePanel
-                  id="chords-browser"
-                  order={1}
-                  defaultSize={leftSize}
-                  minSize={12}
-                  maxSize={32}
-                >
-                  <Browser />
-                </ResizablePanel>
-                <ResizableHandle withHandle />
-              </>
-            )}
-            <ResizablePanel
-              id="chords-main"
-              order={leftOpen ? 2 : 1}
-              defaultSize={mainSize}
-              minSize={50}
+            <button
+              onClick={() => {
+                stopPreview()
+                setIsTransportPlaying(false)
+                setMessage("Transport stopped.")
+              }}
+              className="inline-flex items-center gap-2 rounded-xl border border-white/10 px-4 py-2 text-sm font-bold text-slate-200 hover:bg-white/10"
             >
-              <ChordPanel />
-            </ResizablePanel>
-            {mixerVisible && (
-              <>
-                <ResizableHandle withHandle />
-                <ResizablePanel
-                  id="chords-mixer"
-                  order={leftOpen ? 3 : 2}
-                  defaultSize={rightSize}
-                  minSize={16}
-                  maxSize={40}
-                >
-                  <Mixer />
-                </ResizablePanel>
-              </>
-            )}
-          </ResizablePanelGroup>
-        </div>
-      ) : toolView === "pattern" ? (
-        <div className="flex-1 flex overflow-hidden min-h-0">
-          <ResizablePanelGroup direction="horizontal" className="flex-1" onLayout={handleHorizontalLayout}>
-            {leftOpen && (
-              <>
-                <ResizablePanel
-                  id="pattern-browser"
-                  order={1}
-                  defaultSize={leftSize}
-                  minSize={12}
-                  maxSize={32}
-                >
-                  <Browser />
-                </ResizablePanel>
-                <ResizableHandle withHandle />
-              </>
-            )}
-            <ResizablePanel
-              id="pattern-main"
-              order={leftOpen ? 2 : 1}
-              defaultSize={mainSize}
-              minSize={50}
-            >
-              <PatternEditor />
-            </ResizablePanel>
-            {mixerVisible && (
-              <>
-                <ResizableHandle withHandle />
-                <ResizablePanel
-                  id="pattern-mixer"
-                  order={leftOpen ? 3 : 2}
-                  defaultSize={rightSize}
-                  minSize={16}
-                  maxSize={40}
-                >
-                  <Mixer />
-                </ResizablePanel>
-              </>
-            )}
-          </ResizablePanelGroup>
-        </div>
-      ) : (
-        <div className="flex-1 flex min-h-0">
-          <ResizablePanelGroup direction="horizontal" className="flex-1" onLayout={handleHorizontalLayout}>
-            {leftOpen && (
-              <>
-                <ResizablePanel
-                  id="fl-browser"
-                  order={1}
-                  defaultSize={leftSize}
-                  minSize={12}
-                  maxSize={32}
-                >
-                  <Browser />
-                </ResizablePanel>
-                <ResizableHandle withHandle className="w-1 bg-border/80" />
-              </>
-            )}
-            <ResizablePanel
-              id="fl-main"
-              order={leftOpen ? 2 : 1}
-              defaultSize={mainSize}
-              minSize={40}
-            >
-              <StudioWorkspace />
-            </ResizablePanel>
-            {rightOpen && (
-              <>
-                <ResizableHandle withHandle className="w-1 bg-border/80" />
-                <ResizablePanel
-                  id="fl-right"
-                  order={leftOpen ? 3 : 2}
-                  defaultSize={rightSize}
-                  minSize={16}
-                  maxSize={40}
-                >
-                  {producerVisible && mixerVisible ? (
-                    <ResizablePanelGroup direction="vertical">
-                      <ResizablePanel id="fl-ai" order={1} defaultSize={55} minSize={20}>
-                        <AIPanel />
-                      </ResizablePanel>
-                      <ResizableHandle withHandle className="h-1 bg-border/80" />
-                      <ResizablePanel id="fl-mixer" order={2} defaultSize={45} minSize={20}>
-                        <Mixer />
-                      </ResizablePanel>
-                    </ResizablePanelGroup>
-                  ) : producerVisible ? (
-                    <AIPanel />
-                  ) : (
-                    <Mixer />
-                  )}
-                </ResizablePanel>
-              </>
-            )}
-          </ResizablePanelGroup>
-        </div>
-      )}
+              <Square className="h-4 w-4" />
+              Stop
+            </button>
 
-      <div className="lg:hidden shrink-0 border-t border-border/60 bg-surface-2/90 px-3 py-2 text-center text-[10px] text-muted-foreground leading-snug">
-        Tip: widen your window for the full grid layout. The DAW works on this screen size; a mouse helps for fine edits.
-      </div>
-    </div>
+            <button
+              onClick={saveProject}
+              className="inline-flex items-center gap-2 rounded-xl border border-cyan-400/30 bg-cyan-400/10 px-4 py-2 text-sm font-bold text-cyan-100 hover:bg-cyan-400/20"
+            >
+              <Save className="h-4 w-4" />
+              Save
+            </button>
+
+            <button
+              onClick={exportProjectJson}
+              className="inline-flex items-center gap-2 rounded-xl bg-cyan-400 px-4 py-2 text-sm font-bold text-slate-950 hover:bg-cyan-300"
+            >
+              <Download className="h-4 w-4" />
+              Export JSON
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section className="mx-auto grid max-w-7xl gap-4 px-4 py-5 lg:grid-cols-[300px_1fr_320px]">
+        <aside className="space-y-4">
+          <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-4">
+            <p className="flex items-center gap-2 text-sm font-bold text-cyan-100">
+              <SlidersHorizontal className="h-4 w-4" />
+              Project Setup
+            </p>
+
+            <label className="mt-4 block text-xs text-slate-400">Project name</label>
+            <input
+              value={projectName}
+              onChange={(event) => setProjectName(event.target.value)}
+              className="mt-1 w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-sm outline-none focus:border-cyan-300"
+            />
+
+            <div className="mt-4 grid grid-cols-2 gap-3">
+              <label className="block text-xs text-slate-400">
+                BPM
+                <input
+                  type="number"
+                  min={60}
+                  max={200}
+                  value={bpm}
+                  onChange={(event) => setBpm(Number(event.target.value))}
+                  className="mt-1 w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-sm outline-none focus:border-cyan-300"
+                />
+              </label>
+
+              <label className="block text-xs text-slate-400">
+                Key
+                <input
+                  value={songKey}
+                  onChange={(event) => setSongKey(event.target.value)}
+                  className="mt-1 w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-sm outline-none focus:border-cyan-300"
+                />
+              </label>
+            </div>
+
+            <p className="mt-4 rounded-xl border border-white/10 bg-black/20 px-3 py-2 text-xs text-slate-300">
+              Status: {isTransportPlaying ? "Playing" : "Stopped"} / {tracks.length} tracks / {activeStepCount} active pattern steps
+            </p>
+          </div>
+
+          <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-4">
+            <p className="flex items-center gap-2 text-sm font-bold text-fuchsia-100">
+              <FileAudio className="h-4 w-4" />
+              Import Audio
+            </p>
+
+            <p className="mt-3 text-sm leading-6 text-slate-300">
+              Import your own legal WAV, MP3, OGG, M4A, AAC or FLAC files from this PC.
+            </p>
+
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".wav,.mp3,.ogg,.m4a,.aac,.flac,audio/*"
+              className="hidden"
+              onChange={(event) => {
+                const file = event.target.files?.[0]
+                if (file) void importAudio(file)
+                event.currentTarget.value = ""
+              }}
+            />
+
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-fuchsia-400 px-4 py-3 text-sm font-bold text-slate-950 hover:bg-fuchsia-300"
+            >
+              <Upload className="h-4 w-4" />
+              Choose Audio File
+            </button>
+
+            <p className="mt-3 flex items-center gap-2 text-xs text-emerald-200">
+              <ShieldCheck className="h-4 w-4" />
+              Use only your own or properly licensed sounds.
+            </p>
+          </div>
+        </aside>
+
+        <section className="space-y-4">
+          <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-4">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <p className="flex items-center gap-2 text-sm font-bold text-cyan-100">
+                  <Wand2 className="h-4 w-4" />
+                  Pattern Maker
+                </p>
+                <p className="mt-1 text-xs text-slate-400">
+                  Build a simple 16-step drum, bass, chord and melody pattern.
+                </p>
+              </div>
+
+              <div className="flex gap-2">
+                <button
+                  onClick={loadAmapianoPreset}
+                  className="rounded-xl bg-cyan-400 px-3 py-2 text-xs font-bold text-slate-950 hover:bg-cyan-300"
+                >
+                  Amapiano Preset
+                </button>
+                <button
+                  onClick={clearPattern}
+                  className="rounded-xl border border-white/10 px-3 py-2 text-xs font-bold text-slate-200 hover:bg-white/10"
+                >
+                  Clear
+                </button>
+              </div>
+            </div>
+
+            <div className="mt-5 space-y-3">
+              {rows.map((row) => (
+                <div key={row.id} className="rounded-2xl border border-white/10 bg-slate-900 p-3">
+                  <div className="mb-3 flex items-center justify-between">
+                    <p className="font-bold">{row.name}</p>
+                    <p className="text-xs uppercase tracking-[0.25em] text-slate-500">{row.role}</p>
+                  </div>
+
+                  <div className="grid grid-cols-8 gap-2 md:grid-cols-16">
+                    {row.steps.map((active, index) => (
+                      <button
+                        key={`${row.id}-${index}`}
+                        onClick={() => toggleStep(row.id, index)}
+                        className={`h-9 rounded-lg text-xs font-bold transition ${
+                          active
+                            ? "bg-cyan-400 text-slate-950 shadow-lg shadow-cyan-400/20"
+                            : "bg-slate-800 text-slate-500 hover:bg-slate-700"
+                        }`}
+                      >
+                        {index + 1}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-4">
+            <p className="flex items-center gap-2 text-sm font-bold text-cyan-100">
+              <Music2 className="h-4 w-4" />
+              Timeline
+            </p>
+
+            <div className="mt-4 space-y-3">
+              {tracks.length === 0 ? (
+                <div className="rounded-2xl border border-dashed border-white/10 p-8 text-center text-sm text-slate-400">
+                  No audio tracks yet. Import a local audio file to start.
+                </div>
+              ) : (
+                tracks.map((track) => (
+                  <div key={track.id} className="rounded-2xl border border-white/10 bg-slate-900 p-3">
+                    <div className="flex flex-wrap items-center justify-between gap-3">
+                      <div>
+                        <p className="font-bold">{track.name}</p>
+                        <p className="mt-1 flex items-center gap-2 text-xs text-slate-400">
+                          <FolderOpen className="h-3 w-3" />
+                          {track.fileName} / {formatSeconds(track.duration)}
+                        </p>
+                      </div>
+
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => void playTrack(track)}
+                          className="rounded-xl bg-emerald-400 px-3 py-2 text-xs font-bold text-slate-950 hover:bg-emerald-300"
+                        >
+                          {playingTrackId === track.id ? (
+                            <Pause className="h-4 w-4" />
+                          ) : (
+                            <Play className="h-4 w-4" />
+                          )}
+                        </button>
+
+                        <button
+                          onClick={() => removeTrack(track.id)}
+                          className="rounded-xl border border-red-400/30 bg-red-400/10 px-3 py-2 text-xs font-bold text-red-100 hover:bg-red-400/20"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="mt-3 h-12 rounded-xl bg-gradient-to-r from-cyan-400/30 via-fuchsia-400/30 to-emerald-400/30" />
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        </section>
+
+        <aside className="space-y-4">
+          <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-4">
+            <p className="flex items-center gap-2 text-sm font-bold text-cyan-100">
+              <SlidersHorizontal className="h-4 w-4" />
+              Mixer
+            </p>
+
+            <div className="mt-4 space-y-3">
+              {tracks.length === 0 ? (
+                <p className="rounded-2xl border border-dashed border-white/10 p-5 text-sm text-slate-400">
+                  Import audio to show mixer channels.
+                </p>
+              ) : (
+                tracks.map((track) => (
+                  <div key={track.id} className="rounded-2xl border border-white/10 bg-slate-900 p-3">
+                    <p className="font-bold">{track.name}</p>
+
+                    <label className="mt-3 block text-xs text-slate-400">
+                      Volume {Math.round(track.volume * 100)}%
+                      <input
+                        type="range"
+                        min={0}
+                        max={1}
+                        step={0.01}
+                        value={track.volume}
+                        onChange={(event) =>
+                          updateTrack(track.id, { volume: Number(event.target.value) })
+                        }
+                        className="mt-2 w-full"
+                      />
+                    </label>
+
+                    <label className="mt-3 block text-xs text-slate-400">
+                      Pan {track.pan}
+                      <input
+                        type="range"
+                        min={-1}
+                        max={1}
+                        step={0.01}
+                        value={track.pan}
+                        onChange={(event) =>
+                          updateTrack(track.id, { pan: Number(event.target.value) })
+                        }
+                        className="mt-2 w-full"
+                      />
+                    </label>
+
+                    <div className="mt-3 grid grid-cols-2 gap-2">
+                      <button
+                        onClick={() => updateTrack(track.id, { muted: !track.muted })}
+                        className={`rounded-xl px-3 py-2 text-xs font-bold ${
+                          track.muted
+                            ? "bg-red-400 text-slate-950"
+                            : "border border-white/10 text-slate-300"
+                        }`}
+                      >
+                        Mute
+                      </button>
+
+                      <button
+                        onClick={() => updateTrack(track.id, { solo: !track.solo })}
+                        className={`rounded-xl px-3 py-2 text-xs font-bold ${
+                          track.solo
+                            ? "bg-yellow-300 text-slate-950"
+                            : "border border-white/10 text-slate-300"
+                        }`}
+                      >
+                        Solo
+                      </button>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+
+          <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-4">
+            <p className="text-sm font-bold text-cyan-100">Next Engine Steps</p>
+            <div className="mt-3 space-y-2 text-sm text-slate-300">
+              <p>1. Add real pattern playback.</p>
+              <p>2. Add local sound library into this page.</p>
+              <p>3. Add WAV render/export.</p>
+              <p>4. Redirect old pages to this Studio.</p>
+            </div>
+          </div>
+
+          <div className="rounded-3xl border border-white/10 bg-black/30 p-4">
+            <p className="text-xs uppercase tracking-[0.25em] text-slate-500">Status</p>
+            <p className="mt-3 text-sm leading-6 text-slate-300">{message}</p>
+          </div>
+        </aside>
+      </section>
+    </main>
   )
 }
