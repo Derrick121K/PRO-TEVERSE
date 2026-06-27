@@ -1,6 +1,6 @@
 "use client"
 
-import { useMemo, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import {
   Download,
   FileAudio,
@@ -113,6 +113,216 @@ export default function StudioPage() {
   const [playingTrackId, setPlayingTrackId] = useState<string | null>(null)
   const [isTransportPlaying, setIsTransportPlaying] = useState(false)
   const [message, setMessage] = useState("Ready. Import audio, build a pattern, then export your project.")
+
+  const rowsRef = useRef<StepRow[]>(presetRows)
+  const audioContextRef = useRef<AudioContext | null>(null)
+  const patternTimerRef = useRef<number | null>(null)
+  const currentStepRef = useRef(0)
+  const [currentStep, setCurrentStep] = useState<number | null>(null)
+
+  useEffect(() => {
+    rowsRef.current = rows
+  }, [rows])
+
+  useEffect(() => {
+    return () => {
+      if (patternTimerRef.current !== null) {
+        window.clearInterval(patternTimerRef.current)
+      }
+
+      if (previewAudioRef.current) {
+        previewAudioRef.current.pause()
+      }
+
+      void audioContextRef.current?.close()
+    }
+  }, [])
+
+  function getAudioContext() {
+    if (typeof window === "undefined") return null
+
+    if (!audioContextRef.current) {
+      const AudioContextConstructor =
+        window.AudioContext ||
+        (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext
+
+      if (!AudioContextConstructor) return null
+      audioContextRef.current = new AudioContextConstructor()
+    }
+
+    if (audioContextRef.current.state === "suspended") {
+      void audioContextRef.current.resume()
+    }
+
+    return audioContextRef.current
+  }
+
+  function playTone(
+    context: AudioContext,
+    frequency: number,
+    duration: number,
+    type: OscillatorType = "sine",
+    gainValue = 0.18
+  ) {
+    const now = context.currentTime
+    const oscillator = context.createOscillator()
+    const gain = context.createGain()
+
+    oscillator.type = type
+    oscillator.frequency.setValueAtTime(frequency, now)
+    gain.gain.setValueAtTime(gainValue, now)
+    gain.gain.exponentialRampToValueAtTime(0.001, now + duration)
+
+    oscillator.connect(gain)
+    gain.connect(context.destination)
+
+    oscillator.start(now)
+    oscillator.stop(now + duration + 0.02)
+  }
+
+  function playKick(context: AudioContext) {
+    const now = context.currentTime
+    const oscillator = context.createOscillator()
+    const gain = context.createGain()
+
+    oscillator.type = "sine"
+    oscillator.frequency.setValueAtTime(135, now)
+    oscillator.frequency.exponentialRampToValueAtTime(45, now + 0.16)
+
+    gain.gain.setValueAtTime(0.9, now)
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.22)
+
+    oscillator.connect(gain)
+    gain.connect(context.destination)
+
+    oscillator.start(now)
+    oscillator.stop(now + 0.24)
+  }
+
+  function playNoise(
+    context: AudioContext,
+    duration: number,
+    filterType: BiquadFilterType,
+    filterFrequency: number,
+    gainValue: number
+  ) {
+    const sampleCount = Math.max(1, Math.floor(context.sampleRate * duration))
+    const buffer = context.createBuffer(1, sampleCount, context.sampleRate)
+    const samples = buffer.getChannelData(0)
+
+    for (let index = 0; index < sampleCount; index += 1) {
+      samples[index] = Math.random() * 2 - 1
+    }
+
+    const now = context.currentTime
+    const source = context.createBufferSource()
+    const filter = context.createBiquadFilter()
+    const gain = context.createGain()
+
+    source.buffer = buffer
+    filter.type = filterType
+    filter.frequency.setValueAtTime(filterFrequency, now)
+
+    gain.gain.setValueAtTime(gainValue, now)
+    gain.gain.exponentialRampToValueAtTime(0.001, now + duration)
+
+    source.connect(filter)
+    filter.connect(gain)
+    gain.connect(context.destination)
+
+    source.start(now)
+  }
+
+  function playPatternSound(context: AudioContext, role: StepRow["role"]) {
+    if (role === "kick") {
+      playKick(context)
+      return
+    }
+
+    if (role === "clap") {
+      playNoise(context, 0.12, "bandpass", 1800, 0.24)
+      return
+    }
+
+    if (role === "hat") {
+      playNoise(context, 0.05, "highpass", 6500, 0.12)
+      return
+    }
+
+    if (role === "bass") {
+      playTone(context, 55, 0.18, "sawtooth", 0.2)
+      return
+    }
+
+    if (role === "chord") {
+      ;[261.63, 311.13, 392].forEach((frequency) =>
+        playTone(context, frequency, 0.35, "triangle", 0.07)
+      )
+      return
+    }
+
+    playTone(context, 523.25, 0.16, "square", 0.08)
+  }
+
+  function playPatternStep(stepIndex: number) {
+    const context = getAudioContext()
+
+    if (!context) {
+      setMessage("Pattern playback is not supported in this browser.")
+      return
+    }
+
+    rowsRef.current.forEach((row) => {
+      if (row.steps[stepIndex]) {
+        playPatternSound(context, row.role)
+      }
+    })
+  }
+
+  function startPatternPlayback() {
+    stopPreview()
+
+    if (patternTimerRef.current !== null) {
+      window.clearInterval(patternTimerRef.current)
+      patternTimerRef.current = null
+    }
+
+    const context = getAudioContext()
+
+    if (!context) {
+      setMessage("Pattern playback is not supported in this browser.")
+      return
+    }
+
+    const safeBpm = Math.max(40, Math.min(220, bpm))
+    const stepMs = Math.max(40, (60 / safeBpm / 4) * 1000)
+
+    currentStepRef.current = 0
+    setCurrentStep(0)
+    setIsTransportPlaying(true)
+    setMessage(`Pattern playback started at ${safeBpm} BPM.`)
+
+    playPatternStep(0)
+
+    patternTimerRef.current = window.setInterval(() => {
+      const nextStep = (currentStepRef.current + 1) % stepCount
+      currentStepRef.current = nextStep
+      setCurrentStep(nextStep)
+      playPatternStep(nextStep)
+    }, stepMs)
+  }
+
+  function stopPatternPlayback() {
+    if (patternTimerRef.current !== null) {
+      window.clearInterval(patternTimerRef.current)
+      patternTimerRef.current = null
+    }
+
+    stopPreview()
+    setCurrentStep(null)
+    setIsTransportPlaying(false)
+    setMessage("Transport stopped.")
+  }
 
   const activeStepCount = useMemo(
     () => rows.reduce((total, row) => total + row.steps.filter(Boolean).length, 0),
@@ -305,10 +515,7 @@ export default function StudioPage() {
 
           <div className="flex flex-wrap items-center gap-2">
             <button
-              onClick={() => {
-                setIsTransportPlaying(true)
-                setMessage("Transport started. Pattern playback engine is the next step.")
-              }}
+              onClick={startPatternPlayback}
               className="inline-flex items-center gap-2 rounded-xl bg-emerald-400 px-4 py-2 text-sm font-bold text-slate-950 hover:bg-emerald-300"
             >
               <Play className="h-4 w-4" />
@@ -316,11 +523,7 @@ export default function StudioPage() {
             </button>
 
             <button
-              onClick={() => {
-                stopPreview()
-                setIsTransportPlaying(false)
-                setMessage("Transport stopped.")
-              }}
+              onClick={stopPatternPlayback}
               className="inline-flex items-center gap-2 rounded-xl border border-white/10 px-4 py-2 text-sm font-bold text-slate-200 hover:bg-white/10"
             >
               <Square className="h-4 w-4" />
@@ -385,7 +588,7 @@ export default function StudioPage() {
             </div>
 
             <p className="mt-4 rounded-xl border border-white/10 bg-black/20 px-3 py-2 text-xs text-slate-300">
-              Status: {isTransportPlaying ? "Playing" : "Stopped"} / {tracks.length} tracks / {activeStepCount} active pattern steps
+              Status: {isTransportPlaying ? "Playing" : "Stopped"} / {tracks.length} tracks / {activeStepCount} active pattern steps / Step {currentStep === null ? "-" : currentStep + 1}
             </p>
           </div>
 
@@ -468,7 +671,7 @@ export default function StudioPage() {
                       <button
                         key={`${row.id}-${index}`}
                         onClick={() => toggleStep(row.id, index)}
-                        className={`h-9 rounded-lg text-xs font-bold transition ${
+                        className={`h-9 rounded-lg text-xs font-bold transition ${currentStep === index ? "ring-2 ring-fuchsia-300 scale-105" : ""} ${
                           active
                             ? "bg-cyan-400 text-slate-950 shadow-lg shadow-cyan-400/20"
                             : "bg-slate-800 text-slate-500 hover:bg-slate-700"
@@ -614,8 +817,8 @@ export default function StudioPage() {
           <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-4">
             <p className="text-sm font-bold text-cyan-100">Next Engine Steps</p>
             <div className="mt-3 space-y-2 text-sm text-slate-300">
-              <p>1. Add real pattern playback.</p>
-              <p>2. Add local sound library into this page.</p>
+              <p>1. Pattern playback added.</p>
+              <p>2. Add local sound library panel into this page.</p>
               <p>3. Add WAV render/export.</p>
               <p>4. Redirect old pages to this Studio.</p>
             </div>
