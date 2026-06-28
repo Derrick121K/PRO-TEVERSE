@@ -292,6 +292,11 @@ function scheduleRenderPatternSound(
 export default function StudioPage() {
   const fileInputRef = useRef<HTMLInputElement | null>(null)
   const previewAudioRef = useRef<HTMLAudioElement | null>(null)
+  const playbackNodesRef = useRef<{
+    source: MediaElementAudioSourceNode
+    gain: GainNode
+    panner: StereoPannerNode | null
+  } | null>(null)
 
   const [bpm, setBpm] = useState(112)
   const [songKey, setSongKey] = useState("C minor")
@@ -537,8 +542,24 @@ export default function StudioPage() {
     })
   }, [libraryCategory, libraryQuery])
 
+  function disconnectPlaybackNodes() {
+    if (!playbackNodesRef.current) return
+
+    try {
+      playbackNodesRef.current.source.disconnect()
+      playbackNodesRef.current.gain.disconnect()
+      playbackNodesRef.current.panner?.disconnect()
+    } catch {
+      // Already disconnected.
+    }
+
+    playbackNodesRef.current = null
+  }
+
   function stopPreview() {
-    if (previewAudioRef.current) {
+    disconnectPlaybackNodes()
+
+if (previewAudioRef.current) {
       previewAudioRef.current.pause()
       previewAudioRef.current.currentTime = 0
     }
@@ -607,26 +628,55 @@ export default function StudioPage() {
     stopPreview()
 
     const audio = new Audio(track.audioUrl)
-    audio.volume = track.muted ? 0 : track.volume
+    const context = getAudioContext()
+
     previewAudioRef.current = audio
     setPlayingTrackId(track.id)
-    setMessage(`Playing ${track.name}`)
+    setMessage(`Playing ${track.name} with volume ${Math.round(track.volume * 100)}% and pan ${track.pan}.`)
+
+    if (context) {
+      try {
+        const source = context.createMediaElementSource(audio)
+        const gain = context.createGain()
+        const panner =
+          typeof context.createStereoPanner === "function"
+            ? context.createStereoPanner()
+            : null
+
+        gain.gain.value = track.muted ? 0 : track.volume
+
+        if (panner) {
+          panner.pan.value = Math.max(-1, Math.min(1, track.pan))
+          source.connect(gain)
+          gain.connect(panner)
+          panner.connect(context.destination)
+        } else {
+          source.connect(gain)
+          gain.connect(context.destination)
+        }
+
+        playbackNodesRef.current = { source, gain, panner }
+      } catch {
+        audio.volume = track.muted ? 0 : track.volume
+      }
+    } else {
+      audio.volume = track.muted ? 0 : track.volume
+    }
 
     audio.onended = () => {
+      disconnectPlaybackNodes()
       setPlayingTrackId(null)
-    setPlayingLibraryId(null)
       setMessage("Playback stopped.")
     }
 
     try {
       await audio.play()
     } catch {
+      disconnectPlaybackNodes()
       setPlayingTrackId(null)
-    setPlayingLibraryId(null)
       setMessage("Playback failed. Try another audio file.")
     }
   }
-
 
   async function previewLibraryItem(item: SoundLibraryItem) {
     if (!canPreviewSoundPath(item.path)) {
@@ -642,11 +692,43 @@ export default function StudioPage() {
     stopPreview()
 
     const audio = new Audio(item.path)
+    const context = getAudioContext()
+
     previewAudioRef.current = audio
     setPlayingLibraryId(item.id)
     setMessage(`Previewing library sound: ${item.name}`)
 
+    if (context) {
+      try {
+        const source = context.createMediaElementSource(audio)
+        const gain = context.createGain()
+        const panner =
+          typeof context.createStereoPanner === "function"
+            ? context.createStereoPanner()
+            : null
+
+        gain.gain.value = 0.8
+
+        if (panner) {
+          panner.pan.value = 0
+          source.connect(gain)
+          gain.connect(panner)
+          panner.connect(context.destination)
+        } else {
+          source.connect(gain)
+          gain.connect(context.destination)
+        }
+
+        playbackNodesRef.current = { source, gain, panner }
+      } catch {
+        audio.volume = 0.8
+      }
+    } else {
+      audio.volume = 0.8
+    }
+
     audio.onended = () => {
+      disconnectPlaybackNodes()
       setPlayingLibraryId(null)
       setMessage("Library preview ended.")
     }
@@ -654,6 +736,7 @@ export default function StudioPage() {
     try {
       await audio.play()
     } catch {
+      disconnectPlaybackNodes()
       setPlayingLibraryId(null)
       setMessage("Library preview failed. Confirm the audio file exists in public/sound-library.")
     }
@@ -676,13 +759,18 @@ export default function StudioPage() {
     }
 
     setTracks((current) => [...current, track])
-    if (playable) loadTrackDuration(id, item.path)
+
+    if (playable) {
+      loadTrackDuration(id, item.path)
+    }
+
     setMessage(
       playable
         ? `${item.name} added from Sound Library.`
         : `${item.name} added as a placeholder. Replace the README path with a real legal audio file.`
     )
   }
+
   function toggleStep(rowId: string, index: number) {
     setRows((current) =>
       current.map((row) =>
@@ -1334,7 +1422,8 @@ export default function StudioPage() {
               <p>3. Save/load project added.</p>
               <p>4. Pattern WAV export added.</p>
               <p>5. Sound-library duration loading added.</p>
-              <p>6. Desktop installer later.</p>
+              <p>6. Mixer pan playback added.</p>
+              <p>7. Desktop installer later.</p>
             </div>
           </div>
 
