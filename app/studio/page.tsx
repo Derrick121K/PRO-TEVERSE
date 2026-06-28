@@ -1122,86 +1122,7 @@ if (previewAudioRef.current) {
 
   return (
     <main className="min-h-screen bg-slate-950 text-white">
-      <section className="border-b border-white/10 bg-black/30 px-4 py-4 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-7xl flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-          <div>
-            <p className="text-xs uppercase tracking-[0.35em] text-cyan-300">
-              PRO-TEVERSE One Studio
-            </p>
-            <h1 className="mt-2 text-3xl font-black">Professional Desktop Music Studio</h1>
-            <p className="mt-1 text-sm text-slate-400">
-              Create, connect and conquer with a familiar desktop music production workflow.
-            </p>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-2">
-            <button
-              onClick={startPatternPlayback}
-              className="inline-flex items-center gap-2 rounded-xl bg-emerald-400 px-4 py-2 text-sm font-bold text-slate-950 hover:bg-emerald-300"
-            >
-              <Play className="h-4 w-4" />
-              Play
-            </button>
-
-            <button
-              onClick={stopPatternPlayback}
-              className="inline-flex items-center gap-2 rounded-xl border border-white/10 px-4 py-2 text-sm font-bold text-slate-200 hover:bg-white/10"
-            >
-              <Square className="h-4 w-4" />
-              Stop
-            </button>
-
-            <button
-              onClick={saveProject}
-              className="inline-flex items-center gap-2 rounded-xl border border-cyan-400/30 bg-cyan-400/10 px-4 py-2 text-sm font-bold text-cyan-100 hover:bg-cyan-400/20"
-            >
-              <Save className="h-4 w-4" />
-              Save
-            </button>
-
-            <button
-              onClick={loadProject}
-              className="inline-flex items-center gap-2 rounded-xl border border-emerald-400/30 bg-emerald-400/10 px-4 py-2 text-sm font-bold text-emerald-100 hover:bg-emerald-400/20"
-            >
-              <FolderOpen className="h-4 w-4" />
-              Load
-            </button>
-
-            <button
-              onClick={clearProject}
-              className="inline-flex items-center gap-2 rounded-xl border border-red-400/30 bg-red-400/10 px-4 py-2 text-sm font-bold text-red-100 hover:bg-red-400/20"
-            >
-              <Trash2 className="h-4 w-4" />
-              Clear
-            </button>
-
-            <button
-              onClick={() => void exportPatternWav()}
-              disabled={isRenderingWav}
-              className="inline-flex items-center gap-2 rounded-xl border border-fuchsia-400/30 bg-fuchsia-400/10 px-4 py-2 text-sm font-bold text-fuchsia-100 hover:bg-fuchsia-400/20 disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              <Music2 className="h-4 w-4" />
-              {isRenderingWav ? "Rendering..." : "Export WAV"}
-            </button>
-
-            <button
-              onClick={exportProjectJson}
-              className="inline-flex items-center gap-2 rounded-xl bg-cyan-400 px-4 py-2 text-sm font-bold text-slate-950 hover:bg-cyan-300"
-            >
-              <Download className="h-4 w-4" />
-              Export JSON
-            </button>
-          </div>
-        </div>
-      </section>
-
-      <section className="mx-auto grid max-w-7xl gap-4 px-4 py-5 lg:grid-cols-[300px_1fr_320px]">
-        <aside className="space-y-4">
-          <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-4">
-            <p className="flex items-center gap-2 text-sm font-bold text-cyan-100">
-              <SlidersHorizontal className="h-4 w-4" />
-
-          <section className="pro-daw-force-shell">
+<section className="pro-daw-force-shell">
             <div className="pro-daw-force-topbar">
               <div>
                 <h2>PRO-TEEVERSE</h2>
@@ -1220,13 +1141,13 @@ if (previewAudioRef.current) {
             <div className="pro-daw-force-transport">
               <div className="pro-daw-force-project">
                 <strong>{projectName}</strong>
-                <span>{bpm} BPM Ã‚/ 4/4 Ã‚/ {songKey}</span>
+                <span>{bpm} BPM / 4/4 / {songKey}</span>
               </div>
 
               <div className="pro-daw-force-controls">
-                <button onClick={startPatternPlayback}>Ã¢â€“Â¶</button>
-                <button onClick={stopPatternPlayback}>Ã¢â€“Â </button>
-                <button className="record">Ã¢â€”Â</button>
+                <button onClick={startPatternPlayback}>Play</button>
+                <button onClick={stopPatternPlayback}>Stop</button>
+                <button className="record">Rec</button>
               </div>
 
               <div className="pro-daw-force-clock">
@@ -1374,7 +1295,7 @@ if (previewAudioRef.current) {
                 <div className="inspector-card">
                   <p>Current Project</p>
                   <strong>{projectName}</strong>
-                  <span>{tracks.length} track(s) Ã‚/ {activeStepCount} active step(s)</span>
+                  <span>{tracks.length} track(s) / {activeStepCount} active step(s)</span>
                 </div>
 
                 <div className="inspector-knobs">
@@ -1421,6 +1342,87 @@ if (previewAudioRef.current) {
               ))}
             </div>
           </section>
+
+      <section className="border-b border-white/10 bg-black/30 px-4 py-4 backdrop-blur-xl">
+        <div className="mx-auto flex max-w-7xl flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <div>
+            <p className="text-xs uppercase tracking-[0.35em] text-cyan-300">
+              PRO-TEVERSE One Studio
+            </p>
+            <h1 className="mt-2 text-3xl font-black">Professional Desktop Music Studio</h1>
+            <p className="mt-1 text-sm text-slate-400">
+              Create, connect and conquer with a familiar desktop music production workflow.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              onClick={startPatternPlayback}
+              className="inline-flex items-center gap-2 rounded-xl bg-emerald-400 px-4 py-2 text-sm font-bold text-slate-950 hover:bg-emerald-300"
+            >
+              <Play className="h-4 w-4" />
+              Play
+            </button>
+
+            <button
+              onClick={stopPatternPlayback}
+              className="inline-flex items-center gap-2 rounded-xl border border-white/10 px-4 py-2 text-sm font-bold text-slate-200 hover:bg-white/10"
+            >
+              <Square className="h-4 w-4" />
+              Stop
+            </button>
+
+            <button
+              onClick={saveProject}
+              className="inline-flex items-center gap-2 rounded-xl border border-cyan-400/30 bg-cyan-400/10 px-4 py-2 text-sm font-bold text-cyan-100 hover:bg-cyan-400/20"
+            >
+              <Save className="h-4 w-4" />
+              Save
+            </button>
+
+            <button
+              onClick={loadProject}
+              className="inline-flex items-center gap-2 rounded-xl border border-emerald-400/30 bg-emerald-400/10 px-4 py-2 text-sm font-bold text-emerald-100 hover:bg-emerald-400/20"
+            >
+              <FolderOpen className="h-4 w-4" />
+              Load
+            </button>
+
+            <button
+              onClick={clearProject}
+              className="inline-flex items-center gap-2 rounded-xl border border-red-400/30 bg-red-400/10 px-4 py-2 text-sm font-bold text-red-100 hover:bg-red-400/20"
+            >
+              <Trash2 className="h-4 w-4" />
+              Clear
+            </button>
+
+            <button
+              onClick={() => void exportPatternWav()}
+              disabled={isRenderingWav}
+              className="inline-flex items-center gap-2 rounded-xl border border-fuchsia-400/30 bg-fuchsia-400/10 px-4 py-2 text-sm font-bold text-fuchsia-100 hover:bg-fuchsia-400/20 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              <Music2 className="h-4 w-4" />
+              {isRenderingWav ? "Rendering..." : "Export WAV"}
+            </button>
+
+            <button
+              onClick={exportProjectJson}
+              className="inline-flex items-center gap-2 rounded-xl bg-cyan-400 px-4 py-2 text-sm font-bold text-slate-950 hover:bg-cyan-300"
+            >
+              <Download className="h-4 w-4" />
+              Export JSON
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section className="mx-auto grid max-w-7xl gap-4 px-4 py-5 lg:grid-cols-[300px_1fr_320px]">
+        <aside className="space-y-4">
+          <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-4">
+            <p className="flex items-center gap-2 text-sm font-bold text-cyan-100">
+              <SlidersHorizontal className="h-4 w-4" />
+
+          
               Project Setup
             </p>
 
