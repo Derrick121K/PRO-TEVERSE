@@ -33,6 +33,7 @@ type AudioTrack = {
   audioUrl?: string
   duration?: number
   startSeconds?: number
+  repeatCount?: number
   volume: number
   pan: number
   muted: boolean
@@ -126,6 +127,11 @@ function normalizeStartSeconds(value: number) {
   if (!Number.isFinite(value)) return 0
   const clamped = Math.max(0, Math.min(600, value))
   return Math.round(clamped * 100) / 100
+}
+
+function normalizeRepeatCount(value: number) {
+  if (!Number.isFinite(value)) return 0
+  return Math.max(0, Math.min(32, Math.round(value)))
 }
 
 function formatSeconds(seconds?: number) {
@@ -879,6 +885,7 @@ if (previewAudioRef.current) {
                 : undefined,
             duration: typeof track.duration === "number" ? track.duration : undefined,
             startSeconds: typeof track.startSeconds === "number" ? normalizeStartSeconds(track.startSeconds) : 0,
+            repeatCount: typeof track.repeatCount === "number" ? normalizeRepeatCount(track.repeatCount) : 0,
             volume: typeof track.volume === "number" ? track.volume : 0.8,
             pan: typeof track.pan === "number" ? track.pan : 0,
             muted: Boolean(track.muted),
@@ -916,6 +923,16 @@ if (previewAudioRef.current) {
     setTracks((current) =>
       current.map((track) =>
         track.id === trackId ? { ...track, startSeconds: nextStart } : track
+      )
+    )
+  }
+
+  function updateTrackRepeatCount(trackId: string, repeatCount: number) {
+    const nextRepeatCount = normalizeRepeatCount(repeatCount)
+
+    setTracks((current) =>
+      current.map((track) =>
+        track.id === trackId ? { ...track, repeatCount: nextRepeatCount } : track
       )
     )
   }
@@ -976,7 +993,7 @@ if (previewAudioRef.current) {
       )
 
       const longestTrackSeconds = playableTracks.reduce(
-        (longest, track) => Math.max(longest, (track.startSeconds ?? 0) + (track.duration || 0)),
+        (longest, track) => Math.max(longest, (track.startSeconds ?? 0) + (normalizeRepeatCount(track.repeatCount ?? 0) * oneBarSeconds) + (track.duration || 0)),
         0
       )
 
@@ -1004,27 +1021,33 @@ if (previewAudioRef.current) {
             const response = await fetch(track.audioUrl as string)
             const arrayBuffer = await response.arrayBuffer()
             const decoded = await offlineContext.decodeAudioData(arrayBuffer.slice(0))
-            const source = offlineContext.createBufferSource()
-            const gain = offlineContext.createGain()
-            const panner =
-              typeof offlineContext.createStereoPanner === "function"
-                ? offlineContext.createStereoPanner()
-                : null
+            const baseStart = normalizeStartSeconds(track.startSeconds ?? 0)
+            const repeatCount = normalizeRepeatCount(track.repeatCount ?? 0)
+            const totalPlays = repeatCount + 1
 
-            source.buffer = decoded
-            gain.gain.value = track.volume
+            for (let repeatIndex = 0; repeatIndex < totalPlays; repeatIndex += 1) {
+              const source = offlineContext.createBufferSource()
+              const gain = offlineContext.createGain()
+              const panner =
+                typeof offlineContext.createStereoPanner === "function"
+                  ? offlineContext.createStereoPanner()
+                  : null
 
-            if (panner) {
-              panner.pan.value = Math.max(-1, Math.min(1, track.pan))
-              source.connect(gain)
-              gain.connect(panner)
-              panner.connect(offlineContext.destination)
-            } else {
-              source.connect(gain)
-              gain.connect(offlineContext.destination)
+              source.buffer = decoded
+              gain.gain.value = track.volume
+
+              if (panner) {
+                panner.pan.value = Math.max(-1, Math.min(1, track.pan))
+                source.connect(gain)
+                gain.connect(panner)
+                panner.connect(offlineContext.destination)
+              } else {
+                source.connect(gain)
+                gain.connect(offlineContext.destination)
+              }
+
+              source.start(baseStart + repeatIndex * oneBarSeconds)
             }
-
-            source.start(normalizeStartSeconds(track.startSeconds ?? 0))
           } catch {
             failedTracks.push(track.name)
           }
@@ -1071,6 +1094,7 @@ if (previewAudioRef.current) {
         needsReimport: !isPersistentAudioUrl(track.audioUrl),
         duration: track.duration,
         startSeconds: track.startSeconds ?? 0,
+        repeatCount: track.repeatCount ?? 0,
         volume: track.volume,
         pan: track.pan,
         muted: track.muted,
@@ -1639,7 +1663,8 @@ if (previewAudioRef.current) {
               <p>8. Timeline start positions added.</p>
               <p>9. Duplicate/nudge timeline controls added.</p>
               <p>10. Timeline start display polished.</p>
-              <p>11. Desktop installer later.</p>
+              <p>11. Timeline loop repeat controls added.</p>
+              <p>12. Desktop installer later.</p>
             </div>
           </div>
 
