@@ -715,6 +715,88 @@ export default function StudioPage() {
           </div>
         </aside>
 
+          <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-4">
+            <p className="flex items-center gap-2 text-sm font-bold text-cyan-100">
+              <Library className="h-4 w-4" />
+              Sound Library
+            </p>
+
+            <p className="mt-3 text-sm leading-6 text-slate-300">
+              Browse local legal sounds. Placeholder README files must be replaced with real licensed audio files.
+            </p>
+
+            <label className="mt-4 flex items-center gap-2 rounded-xl border border-white/10 bg-slate-900 px-3 py-2">
+              <Search className="h-4 w-4 text-slate-500" />
+              <input
+                value={libraryQuery}
+                onChange={(event) => setLibraryQuery(event.target.value)}
+                placeholder="Search kick, bass, vocal..."
+                className="w-full bg-transparent text-sm outline-none placeholder:text-slate-500"
+              />
+            </label>
+
+            <select
+              value={libraryCategory}
+              onChange={(event) => setLibraryCategory(event.target.value as "all" | SoundLibraryItem["category"])}
+              className="mt-3 w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-sm outline-none"
+            >
+              <option value="all">All categories</option>
+              {soundLibraryCategories.map((category) => (
+                <option key={category} value={category}>
+                  {category}
+                </option>
+              ))}
+            </select>
+
+            <div className="mt-4 max-h-96 space-y-3 overflow-y-auto pr-1">
+              {filteredLibraryItems.length === 0 ? (
+                <div className="rounded-2xl border border-dashed border-white/10 p-5 text-center text-sm text-slate-400">
+                  <Headphones className="mx-auto h-5 w-5" />
+                  <p className="mt-2">No library sounds found.</p>
+                </div>
+              ) : (
+                filteredLibraryItems.map((item) => {
+                  const playable = canPreviewSoundPath(item.path)
+
+                  return (
+                    <div key={item.id} className="rounded-2xl border border-white/10 bg-slate-900 p-3">
+                      <div className="flex items-start justify-between gap-2">
+                        <div>
+                          <p className="font-bold">{item.name}</p>
+                          <p className="mt-1 text-xs uppercase tracking-[0.2em] text-slate-500">
+                            {item.category} / {item.role}
+                          </p>
+                        </div>
+
+                        <button
+                          onClick={() => void previewLibraryItem(item)}
+                          className="rounded-xl bg-emerald-400 px-3 py-2 text-xs font-bold text-slate-950 hover:bg-emerald-300"
+                        >
+                          {playingLibraryId === item.id ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+                        </button>
+                      </div>
+
+                      <p className="mt-2 truncate text-xs text-slate-400">{item.path}</p>
+                      <p className="mt-1 text-xs text-emerald-200">License: {item.license}</p>
+
+                      {!playable && (
+                        <p className="mt-2 rounded-xl border border-yellow-400/20 bg-yellow-400/10 px-2 py-1 text-xs text-yellow-100">
+                          Placeholder only
+                        </p>
+                      )}
+
+                      <button
+                        onClick={() => addLibraryItemToTimeline(item)}
+                        className="mt-3 w-full rounded-xl border border-cyan-400/30 bg-cyan-400/10 px-3 py-2 text-xs font-bold text-cyan-100 hover:bg-cyan-400/20"
+                      >
+                        Add to Timeline
+                      </button>
+                    </div>
+                  )
+                })
+              )}
+            </div>
+          </div>
         <section className="space-y-4">
           <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-4">
             <div className="flex flex-wrap items-center justify-between gap-3">
