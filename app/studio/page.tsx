@@ -533,6 +533,11 @@ export default function StudioPage() {
     [rows]
   )
 
+  const oneBarSeconds = useMemo(() => {
+    const safeBpm = Math.max(40, Math.min(220, bpm))
+    return (60 / safeBpm) * 4
+  }, [bpm])
+
   const filteredLibraryItems = useMemo(() => {
     const normalizedQuery = libraryQuery.trim().toLowerCase()
 
@@ -902,6 +907,41 @@ if (previewAudioRef.current) {
     setRows(presetRows)
     setTracks([])
     setMessage("Project cleared.")
+  }
+
+  function updateTrackStartSeconds(trackId: string, startSeconds: number) {
+    const nextStart = normalizeStartSeconds(startSeconds)
+
+    setTracks((current) =>
+      current.map((track) =>
+        track.id === trackId ? { ...track, startSeconds: nextStart } : track
+      )
+    )
+  }
+
+  function nudgeTimelineTrack(track: AudioTrack, amount: number) {
+    updateTrackStartSeconds(track.id, (track.startSeconds ?? 0) + amount)
+  }
+
+  function duplicateTimelineTrack(track: AudioTrack) {
+    const duplicateId = makeId()
+    const duplicateStart = normalizeStartSeconds((track.startSeconds ?? 0) + oneBarSeconds)
+
+    const duplicate: AudioTrack = {
+      ...track,
+      id: duplicateId,
+      name: `${track.name} Copy`,
+      startSeconds: duplicateStart,
+      createdAt: new Date().toISOString(),
+    }
+
+    setTracks((current) => [...current, duplicate])
+
+    if (duplicate.audioUrl && !duplicate.duration) {
+      loadTrackDuration(duplicateId, duplicate.audioUrl)
+    }
+
+    setMessage(`${track.name} duplicated one bar later at ${duplicateStart.toFixed(2)}s.`)
   }
 
   async function exportPatternWav() {
@@ -1537,6 +1577,29 @@ if (previewAudioRef.current) {
                       }}
                       className="mt-3 w-full"
                     />
+
+                    <div className="mt-3 grid grid-cols-3 gap-2">
+                      <button
+                        onClick={() => nudgeTimelineTrack(track, -0.25)}
+                        className="rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2 text-xs font-bold text-slate-200 hover:bg-white/[0.08]"
+                      >
+                        -0.25s
+                      </button>
+
+                      <button
+                        onClick={() => nudgeTimelineTrack(track, 0.25)}
+                        className="rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2 text-xs font-bold text-slate-200 hover:bg-white/[0.08]"
+                      >
+                        +0.25s
+                      </button>
+
+                      <button
+                        onClick={() => duplicateTimelineTrack(track)}
+                        className="rounded-xl border border-cyan-400/30 bg-cyan-400/10 px-3 py-2 text-xs font-bold text-cyan-100 hover:bg-cyan-400/20"
+                      >
+                        Duplicate +1 Bar
+                      </button>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -1552,7 +1615,8 @@ if (previewAudioRef.current) {
               <p>6. Mixer pan playback added.</p>
               <p>7. Timeline tracks added to WAV export.</p>
               <p>8. Timeline start positions added.</p>
-              <p>9. Desktop installer later.</p>
+              <p>9. Duplicate/nudge timeline controls added.</p>
+              <p>10. Desktop installer later.</p>
             </div>
           </div>
 
