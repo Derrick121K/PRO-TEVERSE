@@ -32,6 +32,7 @@ type AudioTrack = {
   fileName: string
   audioUrl?: string
   duration?: number
+  startSeconds?: number
   volume: number
   pan: number
   muted: boolean
@@ -119,6 +120,11 @@ function serializeTrackForSave(track: AudioTrack) {
       ? "This track uses a project sound-library path and can reload."
       : "This track was imported from the user's PC and must be re-imported after refresh.",
   }
+}
+
+function normalizeStartSeconds(value: number) {
+  if (!Number.isFinite(value)) return 0
+  return Math.max(0, Math.min(600, value))
 }
 
 function formatSeconds(seconds?: number) {
@@ -866,6 +872,7 @@ if (previewAudioRef.current) {
                 ? track.audioUrl
                 : undefined,
             duration: typeof track.duration === "number" ? track.duration : undefined,
+            startSeconds: typeof track.startSeconds === "number" ? normalizeStartSeconds(track.startSeconds) : 0,
             volume: typeof track.volume === "number" ? track.volume : 0.8,
             pan: typeof track.pan === "number" ? track.pan : 0,
             muted: Boolean(track.muted),
@@ -928,7 +935,7 @@ if (previewAudioRef.current) {
       )
 
       const longestTrackSeconds = playableTracks.reduce(
-        (longest, track) => Math.max(longest, track.duration || 0),
+        (longest, track) => Math.max(longest, (track.startSeconds ?? 0) + (track.duration || 0)),
         0
       )
 
@@ -976,7 +983,7 @@ if (previewAudioRef.current) {
               gain.connect(offlineContext.destination)
             }
 
-            source.start(0)
+            source.start(normalizeStartSeconds(track.startSeconds ?? 0))
           } catch {
             failedTracks.push(track.name)
           }
@@ -1022,6 +1029,7 @@ if (previewAudioRef.current) {
         audioUrl: isPersistentAudioUrl(track.audioUrl) ? track.audioUrl : undefined,
         needsReimport: !isPersistentAudioUrl(track.audioUrl),
         duration: track.duration,
+        startSeconds: track.startSeconds ?? 0,
         volume: track.volume,
         pan: track.pan,
         muted: track.muted,
@@ -1470,6 +1478,70 @@ if (previewAudioRef.current) {
           </div>
 
           <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-4">
+          <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-4">
+            <p className="text-sm font-bold text-cyan-100">Timeline Start Positions</p>
+
+            <p className="mt-3 text-sm leading-6 text-slate-300">
+              Set when each timeline track should start in the exported WAV mix.
+            </p>
+
+            {tracks.length === 0 ? (
+              <div className="mt-4 rounded-2xl border border-dashed border-white/10 p-5 text-center text-sm text-slate-400">
+                Add tracks to the timeline to control their start positions.
+              </div>
+            ) : (
+              <div className="mt-4 space-y-3">
+                {tracks.map((track) => (
+                  <div key={`start-${track.id}`} className="rounded-2xl border border-white/10 bg-slate-900 p-3">
+                    <div className="flex items-center justify-between gap-3">
+                      <div>
+                        <p className="font-bold">{track.name}</p>
+                        <p className="text-xs text-slate-400">
+                          Starts at {(track.startSeconds ?? 0).toFixed(2)}s
+                        </p>
+                      </div>
+
+                      <input
+                        type="number"
+                        min={0}
+                        max={600}
+                        step={0.25}
+                        value={track.startSeconds ?? 0}
+                        onChange={(event) => {
+                          const startSeconds = normalizeStartSeconds(Number(event.target.value))
+
+                          setTracks((current) =>
+                            current.map((item) =>
+                              item.id === track.id ? { ...item, startSeconds } : item
+                            )
+                          )
+                        }}
+                        className="w-24 rounded-xl border border-white/10 bg-slate-950 px-3 py-2 text-sm outline-none"
+                      />
+                    </div>
+
+                    <input
+                      type="range"
+                      min={0}
+                      max={32}
+                      step={0.25}
+                      value={track.startSeconds ?? 0}
+                      onChange={(event) => {
+                        const startSeconds = normalizeStartSeconds(Number(event.target.value))
+
+                        setTracks((current) =>
+                          current.map((item) =>
+                            item.id === track.id ? { ...item, startSeconds } : item
+                          )
+                        )
+                      }}
+                      className="mt-3 w-full"
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
             <p className="text-sm font-bold text-cyan-100">Next Engine Steps</p>
             <div className="mt-3 space-y-2 text-sm text-slate-300">
               <p>1. Pattern playback added.</p>
@@ -1479,7 +1551,8 @@ if (previewAudioRef.current) {
               <p>5. Sound-library duration loading added.</p>
               <p>6. Mixer pan playback added.</p>
               <p>7. Timeline tracks added to WAV export.</p>
-              <p>8. Desktop installer later.</p>
+              <p>8. Timeline start positions added.</p>
+              <p>9. Desktop installer later.</p>
             </div>
           </div>
 
