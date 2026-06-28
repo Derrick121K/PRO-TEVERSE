@@ -1128,7 +1128,7 @@ if (previewAudioRef.current) {
             <p className="text-xs uppercase tracking-[0.35em] text-cyan-300">
               PRO-TEVERSE One Studio
             </p>
-            <h1 className="mt-2 text-3xl font-black">Modern Offline Music Studio</h1>
+            <h1 className="mt-2 text-3xl font-black">Modern Modern Offline Music Studio</h1>
             <p className="mt-1 text-sm text-slate-400">
               Import, program, arrange, mix, save and export in one familiar studio workflow.
             </p>
@@ -1234,7 +1234,7 @@ if (previewAudioRef.current) {
             </div>
 
             <p className="mt-4 rounded-xl border border-white/10 bg-black/20 px-3 py-2 text-xs text-slate-300">
-              Status: {isTransportPlaying ? "Playing" : "Stopped"} / {tracks.length} tracks / {activeStepCount} active pattern steps / Step {currentStep === null ? "-" : currentStep + 1}
+              Studio Status: {isTransportPlaying ? "Playing" : "Stopped"} / {tracks.length} tracks / {activeStepCount} active pattern steps / Step {currentStep === null ? "-" : currentStep + 1}
             </p>
           </div>
 
@@ -1544,10 +1544,10 @@ if (previewAudioRef.current) {
 
           <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-4">
           <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-4">
-            <p className="text-sm font-bold text-cyan-100">Timeline Start Positions</p>
+            <p className="text-sm font-bold text-cyan-100">Arrangement Controls</p>
 
             <p className="mt-3 text-sm leading-6 text-slate-300">
-              Set when each timeline track should start in the exported WAV mix.
+              Set when each track starts, duplicate clips, nudge timing and loop sounds across the export.
             </p>
 
             {tracks.length === 0 ? (
@@ -1673,7 +1673,7 @@ if (previewAudioRef.current) {
               </div>
             )}
           </div>
-            <p className="text-sm font-bold text-cyan-100">Next Engine Steps</p>
+            <p className="text-sm font-bold text-cyan-100">Studio Engine Roadmap</p>
             <div className="mt-3 space-y-2 text-sm text-slate-300">
               <p>1. Pattern playback added.</p>
               <p>2. Sound library panel added.</p>
@@ -1692,7 +1692,7 @@ if (previewAudioRef.current) {
           </div>
 
           <div className="rounded-3xl border border-white/10 bg-black/30 p-4">
-            <p className="text-xs uppercase tracking-[0.25em] text-slate-500">Status</p>
+            <p className="text-xs uppercase tracking-[0.25em] text-slate-500">Studio Status</p>
             <p className="mt-3 text-sm leading-6 text-slate-300">{message}</p>
           </div>
         </aside>
