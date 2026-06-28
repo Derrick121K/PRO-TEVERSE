@@ -1128,9 +1128,9 @@ if (previewAudioRef.current) {
             <p className="text-xs uppercase tracking-[0.35em] text-cyan-300">
               PRO-TEVERSE One Studio
             </p>
-            <h1 className="mt-2 text-3xl font-black">Modern Modern Offline Music Studio</h1>
+            <h1 className="mt-2 text-3xl font-black">Modern Offline Music Studio</h1>
             <p className="mt-1 text-sm text-slate-400">
-              Import, program, arrange, mix, save and export in one familiar studio workflow.
+              Import, program, arrange, mix and export from one clean studio dashboard.
             </p>
           </div>
 
@@ -1687,7 +1687,8 @@ if (previewAudioRef.current) {
               <p>10. Timeline start display polished.</p>
               <p>11. Timeline loop repeat controls added.</p>
               <p>12. Modern UI/UX polish added.</p>
-              <p>13. Desktop installer later.</p>
+              <p>13. Modern studio workspace added.</p>
+              <p>14. Desktop installer later.</p>
             </div>
           </div>
 
