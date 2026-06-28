@@ -333,12 +333,12 @@ export default function StudioPage() {
   const [projectName, setProjectName] = useState("PRO-TEVERSE Offline Project")
   const [tracks, setTracks] = useState<AudioTrack[]>([])
   const [desktopWindows, setDesktopWindows] = useState<Record<string, DesktopWindowState>>(() => ({
-    browser: { x: 18, y: 152, width: 270, height: 560, visible: true, z: 10 },
-    arrangement: { x: 304, y: 152, width: 780, height: 560, visible: true, z: 11 },
-    inspector: { x: 1100, y: 152, width: 300, height: 560, visible: true, z: 12 },
-    mixer: { x: 304, y: 728, width: 600, height: 230, visible: true, z: 13 },
-    plugins: { x: 920, y: 728, width: 480, height: 230, visible: true, z: 14 },
-    ai: { x: 18, y: 728, width: 270, height: 230, visible: true, z: 15 },
+    browser: { x: 14, y: 14, width: 260, height: 500, visible: true, z: 10 },
+    arrangement: { x: 288, y: 14, width: 720, height: 500, visible: true, z: 11 },
+    inspector: { x: 1022, y: 14, width: 310, height: 500, visible: true, z: 12 },
+    mixer: { x: 288, y: 528, width: 520, height: 170, visible: true, z: 13 },
+    plugins: { x: 822, y: 528, width: 510, height: 170, visible: true, z: 14 },
+    ai: { x: 14, y: 528, width: 260, height: 170, visible: true, z: 15 },
   }))
   const [desktopDrag, setDesktopDrag] = useState<DesktopDragState | null>(null)
   const [desktopZ, setDesktopZ] = useState(30)
@@ -1282,7 +1282,7 @@ if (previewAudioRef.current) {
             ))}
           </div>
 
-          <div className="pro-daw-layout-actions">
+          <div className="pro-daw-layout-actions compact">
             {[
               ["browser", "Browser"],
               ["arrangement", "Arrangement"],
@@ -1325,6 +1325,26 @@ if (previewAudioRef.current) {
           </div>
         </div>
 
+
+        <div className="pro-daw-tab-dock">
+          {[
+            ["browser", "Browser"],
+            ["arrangement", "Arrangement"],
+            ["inspector", "Inspector"],
+            ["mixer", "Mixer"],
+            ["plugins", "Plugin Rack"],
+            ["ai", "AI Studio"],
+          ].map(([id, label]) => (
+            <button
+              key={id}
+              className={desktopWindows[id]?.visible ? "active" : ""}
+              onClick={() => toggleDesktopWindow(id)}
+            >
+              {label}
+            </button>
+          ))}
+          <button onClick={resetDesktopLayout}>Reset Layout</button>
+        </div>
         <div className="pro-daw-window-layer">
           {desktopWindows.browser?.visible && (
             <section
@@ -1389,8 +1409,8 @@ if (previewAudioRef.current) {
                 className="pro-daw-window-title"
                 onMouseDown={(event) => beginDesktopDrag("arrangement", event.clientX, event.clientY)}
               >
-                <strong>Arrangement + Pattern Grid</strong>
-                <span>16-step clips / timeline tracks</span>
+                <strong>Arrangement / Step Sequencer</strong>
+                <span>Patterns, clips, bars and timeline lanes</span>
               </div>
 
               <div className="pro-daw-ruler-row">

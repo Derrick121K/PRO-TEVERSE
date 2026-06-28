@@ -2132,3 +2132,226 @@ body {
   text-align: center;
   font-size: 0.8rem;
 }
+/* PRO-TEEVERSE UIUX IMAGE MATCH + MOVABLE TABS V1 */
+.pro-daw-desktop {
+  background:
+    radial-gradient(circle at 12% 0%, rgba(138, 92, 255, 0.25), transparent 30rem),
+    radial-gradient(circle at 85% 8%, rgba(185, 131, 255, 0.12), transparent 24rem),
+    linear-gradient(180deg, #101014 0%, #07070b 100%) !important;
+}
+
+.pro-daw-topbar {
+  min-height: 56px !important;
+  grid-template-columns: 250px 300px minmax(0, 1fr) !important;
+  padding: 0.55rem 0.8rem !important;
+  background: #0b0b10 !important;
+  border-bottom: 1px solid rgba(185, 131, 255, 0.18) !important;
+}
+
+.pro-daw-brand-block h1 {
+  color: #b983ff !important;
+  text-shadow: 0 0 24px rgba(138, 92, 255, 0.55) !important;
+}
+
+.pro-daw-main-menu {
+  justify-content: center !important;
+}
+
+.pro-daw-main-menu button {
+  background: transparent !important;
+  border-color: transparent !important;
+  color: #a9a9b2 !important;
+}
+
+.pro-daw-main-menu button:hover {
+  color: #ffffff !important;
+  background: rgba(138, 92, 255, 0.16) !important;
+}
+
+.pro-daw-layout-actions.compact {
+  justify-content: flex-end !important;
+  overflow-x: auto !important;
+  flex-wrap: nowrap !important;
+  min-width: 0 !important;
+  padding-bottom: 0.15rem !important;
+}
+
+.pro-daw-layout-actions.compact button {
+  flex: 0 0 auto !important;
+  padding: 0.42rem 0.62rem !important;
+  font-size: 0.66rem !important;
+  background: rgba(255,255,255,0.035) !important;
+}
+
+.pro-daw-transport-bar {
+  min-height: 64px !important;
+  grid-template-columns: 250px 230px minmax(360px, 1fr) 245px !important;
+  padding: 0.55rem 0.8rem !important;
+  background: #111119 !important;
+  border-bottom: 1px solid rgba(255,255,255,0.08) !important;
+}
+
+.pro-daw-project-info,
+.pro-daw-status-chip {
+  min-height: 46px !important;
+  background: #1a1b23 !important;
+  border-color: rgba(255,255,255,0.08) !important;
+}
+
+.pro-daw-transport-actions,
+.pro-daw-fast-actions {
+  flex-wrap: nowrap !important;
+  overflow-x: auto !important;
+}
+
+.pro-daw-transport-actions button,
+.pro-daw-fast-actions button {
+  flex: 0 0 auto !important;
+}
+
+.pro-daw-tab-dock {
+  flex: 0 0 44px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.45rem !important;
+  padding: 0 0.8rem !important;
+  overflow-x: auto !important;
+  background: #0d0d13 !important;
+  border-bottom: 1px solid rgba(185, 131, 255, 0.18) !important;
+}
+
+.pro-daw-tab-dock button {
+  flex: 0 0 auto !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+  border-radius: 0.7rem 0.7rem 0 0 !important;
+  background: #151620 !important;
+  color: #a9a9b2 !important;
+  padding: 0.55rem 0.85rem !important;
+  font-size: 0.72rem !important;
+  font-weight: 900 !important;
+}
+
+.pro-daw-tab-dock button.active {
+  border-color: rgba(185, 131, 255, 0.45) !important;
+  background: linear-gradient(180deg, rgba(138, 92, 255, 0.35), #1a1b23) !important;
+  color: #ffffff !important;
+  box-shadow: 0 -8px 24px rgba(138, 92, 255, 0.16) inset !important;
+}
+
+.pro-daw-window-layer {
+  background:
+    linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(255,255,255,0.03) 1px, transparent 1px),
+    #101014 !important;
+  background-size: 48px 100%, 100% 48px !important;
+}
+
+.pro-daw-window {
+  border-color: rgba(185, 131, 255, 0.18) !important;
+  border-radius: 0.75rem !important;
+  background: rgba(26, 27, 35, 0.97) !important;
+  box-shadow:
+    0 24px 70px rgba(0,0,0,0.5),
+    inset 0 1px 0 rgba(255,255,255,0.04) !important;
+}
+
+.pro-daw-window-title {
+  min-height: 38px !important;
+  padding: 0.55rem 0.75rem !important;
+  background: linear-gradient(90deg, rgba(138, 92, 255, 0.25), rgba(26, 27, 35, 0.98)) !important;
+}
+
+.pro-daw-window-title strong {
+  color: #ffffff !important;
+  letter-spacing: 0.02em !important;
+}
+
+.pro-daw-window-title span {
+  color: #a9a9b2 !important;
+}
+
+.pro-daw-ruler-row {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 5 !important;
+  background: #151620 !important;
+}
+
+.pro-daw-pattern-row,
+.pro-daw-track-clip-row {
+  min-width: 900px !important;
+  grid-template-columns: 165px 1fr !important;
+}
+
+.pro-daw-pattern-label {
+  background: #171822 !important;
+}
+
+.pro-daw-pattern-steps {
+  background:
+    linear-gradient(90deg, rgba(185,131,255,0.08) 1px, transparent 1px),
+    #0f1016 !important;
+  background-size: 48px 100% !important;
+}
+
+.pro-daw-pattern-steps button {
+  border-radius: 0.35rem !important;
+  background: #1a1b23 !important;
+}
+
+.pro-daw-pattern-steps button.active {
+  border-color: rgba(255,255,255,0.25) !important;
+  transform: translateY(-1px) !important;
+}
+
+.pro-daw-mixer-body {
+  align-items: stretch !important;
+  overflow-x: auto !important;
+}
+
+.pro-daw-channel {
+  min-width: 135px !important;
+  background: #151620 !important;
+}
+
+.pro-daw-device-card {
+  min-width: 135px !important;
+  background: #151620 !important;
+}
+
+.pro-daw-ai-grid {
+  grid-template-columns: 1fr !important;
+}
+
+@media (max-width: 1180px) {
+  .pro-daw-topbar {
+    grid-template-columns: 220px 260px minmax(0, 1fr) !important;
+  }
+
+  .pro-daw-transport-bar {
+    grid-template-columns: 220px 210px minmax(280px, 1fr) !important;
+  }
+
+  .pro-daw-status-chip {
+    display: none !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .pro-daw-topbar,
+  .pro-daw-transport-bar {
+    display: flex !important;
+    overflow-x: auto !important;
+  }
+
+  .pro-daw-brand-block {
+    min-width: 220px !important;
+  }
+
+  .pro-daw-main-menu,
+  .pro-daw-layout-actions,
+  .pro-daw-transport-actions,
+  .pro-daw-fast-actions {
+    flex: 0 0 auto !important;
+  }
+}
