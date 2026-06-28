@@ -1200,6 +1200,215 @@ if (previewAudioRef.current) {
           <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-4">
             <p className="flex items-center gap-2 text-sm font-bold text-cyan-100">
               <SlidersHorizontal className="h-4 w-4" />
+
+          <section className="pro-daw-force-shell">
+            <div className="pro-daw-force-topbar">
+              <div>
+                <h2>PRO-TEEVERSE</h2>
+                <p>Create. Connect. Conquer.</p>
+              </div>
+
+              <nav>
+                {["FILE", "EDIT", "VIEW", "TOOLS", "HELP"].map((item) => (
+                  <button key={item}>{item}</button>
+                ))}
+              </nav>
+
+              <div className="pro-daw-force-profile">D</div>
+            </div>
+
+            <div className="pro-daw-force-transport">
+              <div className="pro-daw-force-project">
+                <strong>{projectName}</strong>
+                <span>{bpm} BPM Â· 4/4 Â· {songKey}</span>
+              </div>
+
+              <div className="pro-daw-force-controls">
+                <button onClick={startPatternPlayback}>â–¶</button>
+                <button onClick={stopPatternPlayback}>â– </button>
+                <button className="record">â—</button>
+              </div>
+
+              <div className="pro-daw-force-clock">
+                <strong>1.1.00</strong>
+                <span>READY</span>
+              </div>
+
+              <div className="pro-daw-force-stats">
+                <span>CPU 12%</span>
+                <span>RAM 34%</span>
+                <span>DISK 8%</span>
+              </div>
+            </div>
+
+            <div className="pro-daw-force-grid">
+              <aside className="pro-daw-force-browser">
+                <div className="browser-search">Search sounds, plugins, projects...</div>
+
+                {[
+                  "Dashboard",
+                  "Sound Library",
+                  "Loops & Samples",
+                  "Presets",
+                  "Instruments",
+                  "Audio Effects",
+                  "MIDI Effects",
+                  "Plugins",
+                  "Projects",
+                  "User Library",
+                ].map((item) => (
+                  <button
+                    key={item}
+                    className={item === "Sound Library" ? "active" : ""}
+                  >
+                    {item}
+                  </button>
+                ))}
+
+                <div className="browser-collections">
+                  <p>Collections</p>
+                  {["Drums", "Bass", "Synths", "Vocals", "FX", "My Collection"].map((item) => (
+                    <span key={item}>{item}</span>
+                  ))}
+                </div>
+              </aside>
+
+              <main className="pro-daw-force-arrange">
+                <div className="arrange-ruler">
+                  {["1", "9", "17", "25", "33", "41", "49", "57", "65", "73"].map((bar) => (
+                    <span key={bar}>{bar}</span>
+                  ))}
+                </div>
+
+                <div className="arrange-sections">
+                  {["INTRO", "VERSE", "PRE CHORUS", "CHORUS", "VERSE 2", "BREAKDOWN", "OUTRO"].map((section) => (
+                    <span key={section}>{section}</span>
+                  ))}
+                </div>
+
+                <div className="arrange-lanes">
+                  {rows.map((row, rowIndex) => (
+                    <div key={row.id} className="arrange-lane">
+                      <div className="lane-head">
+                        <strong>{row.name}</strong>
+                        <small>{row.role}</small>
+                        <div>
+                          <button>M</button>
+                          <button>S</button>
+                        </div>
+                      </div>
+
+                      <div className="lane-body">
+                        {row.steps.map((active, stepIndex) =>
+                          active ? (
+                            <span
+                              key={`${row.id}-${stepIndex}`}
+                              className={`midi-clip role-${row.role}`}
+                              style={{
+                                left: `${stepIndex * 6.1}%`,
+                                width: row.role === "hat" ? "3%" : "6%",
+                                top: `${10 + (rowIndex % 2) * 16}px`,
+                              }}
+                            />
+                          ) : null
+                        )}
+                      </div>
+                    </div>
+                  ))}
+
+                  {tracks.map((track, index) => {
+                    const repeatCount = normalizeRepeatCount(track.repeatCount ?? 0)
+                    const left = Math.min(88, (track.startSeconds ?? 0) * 8)
+                    const width = Math.max(8, Math.min(30, (track.duration ?? 1) * 10))
+
+                    return (
+                      <div key={track.id} className="arrange-lane">
+                        <div className="lane-head">
+                          <strong>{track.name}</strong>
+                          <small>{formatSeconds(track.duration)}</small>
+                          <div>
+                            <button>{track.muted ? "M!" : "M"}</button>
+                            <button>{track.solo ? "S!" : "S"}</button>
+                          </div>
+                        </div>
+
+                        <div className="lane-body">
+                          {Array.from({ length: repeatCount + 1 }).map((_, repeatIndex) => (
+                            <span
+                              key={`${track.id}-${repeatIndex}`}
+                              className="audio-clip"
+                              style={{
+                                left: `${Math.min(92, left + repeatIndex * oneBarSeconds * 8)}%`,
+                                width: `${width}%`,
+                                top: `${12 + (index % 2) * 14}px`,
+                              }}
+                            >
+                              {track.fileName}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              </main>
+
+              <aside className="pro-daw-force-inspector">
+                <div className="inspector-title">
+                  <strong>INSPECTOR</strong>
+                  <span>TRACK</span>
+                </div>
+
+                <div className="inspector-card">
+                  <p>Current Project</p>
+                  <strong>{projectName}</strong>
+                  <span>{tracks.length} track(s) Â· {activeStepCount} active step(s)</span>
+                </div>
+
+                <div className="inspector-knobs">
+                  <div>
+                    <span>Gain</span>
+                    <strong>0.0 dB</strong>
+                  </div>
+                  <div>
+                    <span>Pan</span>
+                    <strong>Center</strong>
+                  </div>
+                </div>
+
+                <div className="inspector-eq">
+                  <i />
+                  <i />
+                  <i />
+                  <i />
+                  <i />
+                </div>
+
+                <div className="inspector-meter">
+                  <i />
+                  <i />
+                  <i />
+                </div>
+              </aside>
+            </div>
+
+            <div className="pro-daw-force-devices">
+              {["EQ Eight", "Compressor", "Reverb", "Limiter", "Master"].map((device) => (
+                <div key={device}>
+                  <strong>{device}</strong>
+                  <span />
+                  <span />
+                  <span />
+                </div>
+              ))}
+            </div>
+
+            <div className="pro-daw-force-tabs">
+              {["Arrange", "Mixer", "Sampler", "Piano Roll", "Score", "Automation"].map((tab) => (
+                <button key={tab}>{tab}</button>
+              ))}
+            </div>
+          </section>
               Project Setup
             </p>
 

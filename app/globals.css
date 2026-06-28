@@ -1069,3 +1069,513 @@ input[type="file"]::file-selector-button {
     display: none;
   }
 }
+/* PRO-TEEVERSE FORCE DAW SHELL */
+.pro-daw-force-shell {
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 2rem;
+  background:
+    radial-gradient(circle at 10% 0%, rgba(138,92,255,0.24), transparent 28rem),
+    radial-gradient(circle at 90% 10%, rgba(34,211,238,0.12), transparent 24rem),
+    #090b12;
+  color: #f8fafc;
+  box-shadow: 0 35px 90px -45px rgba(0,0,0,0.9);
+}
+
+.pro-daw-force-topbar,
+.pro-daw-force-transport,
+.pro-daw-force-devices,
+.pro-daw-force-tabs {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.pro-daw-force-topbar {
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.9rem 1rem;
+  background: rgba(5,7,12,0.9);
+}
+
+.pro-daw-force-topbar h2 {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 1000;
+  letter-spacing: 0.08em;
+  color: #c4b5fd;
+  text-shadow: 0 0 25px rgba(138,92,255,0.65);
+}
+
+.pro-daw-force-topbar p {
+  margin: 0.25rem 0 0;
+  font-size: 0.65rem;
+  letter-spacing: 0.28em;
+  color: rgba(226,232,240,0.55);
+  text-transform: uppercase;
+}
+
+.pro-daw-force-topbar nav {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.pro-daw-force-topbar button,
+.pro-daw-force-tabs button {
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: rgba(226,232,240,0.78);
+  padding: 0.5rem 0.7rem;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.pro-daw-force-topbar button:hover,
+.pro-daw-force-tabs button:hover {
+  background: rgba(138,92,255,0.18);
+  color: white;
+}
+
+.pro-daw-force-profile {
+  display: grid;
+  place-items: center;
+  width: 2.1rem;
+  height: 2.1rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #8a5cff, #b983ff);
+  font-weight: 900;
+}
+
+.pro-daw-force-transport {
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.8rem 1rem;
+  background: rgba(15,23,42,0.72);
+}
+
+.pro-daw-force-project,
+.pro-daw-force-clock {
+  display: flex;
+  flex-direction: column;
+  min-width: 10rem;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 0.9rem;
+  background: rgba(2,6,23,0.68);
+  padding: 0.65rem 0.8rem;
+}
+
+.pro-daw-force-project strong,
+.pro-daw-force-clock strong {
+  color: #d8b4fe;
+  font-weight: 900;
+}
+
+.pro-daw-force-project span,
+.pro-daw-force-clock span {
+  margin-top: 0.2rem;
+  color: rgba(226,232,240,0.62);
+  font-size: 0.7rem;
+}
+
+.pro-daw-force-controls {
+  display: flex;
+  gap: 0.7rem;
+}
+
+.pro-daw-force-controls button {
+  display: grid;
+  place-items: center;
+  width: 2.7rem;
+  height: 2.7rem;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 999px;
+  background: rgba(255,255,255,0.04);
+  color: white;
+  font-weight: 900;
+}
+
+.pro-daw-force-controls button:first-child {
+  width: 3.2rem;
+  height: 3.2rem;
+  border-color: rgba(185,131,255,0.75);
+  color: #c4b5fd;
+}
+
+.pro-daw-force-controls .record {
+  color: #ff4e6a;
+}
+
+.pro-daw-force-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.45rem;
+}
+
+.pro-daw-force-stats span {
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 0.8rem;
+  background: rgba(2,6,23,0.65);
+  color: #67e8f9;
+  padding: 0.55rem;
+  font-size: 0.72rem;
+  font-weight: 900;
+}
+
+.pro-daw-force-grid {
+  display: grid;
+  grid-template-columns: 250px minmax(520px, 1fr) 260px;
+  min-height: 520px;
+}
+
+.pro-daw-force-browser,
+.pro-daw-force-inspector {
+  background: rgba(8,11,18,0.94);
+  padding: 0.8rem;
+}
+
+.pro-daw-force-browser {
+  border-right: 1px solid rgba(255,255,255,0.08);
+}
+
+.pro-daw-force-inspector {
+  border-left: 1px solid rgba(255,255,255,0.08);
+}
+
+.browser-search {
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 0.8rem;
+  background: rgba(2,6,23,0.72);
+  color: rgba(226,232,240,0.45);
+  padding: 0.65rem;
+  font-size: 0.72rem;
+}
+
+.pro-daw-force-browser button {
+  display: block;
+  width: 100%;
+  margin-top: 0.35rem;
+  border: 0;
+  border-radius: 0.65rem;
+  background: transparent;
+  color: rgba(226,232,240,0.78);
+  padding: 0.55rem 0.65rem;
+  text-align: left;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.pro-daw-force-browser button.active,
+.pro-daw-force-browser button:hover {
+  background: rgba(138,92,255,0.2);
+  color: white;
+}
+
+.browser-collections {
+  margin-top: 1rem;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  padding-top: 0.85rem;
+}
+
+.browser-collections p,
+.inspector-title strong {
+  color: #b983ff;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.browser-collections span {
+  display: block;
+  margin-top: 0.45rem;
+  color: rgba(226,232,240,0.72);
+  font-size: 0.75rem;
+}
+
+.pro-daw-force-arrange {
+  overflow: hidden;
+  background:
+    linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(255,255,255,0.035) 1px, transparent 1px),
+    rgba(7,10,18,0.95);
+  background-size: 54px 100%, 100% 48px;
+}
+
+.arrange-ruler,
+.arrange-sections {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.arrange-ruler span,
+.arrange-sections span {
+  border-right: 1px solid rgba(255,255,255,0.06);
+  color: rgba(226,232,240,0.56);
+  padding: 0.35rem 0.5rem;
+  font-size: 0.65rem;
+  font-weight: 800;
+}
+
+.arrange-sections span {
+  text-align: center;
+  color: rgba(226,232,240,0.72);
+}
+
+.arrange-lane {
+  display: grid;
+  grid-template-columns: 145px 1fr;
+  min-height: 54px;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+
+.lane-head {
+  border-right: 1px solid rgba(255,255,255,0.08);
+  background: rgba(15,23,42,0.82);
+  padding: 0.55rem;
+}
+
+.lane-head strong {
+  display: block;
+  color: rgba(248,250,252,0.95);
+  font-size: 0.75rem;
+}
+
+.lane-head small {
+  display: block;
+  margin-top: 0.2rem;
+  color: rgba(226,232,240,0.45);
+  font-size: 0.65rem;
+}
+
+.lane-head button {
+  margin-top: 0.45rem;
+  margin-right: 0.3rem;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 0.35rem;
+  background: rgba(255,255,255,0.04);
+  color: rgba(226,232,240,0.8);
+  font-size: 0.62rem;
+  font-weight: 900;
+}
+
+.lane-body {
+  position: relative;
+  min-height: 54px;
+}
+
+.midi-clip,
+.audio-clip {
+  position: absolute;
+  display: block;
+  height: 18px;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 0.35rem;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.25);
+}
+
+.role-kick,
+.role-clap {
+  background: linear-gradient(90deg, rgba(59,130,246,0.9), rgba(37,99,235,0.82));
+}
+
+.role-hat {
+  background: linear-gradient(90deg, rgba(34,211,238,0.9), rgba(14,165,233,0.82));
+}
+
+.role-bass {
+  background: linear-gradient(90deg, rgba(34,197,94,0.9), rgba(22,163,74,0.82));
+}
+
+.role-chord {
+  background: linear-gradient(90deg, rgba(234,179,8,0.9), rgba(202,138,4,0.82));
+}
+
+.role-melody {
+  background: linear-gradient(90deg, rgba(168,85,247,0.9), rgba(147,51,234,0.82));
+}
+
+.audio-clip {
+  height: 24px;
+  overflow: hidden;
+  background: linear-gradient(90deg, rgba(217,70,239,0.92), rgba(168,85,247,0.86));
+  color: white;
+  padding: 0.25rem 0.45rem;
+  font-size: 0.62rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.inspector-title {
+  display: flex;
+  justify-content: space-between;
+}
+
+.inspector-title span {
+  color: rgba(226,232,240,0.45);
+  font-size: 0.7rem;
+}
+
+.inspector-card,
+.inspector-knobs > div {
+  margin-top: 1rem;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 1rem;
+  background: rgba(2,6,23,0.72);
+  padding: 0.85rem;
+}
+
+.inspector-card p {
+  color: rgba(226,232,240,0.5);
+  font-size: 0.72rem;
+}
+
+.inspector-card strong {
+  display: block;
+  color: white;
+}
+
+.inspector-card span {
+  display: block;
+  margin-top: 0.25rem;
+  color: rgba(226,232,240,0.55);
+  font-size: 0.72rem;
+}
+
+.inspector-knobs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.7rem;
+}
+
+.inspector-knobs span {
+  color: rgba(226,232,240,0.5);
+  font-size: 0.68rem;
+}
+
+.inspector-knobs strong {
+  display: block;
+  color: #c4b5fd;
+}
+
+.inspector-eq {
+  margin-top: 1rem;
+  height: 92px;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 1rem;
+  background:
+    linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(255,255,255,0.04) 1px, transparent 1px),
+    rgba(2,6,23,0.72);
+  background-size: 20% 100%, 100% 25%;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 0.8rem;
+}
+
+.inspector-eq i {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 999px;
+  background: #8a5cff;
+  box-shadow: 0 0 22px rgba(138,92,255,0.8);
+}
+
+.inspector-meter {
+  margin-top: 1rem;
+  display: flex;
+  align-items: end;
+  gap: 0.35rem;
+  height: 112px;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 1rem;
+  background: rgba(2,6,23,0.72);
+  padding: 0.8rem;
+}
+
+.inspector-meter i {
+  flex: 1;
+  border-radius: 0.3rem;
+  background: linear-gradient(180deg, #facc15, #22c55e);
+}
+
+.inspector-meter i:nth-child(1) {
+  height: 62%;
+}
+
+.inspector-meter i:nth-child(2) {
+  height: 86%;
+}
+
+.inspector-meter i:nth-child(3) {
+  height: 74%;
+}
+
+.pro-daw-force-devices {
+  gap: 0.6rem;
+  overflow-x: auto;
+  padding: 0.75rem;
+  background: rgba(2,6,23,0.86);
+}
+
+.pro-daw-force-devices div {
+  min-width: 170px;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 0.95rem;
+  background: rgba(15,23,42,0.9);
+  padding: 0.85rem;
+}
+
+.pro-daw-force-devices strong {
+  display: block;
+  color: #c4b5fd;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+}
+
+.pro-daw-force-devices span {
+  display: inline-block;
+  margin-top: 0.8rem;
+  margin-right: 0.4rem;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 999px;
+  background: radial-gradient(circle at 30% 25%, #8a5cff, #1e1b4b 60%);
+}
+
+.pro-daw-force-tabs {
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding: 0.7rem 1rem;
+  background: rgba(5,7,12,0.92);
+}
+
+@media (max-width: 1180px) {
+  .pro-daw-force-grid {
+    grid-template-columns: 220px minmax(460px, 1fr);
+  }
+
+  .pro-daw-force-inspector {
+    display: none;
+  }
+}
+
+@media (max-width: 820px) {
+  .pro-daw-force-topbar,
+  .pro-daw-force-transport {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .pro-daw-force-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .pro-daw-force-browser {
+    display: none;
+  }
+}
