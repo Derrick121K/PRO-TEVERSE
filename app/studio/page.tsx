@@ -1220,18 +1220,30 @@ if (previewAudioRef.current) {
             <div className="pro-daw-force-transport">
               <div className="pro-daw-force-project">
                 <strong>{projectName}</strong>
-                <span>{bpm} BPM Â· 4/4 Â· {songKey}</span>
+                <span>{bpm} BPM Ã‚/ 4/4 Ã‚/ {songKey}</span>
               </div>
 
               <div className="pro-daw-force-controls">
-                <button onClick={startPatternPlayback}>â–¶</button>
-                <button onClick={stopPatternPlayback}>â– </button>
-                <button className="record">â—</button>
+                <button onClick={startPatternPlayback}>Ã¢â€“Â¶</button>
+                <button onClick={stopPatternPlayback}>Ã¢â€“Â </button>
+                <button className="record">Ã¢â€”Â</button>
               </div>
 
               <div className="pro-daw-force-clock">
                 <strong>1.1.00</strong>
                 <span>READY</span>
+              </div>
+
+              <div className="pro-daw-force-actions">
+                <button onClick={() => filteredLibraryItems[0] && addLibraryItemToTimeline(filteredLibraryItems[0])}>
+                  Add Sound
+                </button>
+                <button onClick={exportPatternWav}>
+                  Export WAV
+                </button>
+                <button onClick={exportProjectJson}>
+                  Export JSON
+                </button>
               </div>
 
               <div className="pro-daw-force-stats">
@@ -1362,7 +1374,7 @@ if (previewAudioRef.current) {
                 <div className="inspector-card">
                   <p>Current Project</p>
                   <strong>{projectName}</strong>
-                  <span>{tracks.length} track(s) Â· {activeStepCount} active step(s)</span>
+                  <span>{tracks.length} track(s) Ã‚/ {activeStepCount} active step(s)</span>
                 </div>
 
                 <div className="inspector-knobs">

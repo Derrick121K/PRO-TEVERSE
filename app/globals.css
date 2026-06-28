@@ -1579,3 +1579,163 @@ input[type="file"]::file-selector-button {
     display: none;
   }
 }
+/* PRO-TEEVERSE FULLSCREEN DAW OVERRIDE V2 */
+html,
+body {
+  margin: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  overflow: hidden !important;
+  background: #05070d !important;
+}
+
+.pro-daw-force-shell {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 2147483647 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  margin: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+  background:
+    radial-gradient(circle at 8% 0%, rgba(138, 92, 255, 0.30), transparent 32rem),
+    radial-gradient(circle at 88% 12%, rgba(34, 211, 238, 0.14), transparent 26rem),
+    linear-gradient(180deg, #10131c 0%, #070911 100%) !important;
+  color: #f8fafc !important;
+}
+
+.pro-daw-force-topbar {
+  flex: 0 0 64px !important;
+  display: grid !important;
+  grid-template-columns: 270px 1fr 60px !important;
+  align-items: center !important;
+  gap: 1rem !important;
+  padding: 0 1.2rem !important;
+  background: #080b13 !important;
+  border-bottom: 1px solid rgba(255,255,255,0.08) !important;
+}
+
+.pro-daw-force-transport {
+  flex: 0 0 76px !important;
+  display: grid !important;
+  grid-template-columns: 270px 230px 130px 1fr 220px !important;
+  align-items: center !important;
+  gap: 1rem !important;
+  padding: 0 1.2rem !important;
+  background: #0c101b !important;
+  border-bottom: 1px solid rgba(255,255,255,0.08) !important;
+}
+
+.pro-daw-force-actions {
+  display: flex !important;
+  justify-content: center !important;
+  gap: 0.55rem !important;
+}
+
+.pro-daw-force-actions button {
+  border: 1px solid rgba(138,92,255,0.35) !important;
+  border-radius: 999px !important;
+  background: rgba(138,92,255,0.15) !important;
+  color: #ede9fe !important;
+  padding: 0.6rem 0.8rem !important;
+  font-size: 0.72rem !important;
+  font-weight: 900 !important;
+}
+
+.pro-daw-force-grid {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  display: grid !important;
+  grid-template-columns: 270px minmax(0, 1fr) 285px !important;
+  overflow: hidden !important;
+}
+
+.pro-daw-force-browser,
+.pro-daw-force-inspector {
+  overflow: auto !important;
+  background: #080b13 !important;
+  padding: 0.9rem !important;
+}
+
+.pro-daw-force-browser {
+  border-right: 1px solid rgba(255,255,255,0.08) !important;
+}
+
+.pro-daw-force-inspector {
+  border-left: 1px solid rgba(255,255,255,0.08) !important;
+}
+
+.pro-daw-force-arrange {
+  overflow: auto !important;
+  background:
+    linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(255,255,255,0.035) 1px, transparent 1px),
+    #070a12 !important;
+  background-size: 56px 100%, 100% 54px !important;
+}
+
+.arrange-ruler,
+.arrange-sections,
+.arrange-lanes {
+  min-width: 980px !important;
+}
+
+.arrange-lane {
+  display: grid !important;
+  grid-template-columns: 160px 1fr !important;
+  min-height: 56px !important;
+  border-bottom: 1px solid rgba(255,255,255,0.07) !important;
+}
+
+.lane-head {
+  background: #101827 !important;
+  border-right: 1px solid rgba(255,255,255,0.08) !important;
+  padding: 0.6rem !important;
+}
+
+.lane-body {
+  position: relative !important;
+  min-height: 56px !important;
+}
+
+.pro-daw-force-devices {
+  flex: 0 0 126px !important;
+  display: flex !important;
+  gap: 0.7rem !important;
+  overflow-x: auto !important;
+  padding: 0.8rem 1rem !important;
+  background: #070a12 !important;
+  border-top: 1px solid rgba(255,255,255,0.08) !important;
+  border-bottom: 1px solid rgba(255,255,255,0.08) !important;
+}
+
+.pro-daw-force-tabs {
+  flex: 0 0 52px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.55rem !important;
+  padding: 0 1rem !important;
+  background: #05070d !important;
+}
+
+@media (max-width: 1180px) {
+  .pro-daw-force-grid {
+    grid-template-columns: 230px minmax(0, 1fr) !important;
+  }
+
+  .pro-daw-force-inspector {
+    display: none !important;
+  }
+
+  .pro-daw-force-transport {
+    grid-template-columns: 220px 220px 120px 1fr !important;
+  }
+
+  .pro-daw-force-stats {
+    display: none !important;
+  }
+}
