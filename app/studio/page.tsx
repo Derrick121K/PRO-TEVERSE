@@ -90,6 +90,7 @@ const presetRows: StepRow[] = [
 ]
 
 const supportedAudioExtensions = /\.(wav|mp3|ogg|m4a|aac|flac)$/i
+const PROJECT_STORAGE_KEY = "proteverse-one-studio-project"
 
 function makeId() {
   if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
@@ -101,6 +102,23 @@ function makeId() {
 
 function cleanFileName(fileName: string) {
   return fileName.replace(/\.[^.]+$/, "").replace(/[_-]+/g, " ").trim() || "Imported Audio"
+}
+
+function isPersistentAudioUrl(audioUrl?: string) {
+  return Boolean(audioUrl && audioUrl.startsWith("/"))
+}
+
+function serializeTrackForSave(track: AudioTrack) {
+  const persistentAudioUrl = isPersistentAudioUrl(track.audioUrl) ? track.audioUrl : undefined
+
+  return {
+    ...track,
+    audioUrl: persistentAudioUrl,
+    needsReimport: !persistentAudioUrl,
+    note: persistentAudioUrl
+      ? "This track uses a project sound-library path and can reload."
+      : "This track was imported from the user's PC and must be re-imported after refresh.",
+  }
 }
 
 function formatSeconds(seconds?: number) {
@@ -531,20 +549,86 @@ export default function StudioPage() {
 
   function saveProject() {
     const payload = {
+      app: "PRO-TEVERSE",
+      version: "one-studio-rebuild",
       projectName,
       bpm,
       songKey,
       rows,
-      tracks: tracks.map((track) => ({
-        ...track,
-        audioUrl: undefined,
-        note: "Local audio files must be re-imported because browsers cannot permanently store file paths.",
-      })),
+      tracks: tracks.map(serializeTrackForSave),
       savedAt: new Date().toISOString(),
     }
 
-    localStorage.setItem("proteverse-one-studio-project", JSON.stringify(payload, null, 2))
-    setMessage("Project saved locally in this browser.")
+    localStorage.setItem(PROJECT_STORAGE_KEY, JSON.stringify(payload, null, 2))
+    setMessage("Project saved locally. Sound-library tracks can reload; PC-imported audio must be re-imported after refresh.")
+  }
+
+  function loadProject() {
+    const saved = localStorage.getItem(PROJECT_STORAGE_KEY)
+
+    if (!saved) {
+      setMessage("No saved project found yet.")
+      return
+    }
+
+    try {
+      const parsed = JSON.parse(saved) as {
+        projectName?: string
+        bpm?: number
+        songKey?: string
+        rows?: StepRow[]
+        pattern?: StepRow[]
+        tracks?: Array<Partial<AudioTrack>>
+      }
+
+      setProjectName(parsed.projectName || "PRO-TEVERSE Offline Project")
+      setBpm(typeof parsed.bpm === "number" ? parsed.bpm : 112)
+      setSongKey(parsed.songKey || "C minor")
+
+      const loadedRows = Array.isArray(parsed.rows)
+        ? parsed.rows
+        : Array.isArray(parsed.pattern)
+          ? parsed.pattern
+          : presetRows
+
+      setRows(loadedRows)
+
+      const loadedTracks: AudioTrack[] = Array.isArray(parsed.tracks)
+        ? parsed.tracks.map((track) => ({
+            id: typeof track.id === "string" ? track.id : makeId(),
+            name: typeof track.name === "string" ? track.name : "Recovered Track",
+            fileName: typeof track.fileName === "string" ? track.fileName : "missing-audio-file",
+            audioUrl:
+              typeof track.audioUrl === "string" && isPersistentAudioUrl(track.audioUrl)
+                ? track.audioUrl
+                : undefined,
+            duration: typeof track.duration === "number" ? track.duration : undefined,
+            volume: typeof track.volume === "number" ? track.volume : 0.8,
+            pan: typeof track.pan === "number" ? track.pan : 0,
+            muted: Boolean(track.muted),
+            solo: Boolean(track.solo),
+            createdAt: typeof track.createdAt === "string" ? track.createdAt : new Date().toISOString(),
+          }))
+        : []
+
+      setTracks(loadedTracks)
+      setCurrentStep(null)
+      setIsTransportPlaying(false)
+      setMessage(`Loaded saved project: ${parsed.projectName || "PRO-TEVERSE Offline Project"}. Re-import PC audio if any track has no playback.`)
+    } catch {
+      setMessage("Saved project could not be loaded. The local save may be corrupted.")
+    }
+  }
+
+  function clearProject() {
+    stopPatternPlayback()
+    localStorage.removeItem(PROJECT_STORAGE_KEY)
+    setProjectName("PRO-TEVERSE Offline Project")
+    setBpm(112)
+    setSongKey("C minor")
+    setRows(presetRows)
+    setTracks([])
+    setMessage("Project cleared.")
   }
 
   function exportProjectJson() {
@@ -559,6 +643,8 @@ export default function StudioPage() {
         id: track.id,
         name: track.name,
         fileName: track.fileName,
+        audioUrl: isPersistentAudioUrl(track.audioUrl) ? track.audioUrl : undefined,
+        needsReimport: !isPersistentAudioUrl(track.audioUrl),
         duration: track.duration,
         volume: track.volume,
         pan: track.pan,
@@ -622,6 +708,22 @@ export default function StudioPage() {
             >
               <Save className="h-4 w-4" />
               Save
+            </button>
+
+            <button
+              onClick={loadProject}
+              className="inline-flex items-center gap-2 rounded-xl border border-emerald-400/30 bg-emerald-400/10 px-4 py-2 text-sm font-bold text-emerald-100 hover:bg-emerald-400/20"
+            >
+              <FolderOpen className="h-4 w-4" />
+              Load
+            </button>
+
+            <button
+              onClick={clearProject}
+              className="inline-flex items-center gap-2 rounded-xl border border-red-400/30 bg-red-400/10 px-4 py-2 text-sm font-bold text-red-100 hover:bg-red-400/20"
+            >
+              <Trash2 className="h-4 w-4" />
+              Clear
             </button>
 
             <button
@@ -987,8 +1089,9 @@ export default function StudioPage() {
             <div className="mt-3 space-y-2 text-sm text-slate-300">
               <p>1. Pattern playback added.</p>
               <p>2. Sound library panel added.</p>
-              <p>3. Add WAV render/export.</p>
-              <p>4. Redirect old pages to this Studio.</p>
+              <p>3. Save/load project added.</p>
+              <p>4. Add WAV render/export.</p>
+              <p>5. Desktop installer later.</p>
             </div>
           </div>
 
