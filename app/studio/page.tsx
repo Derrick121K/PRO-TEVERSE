@@ -2,8 +2,17 @@
 
 import { useEffect, useMemo, useRef, useState } from "react"
 import {
+  soundLibraryCategories,
+  soundLibraryManifest,
+  type SoundLibraryItem,
+} from "@/lib/sound-library/manifest"
+import { canPreviewSoundPath } from "@/lib/sound-library/selected-sound"
+import {
   Download,
   FileAudio,
+  Headphones,
+  Library,
+  Search,
   FolderOpen,
   Music2,
   Pause,
@@ -113,6 +122,10 @@ export default function StudioPage() {
   const [playingTrackId, setPlayingTrackId] = useState<string | null>(null)
   const [isTransportPlaying, setIsTransportPlaying] = useState(false)
   const [message, setMessage] = useState("Ready. Import audio, build a pattern, then export your project.")
+
+  const [libraryQuery, setLibraryQuery] = useState("")
+  const [libraryCategory, setLibraryCategory] = useState<"all" | SoundLibraryItem["category"]>("all")
+  const [playingLibraryId, setPlayingLibraryId] = useState<string | null>(null)
 
   const rowsRef = useRef<StepRow[]>(presetRows)
   const audioContextRef = useRef<AudioContext | null>(null)
@@ -329,6 +342,21 @@ export default function StudioPage() {
     [rows]
   )
 
+  const filteredLibraryItems = useMemo(() => {
+    const normalizedQuery = libraryQuery.trim().toLowerCase()
+
+    return soundLibraryManifest.filter((item) => {
+      const matchesCategory = libraryCategory === "all" || item.category === libraryCategory
+      const matchesQuery =
+        normalizedQuery.length === 0 ||
+        item.name.toLowerCase().includes(normalizedQuery) ||
+        item.role.toLowerCase().includes(normalizedQuery) ||
+        item.category.toLowerCase().includes(normalizedQuery)
+
+      return matchesCategory && matchesQuery
+    })
+  }, [libraryCategory, libraryQuery])
+
   function stopPreview() {
     if (previewAudioRef.current) {
       previewAudioRef.current.pause()
@@ -336,6 +364,7 @@ export default function StudioPage() {
     }
 
     setPlayingTrackId(null)
+    setPlayingLibraryId(null)
   }
 
   async function importAudio(file: File) {
@@ -393,6 +422,7 @@ export default function StudioPage() {
 
     audio.onended = () => {
       setPlayingTrackId(null)
+    setPlayingLibraryId(null)
       setMessage("Playback stopped.")
     }
 
@@ -400,10 +430,66 @@ export default function StudioPage() {
       await audio.play()
     } catch {
       setPlayingTrackId(null)
+    setPlayingLibraryId(null)
       setMessage("Playback failed. Try another audio file.")
     }
   }
 
+
+  async function previewLibraryItem(item: SoundLibraryItem) {
+    if (!canPreviewSoundPath(item.path)) {
+      setMessage(`${item.name} is a placeholder. Add a real WAV, MP3 or OGG file in public${item.path}.`)
+      return
+    }
+
+    if (playingLibraryId === item.id) {
+      stopPreview()
+      return
+    }
+
+    stopPreview()
+
+    const audio = new Audio(item.path)
+    previewAudioRef.current = audio
+    setPlayingLibraryId(item.id)
+    setMessage(`Previewing library sound: ${item.name}`)
+
+    audio.onended = () => {
+      setPlayingLibraryId(null)
+      setMessage("Library preview ended.")
+    }
+
+    try {
+      await audio.play()
+    } catch {
+      setPlayingLibraryId(null)
+      setMessage("Library preview failed. Confirm the audio file exists in public/sound-library.")
+    }
+  }
+
+  function addLibraryItemToTimeline(item: SoundLibraryItem) {
+    const playable = canPreviewSoundPath(item.path)
+    const id = makeId()
+
+    const track: AudioTrack = {
+      id,
+      name: item.name,
+      fileName: item.path.split("/").pop() || item.name,
+      audioUrl: playable ? item.path : undefined,
+      volume: 0.8,
+      pan: 0,
+      muted: false,
+      solo: false,
+      createdAt: new Date().toISOString(),
+    }
+
+    setTracks((current) => [...current, track])
+    setMessage(
+      playable
+        ? `${item.name} added from Sound Library.`
+        : `${item.name} added as a placeholder. Replace the README path with a real legal audio file.`
+    )
+  }
   function toggleStep(rowId: string, index: number) {
     setRows((current) =>
       current.map((row) =>
@@ -818,7 +904,7 @@ export default function StudioPage() {
             <p className="text-sm font-bold text-cyan-100">Next Engine Steps</p>
             <div className="mt-3 space-y-2 text-sm text-slate-300">
               <p>1. Pattern playback added.</p>
-              <p>2. Add local sound library panel into this page.</p>
+              <p>2. Sound library panel added.</p>
               <p>3. Add WAV render/export.</p>
               <p>4. Redirect old pages to this Studio.</p>
             </div>
