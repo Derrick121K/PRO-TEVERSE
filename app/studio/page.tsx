@@ -123,6 +123,11 @@ function serializeTrackForSave(track: AudioTrack) {
 
 function formatSeconds(seconds?: number) {
   if (!seconds || !Number.isFinite(seconds)) return "Unknown"
+
+  if (seconds < 10) {
+    return `${seconds.toFixed(2)}s`
+  }
+
   const mins = Math.floor(seconds / 60)
   const secs = Math.round(seconds % 60).toString().padStart(2, "0")
   return `${mins}:${secs}`
