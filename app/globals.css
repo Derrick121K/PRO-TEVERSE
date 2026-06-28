@@ -492,3 +492,580 @@ input[type="file"]::file-selector-button {
     transform: none;
   }
 }
+/* PRO-TEEVERSE DESKTOP DAW SHELL */
+.pro-daw-shell {
+  color: #f8fafc;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.04), transparent),
+    radial-gradient(circle at 15% 0%, rgba(138, 92, 255, 0.25), transparent 28rem),
+    radial-gradient(circle at 85% 12%, rgba(34, 211, 238, 0.12), transparent 24rem),
+    #090b12;
+}
+
+.pro-daw-menu,
+.pro-daw-transport,
+.pro-daw-device-chain,
+.pro-daw-bottom-tabs {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.pro-daw-menu {
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.8rem 1rem;
+  background: rgba(5, 7, 12, 0.82);
+}
+
+.pro-daw-brand {
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+}
+
+.pro-daw-logo {
+  font-size: 1.7rem;
+  font-weight: 1000;
+  letter-spacing: 0.08em;
+  color: #c4b5fd;
+  text-shadow: 0 0 24px rgba(138, 92, 255, 0.55);
+}
+
+.pro-daw-slogan {
+  margin-top: 0.25rem;
+  font-size: 0.65rem;
+  letter-spacing: 0.28em;
+  color: rgba(226, 232, 240, 0.55);
+  text-transform: uppercase;
+}
+
+.pro-daw-menu-links {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.pro-daw-menu-button,
+.pro-daw-bottom-tabs button {
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: rgba(226, 232, 240, 0.78);
+  padding: 0.5rem 0.7rem;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.pro-daw-menu-button:hover,
+.pro-daw-bottom-tabs button:hover {
+  background: rgba(138, 92, 255, 0.14);
+  color: white;
+}
+
+.pro-daw-user {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  color: rgba(226,232,240,0.7);
+  font-size: 0.72rem;
+}
+
+.pro-daw-avatar {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #8a5cff, #b983ff);
+  color: white;
+  font-weight: 900;
+}
+
+.pro-daw-transport {
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  background: rgba(15, 23, 42, 0.7);
+}
+
+.pro-daw-project-chip {
+  display: flex;
+  flex-direction: column;
+  min-width: 12rem;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 0.9rem;
+  background: rgba(2,6,23,0.65);
+  padding: 0.65rem 0.8rem;
+}
+
+.pro-daw-project-chip span,
+.pro-daw-time strong {
+  color: #d8b4fe;
+  font-weight: 900;
+}
+
+.pro-daw-project-chip small,
+.pro-daw-time small {
+  margin-top: 0.2rem;
+  color: rgba(226,232,240,0.62);
+  font-size: 0.7rem;
+}
+
+.pro-daw-transport-buttons {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.pro-daw-round,
+.pro-daw-square,
+.pro-daw-record {
+  display: grid;
+  place-items: center;
+  width: 2.6rem;
+  height: 2.6rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.04);
+  color: white;
+  font-weight: 900;
+}
+
+.pro-daw-round {
+  width: 3.1rem;
+  height: 3.1rem;
+  border-color: rgba(185,131,255,0.75);
+  color: #c4b5fd;
+}
+
+.pro-daw-record {
+  color: #ff4e6a;
+}
+
+.pro-daw-time {
+  display: flex;
+  flex-direction: column;
+  min-width: 8rem;
+  text-align: center;
+}
+
+.pro-daw-time strong {
+  font-size: 1.45rem;
+  letter-spacing: 0.08em;
+}
+
+.pro-daw-meter-pack {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.45rem;
+}
+
+.pro-daw-meter-pack div {
+  min-width: 4rem;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 0.8rem;
+  background: rgba(2,6,23,0.65);
+  padding: 0.55rem;
+}
+
+.pro-daw-meter-pack span {
+  display: block;
+  color: rgba(226,232,240,0.45);
+  font-size: 0.62rem;
+  font-weight: 900;
+}
+
+.pro-daw-meter-pack b {
+  color: #67e8f9;
+  font-size: 0.85rem;
+}
+
+.pro-daw-workspace {
+  display: grid;
+  grid-template-columns: 250px minmax(520px, 1fr) 260px;
+  min-height: 520px;
+}
+
+.pro-daw-browser,
+.pro-daw-inspector {
+  background: rgba(8, 11, 18, 0.92);
+  border-right: 1px solid rgba(255,255,255,0.08);
+  padding: 0.8rem;
+}
+
+.pro-daw-inspector {
+  border-right: 0;
+  border-left: 1px solid rgba(255,255,255,0.08);
+}
+
+.pro-daw-search {
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 0.8rem;
+  background: rgba(2,6,23,0.72);
+  color: rgba(226,232,240,0.45);
+  padding: 0.65rem;
+  font-size: 0.72rem;
+}
+
+.pro-daw-nav {
+  display: block;
+  width: 100%;
+  margin-top: 0.35rem;
+  border: 0;
+  border-radius: 0.65rem;
+  background: transparent;
+  color: rgba(226,232,240,0.78);
+  padding: 0.55rem 0.65rem;
+  text-align: left;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.pro-daw-nav.active,
+.pro-daw-nav:hover {
+  background: rgba(138,92,255,0.18);
+  color: white;
+}
+
+.pro-daw-browser-section {
+  margin-top: 1rem;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  padding-top: 0.85rem;
+}
+
+.pro-daw-browser-section p,
+.pro-daw-sample-card p,
+.pro-daw-panel-title span {
+  color: #b983ff;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.pro-daw-browser-section span {
+  display: block;
+  margin-top: 0.45rem;
+  color: rgba(226,232,240,0.72);
+  font-size: 0.75rem;
+}
+
+.pro-daw-sample-card {
+  margin-top: 1rem;
+  border: 1px solid rgba(138,92,255,0.28);
+  border-radius: 1rem;
+  background: rgba(138,92,255,0.12);
+  padding: 0.85rem;
+}
+
+.pro-daw-sample-card strong,
+.pro-daw-inspector-card strong {
+  display: block;
+  margin-top: 0.45rem;
+  color: white;
+}
+
+.pro-daw-sample-card small,
+.pro-daw-inspector-card small {
+  display: block;
+  margin-top: 0.25rem;
+  color: rgba(226,232,240,0.55);
+}
+
+.pro-daw-sample-card button {
+  margin-top: 0.8rem;
+  width: 100%;
+  border: 0;
+  border-radius: 0.75rem;
+  background: linear-gradient(135deg, #8a5cff, #b983ff);
+  color: white;
+  padding: 0.65rem;
+  font-weight: 900;
+}
+
+.pro-daw-arrangement {
+  overflow: hidden;
+  background:
+    linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(255,255,255,0.035) 1px, transparent 1px),
+    rgba(7, 10, 18, 0.92);
+  background-size: 54px 100%, 100% 48px;
+}
+
+.pro-daw-ruler,
+.pro-daw-section-row {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.pro-daw-ruler span,
+.pro-daw-section-row span {
+  border-right: 1px solid rgba(255,255,255,0.06);
+  color: rgba(226,232,240,0.55);
+  padding: 0.35rem 0.5rem;
+  font-size: 0.65rem;
+  font-weight: 800;
+}
+
+.pro-daw-section-row span {
+  color: rgba(226,232,240,0.72);
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.pro-daw-track-stack {
+  position: relative;
+}
+
+.pro-daw-lane {
+  display: grid;
+  grid-template-columns: 145px 1fr;
+  min-height: 54px;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+
+.pro-daw-lane-head {
+  border-right: 1px solid rgba(255,255,255,0.08);
+  background: rgba(15,23,42,0.82);
+  padding: 0.55rem;
+}
+
+.pro-daw-lane-head strong {
+  display: block;
+  color: rgba(248,250,252,0.95);
+  font-size: 0.75rem;
+}
+
+.pro-daw-lane-head span {
+  display: block;
+  margin-top: 0.2rem;
+  color: rgba(226,232,240,0.45);
+  font-size: 0.65rem;
+}
+
+.pro-daw-lane-head button {
+  margin-top: 0.45rem;
+  margin-right: 0.3rem;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 0.35rem;
+  background: rgba(255,255,255,0.04);
+  color: rgba(226,232,240,0.8);
+  font-size: 0.62rem;
+  font-weight: 900;
+}
+
+.pro-daw-lane-body {
+  position: relative;
+  min-height: 54px;
+}
+
+.pro-daw-clip,
+.pro-daw-audio-clip {
+  position: absolute;
+  display: block;
+  height: 18px;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 0.35rem;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.25);
+}
+
+.clip-kick,
+.clip-clap {
+  background: linear-gradient(90deg, rgba(59,130,246,0.85), rgba(37,99,235,0.8));
+}
+
+.clip-hat {
+  background: linear-gradient(90deg, rgba(34,211,238,0.85), rgba(14,165,233,0.8));
+}
+
+.clip-bass {
+  background: linear-gradient(90deg, rgba(34,197,94,0.85), rgba(22,163,74,0.8));
+}
+
+.clip-chord {
+  background: linear-gradient(90deg, rgba(234,179,8,0.88), rgba(202,138,4,0.8));
+}
+
+.clip-melody {
+  background: linear-gradient(90deg, rgba(168,85,247,0.88), rgba(147,51,234,0.8));
+}
+
+.pro-daw-audio-clip {
+  height: 24px;
+  overflow: hidden;
+  background: linear-gradient(90deg, rgba(217,70,239,0.9), rgba(168,85,247,0.82));
+  color: white;
+  padding: 0.25rem 0.45rem;
+  font-size: 0.62rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.pro-daw-panel-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.pro-daw-panel-title small {
+  color: rgba(226,232,240,0.45);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+}
+
+.pro-daw-inspector-card,
+.pro-daw-knob-grid > div {
+  margin-top: 1rem;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 1rem;
+  background: rgba(2,6,23,0.72);
+  padding: 0.85rem;
+}
+
+.pro-daw-knob-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.7rem;
+}
+
+.pro-daw-knob-grid span {
+  color: rgba(226,232,240,0.5);
+  font-size: 0.68rem;
+}
+
+.pro-daw-knob-grid b {
+  display: block;
+  margin-top: 0.35rem;
+  color: #c4b5fd;
+}
+
+.pro-daw-eq {
+  margin-top: 1rem;
+  height: 92px;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 1rem;
+  background:
+    linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(255,255,255,0.04) 1px, transparent 1px),
+    rgba(2,6,23,0.72);
+  background-size: 20% 100%, 100% 25%;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 0.8rem;
+}
+
+.pro-daw-eq span {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 999px;
+  background: #8a5cff;
+  box-shadow: 0 0 22px rgba(138,92,255,0.8);
+}
+
+.pro-daw-master-meter {
+  margin-top: 1rem;
+  display: flex;
+  align-items: end;
+  gap: 0.35rem;
+  height: 112px;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 1rem;
+  background: rgba(2,6,23,0.72);
+  padding: 0.8rem;
+}
+
+.pro-daw-master-meter div {
+  flex: 1;
+  border-radius: 0.3rem;
+  background: linear-gradient(180deg, #facc15, #22c55e);
+}
+
+.pro-daw-master-meter div:nth-child(1) {
+  height: 62%;
+}
+
+.pro-daw-master-meter div:nth-child(2) {
+  height: 86%;
+}
+
+.pro-daw-master-meter div:nth-child(3) {
+  height: 74%;
+}
+
+.pro-daw-device-chain {
+  gap: 0.6rem;
+  overflow-x: auto;
+  padding: 0.75rem;
+  background: rgba(2,6,23,0.86);
+}
+
+.pro-daw-device {
+  min-width: 185px;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 0.95rem;
+  background: rgba(15,23,42,0.9);
+  padding: 0.85rem;
+}
+
+.pro-daw-device span {
+  color: #c4b5fd;
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.pro-daw-mini-controls {
+  margin-top: 0.8rem;
+  display: flex;
+  gap: 0.45rem;
+}
+
+.pro-daw-mini-controls i {
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 999px;
+  background: radial-gradient(circle at 30% 25%, #8a5cff, #1e1b4b 60%);
+}
+
+.pro-daw-bottom-tabs {
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding: 0.7rem 1rem;
+  background: rgba(5,7,12,0.92);
+}
+
+@media (max-width: 1180px) {
+  .pro-daw-workspace {
+    grid-template-columns: 220px minmax(460px, 1fr);
+  }
+
+  .pro-daw-inspector {
+    display: none;
+  }
+}
+
+@media (max-width: 820px) {
+  .pro-daw-menu,
+  .pro-daw-transport {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .pro-daw-menu-links,
+  .pro-daw-transport-buttons,
+  .pro-daw-meter-pack {
+    justify-content: center;
+  }
+
+  .pro-daw-workspace {
+    grid-template-columns: 1fr;
+  }
+
+  .pro-daw-browser {
+    display: none;
+  }
+}
