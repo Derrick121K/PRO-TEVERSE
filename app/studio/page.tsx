@@ -128,6 +128,162 @@ function formatSeconds(seconds?: number) {
   return `${mins}:${secs}`
 }
 
+function writeAscii(view: DataView, offset: number, text: string) {
+  for (let index = 0; index < text.length; index += 1) {
+    view.setUint8(offset + index, text.charCodeAt(index))
+  }
+}
+
+function audioBufferToWav(buffer: AudioBuffer) {
+  const channelCount = buffer.numberOfChannels
+  const sampleRate = buffer.sampleRate
+  const sampleCount = buffer.length
+  const bytesPerSample = 2
+  const blockAlign = channelCount * bytesPerSample
+  const byteRate = sampleRate * blockAlign
+  const dataSize = sampleCount * blockAlign
+  const wav = new ArrayBuffer(44 + dataSize)
+  const view = new DataView(wav)
+
+  writeAscii(view, 0, "RIFF")
+  view.setUint32(4, 36 + dataSize, true)
+  writeAscii(view, 8, "WAVE")
+  writeAscii(view, 12, "fmt ")
+  view.setUint32(16, 16, true)
+  view.setUint16(20, 1, true)
+  view.setUint16(22, channelCount, true)
+  view.setUint32(24, sampleRate, true)
+  view.setUint32(28, byteRate, true)
+  view.setUint16(32, blockAlign, true)
+  view.setUint16(34, 16, true)
+  writeAscii(view, 36, "data")
+  view.setUint32(40, dataSize, true)
+
+  let offset = 44
+
+  for (let sampleIndex = 0; sampleIndex < sampleCount; sampleIndex += 1) {
+    for (let channelIndex = 0; channelIndex < channelCount; channelIndex += 1) {
+      const channel = buffer.getChannelData(channelIndex)
+      const sample = Math.max(-1, Math.min(1, channel[sampleIndex] || 0))
+      view.setInt16(offset, sample < 0 ? sample * 0x8000 : sample * 0x7fff, true)
+      offset += bytesPerSample
+    }
+  }
+
+  return wav
+}
+
+function scheduleRenderTone(
+  context: OfflineAudioContext,
+  frequency: number,
+  startTime: number,
+  duration: number,
+  type: OscillatorType = "sine",
+  gainValue = 0.18
+) {
+  const oscillator = context.createOscillator()
+  const gain = context.createGain()
+
+  oscillator.type = type
+  oscillator.frequency.setValueAtTime(frequency, startTime)
+
+  gain.gain.setValueAtTime(gainValue, startTime)
+  gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration)
+
+  oscillator.connect(gain)
+  gain.connect(context.destination)
+
+  oscillator.start(startTime)
+  oscillator.stop(startTime + duration + 0.02)
+}
+
+function scheduleRenderKick(context: OfflineAudioContext, startTime: number) {
+  const oscillator = context.createOscillator()
+  const gain = context.createGain()
+
+  oscillator.type = "sine"
+  oscillator.frequency.setValueAtTime(135, startTime)
+  oscillator.frequency.exponentialRampToValueAtTime(45, startTime + 0.16)
+
+  gain.gain.setValueAtTime(0.9, startTime)
+  gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.22)
+
+  oscillator.connect(gain)
+  gain.connect(context.destination)
+
+  oscillator.start(startTime)
+  oscillator.stop(startTime + 0.24)
+}
+
+function scheduleRenderNoise(
+  context: OfflineAudioContext,
+  startTime: number,
+  duration: number,
+  filterType: BiquadFilterType,
+  filterFrequency: number,
+  gainValue: number
+) {
+  const sampleCount = Math.max(1, Math.floor(context.sampleRate * duration))
+  const buffer = context.createBuffer(1, sampleCount, context.sampleRate)
+  const samples = buffer.getChannelData(0)
+
+  for (let index = 0; index < sampleCount; index += 1) {
+    samples[index] = Math.random() * 2 - 1
+  }
+
+  const source = context.createBufferSource()
+  const filter = context.createBiquadFilter()
+  const gain = context.createGain()
+
+  source.buffer = buffer
+  filter.type = filterType
+  filter.frequency.setValueAtTime(filterFrequency, startTime)
+
+  gain.gain.setValueAtTime(gainValue, startTime)
+  gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration)
+
+  source.connect(filter)
+  filter.connect(gain)
+  gain.connect(context.destination)
+
+  source.start(startTime)
+}
+
+function scheduleRenderPatternSound(
+  context: OfflineAudioContext,
+  role: StepRow["role"],
+  startTime: number
+) {
+  if (role === "kick") {
+    scheduleRenderKick(context, startTime)
+    return
+  }
+
+  if (role === "clap") {
+    scheduleRenderNoise(context, startTime, 0.12, "bandpass", 1800, 0.24)
+    return
+  }
+
+  if (role === "hat") {
+    scheduleRenderNoise(context, startTime, 0.05, "highpass", 6500, 0.12)
+    return
+  }
+
+  if (role === "bass") {
+    scheduleRenderTone(context, 55, startTime, 0.18, "sawtooth", 0.2)
+    return
+  }
+
+  if (role === "chord") {
+    ;[261.63, 311.13, 392].forEach((frequency) =>
+      scheduleRenderTone(context, frequency, startTime, 0.35, "triangle", 0.07)
+    )
+    return
+  }
+
+  scheduleRenderTone(context, 523.25, startTime, 0.16, "square", 0.08)
+}
+
 export default function StudioPage() {
   const fileInputRef = useRef<HTMLInputElement | null>(null)
   const previewAudioRef = useRef<HTMLAudioElement | null>(null)
@@ -140,6 +296,7 @@ export default function StudioPage() {
   const [playingTrackId, setPlayingTrackId] = useState<string | null>(null)
   const [isTransportPlaying, setIsTransportPlaying] = useState(false)
   const [message, setMessage] = useState("Ready. Import audio, build a pattern, then export your project.")
+  const [isRenderingWav, setIsRenderingWav] = useState(false)
 
   const [libraryQuery, setLibraryQuery] = useState("")
   const [libraryCategory, setLibraryCategory] = useState<"all" | SoundLibraryItem["category"]>("all")
@@ -631,6 +788,61 @@ export default function StudioPage() {
     setMessage("Project cleared.")
   }
 
+  async function exportPatternWav() {
+    if (isRenderingWav) return
+
+    setIsRenderingWav(true)
+    setMessage("Rendering pattern WAV...")
+
+    try {
+      const OfflineAudioContextConstructor =
+        window.OfflineAudioContext ||
+        (window as unknown as { webkitOfflineAudioContext?: typeof OfflineAudioContext }).webkitOfflineAudioContext
+
+      if (!OfflineAudioContextConstructor) {
+        setMessage("WAV rendering is not supported in this browser.")
+        return
+      }
+
+      const sampleRate = 44100
+      const safeBpm = Math.max(40, Math.min(220, bpm))
+      const stepSeconds = 60 / safeBpm / 4
+      const barsToRender = 8
+      const renderSeconds = stepSeconds * stepCount * barsToRender + 0.6
+      const frameCount = Math.ceil(sampleRate * renderSeconds)
+      const offlineContext = new OfflineAudioContextConstructor(2, frameCount, sampleRate)
+
+      for (let bar = 0; bar < barsToRender; bar += 1) {
+        for (let stepIndex = 0; stepIndex < stepCount; stepIndex += 1) {
+          const startTime = (bar * stepCount + stepIndex) * stepSeconds
+
+          rows.forEach((row) => {
+            if (row.steps[stepIndex]) {
+              scheduleRenderPatternSound(offlineContext, row.role, startTime)
+            }
+          })
+        }
+      }
+
+      const renderedBuffer = await offlineContext.startRendering()
+      const wav = audioBufferToWav(renderedBuffer)
+      const blob = new Blob([wav], { type: "audio/wav" })
+      const url = URL.createObjectURL(blob)
+      const link = document.createElement("a")
+
+      link.href = url
+      link.download = `${projectName.replace(/[^a-z0-9]+/gi, "-").toLowerCase()}-pattern.wav`
+      link.click()
+
+      URL.revokeObjectURL(url)
+      setMessage(`Pattern WAV exported: ${barsToRender} bars at ${safeBpm} BPM.`)
+    } catch {
+      setMessage("WAV export failed. Try stopping playback first, then export again.")
+    } finally {
+      setIsRenderingWav(false)
+    }
+  }
+
   function exportProjectJson() {
     const payload = {
       app: "PRO-TEVERSE",
@@ -724,6 +936,15 @@ export default function StudioPage() {
             >
               <Trash2 className="h-4 w-4" />
               Clear
+            </button>
+
+            <button
+              onClick={() => void exportPatternWav()}
+              disabled={isRenderingWav}
+              className="inline-flex items-center gap-2 rounded-xl border border-fuchsia-400/30 bg-fuchsia-400/10 px-4 py-2 text-sm font-bold text-fuchsia-100 hover:bg-fuchsia-400/20 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              <Music2 className="h-4 w-4" />
+              {isRenderingWav ? "Rendering..." : "Export WAV"}
             </button>
 
             <button
@@ -1090,7 +1311,7 @@ export default function StudioPage() {
               <p>1. Pattern playback added.</p>
               <p>2. Sound library panel added.</p>
               <p>3. Save/load project added.</p>
-              <p>4. Add WAV render/export.</p>
+              <p>4. Pattern WAV export added.</p>
               <p>5. Desktop installer later.</p>
             </div>
           </div>
