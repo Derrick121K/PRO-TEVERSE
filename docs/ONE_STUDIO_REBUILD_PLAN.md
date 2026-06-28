@@ -43,7 +43,6 @@ This is now the main production workspace.
 5. Added Sound Library inside Studio
    - Search
    - Category filter
-   - Placeholder warning
    - Add to Timeline
 
 6. Added Save / Load / Clear project
@@ -57,25 +56,50 @@ This is now the main production workspace.
    - Uses current BPM
    - Exports a .wav file
 
+8. Added generated legal starter samples
+   - Kick
+   - Clap
+   - Hat
+   - Log Drum
+   - Chord Stab
+   - Riser
+
+9. Added track duration loading
+   - Sound-library tracks show real duration
+   - Short samples show seconds professionally
+
+10. Added mixer pan playback
+   - Track playback uses volume
+   - Track playback uses pan
+   - Muted tracks play silent
+
+11. Added timeline tracks to WAV export
+   - Exports pattern
+   - Exports playable timeline tracks
+   - Respects mute and solo
+   - Uses volume and pan
+
 ## Current Working Features
 
 - One Studio route
 - Local audio import
+- Generated legal Sound Library
 - Pattern playback
 - Pattern WAV export
+- Timeline WAV export
 - Project JSON export
 - Save/load project
-- Sound Library panel
 - Timeline
 - Mixer
+- Mixer pan playback
 - Duplicate page redirects
 
 ## Remaining Work
 
-1. Add real legal audio samples to public/sound-library
-2. Improve arrangement timeline
-3. Improve mixer engine
-4. Add better WAV export with imported audio tracks
+1. Add timeline start position controls
+2. Add loop and duplicate controls
+3. Improve arrangement timeline
+4. Improve master mixer/export engine
 5. Add MIDI export
 6. Add desktop installer later
 

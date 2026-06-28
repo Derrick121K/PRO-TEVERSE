@@ -19,15 +19,18 @@ rebuild/one-studio
 - One main Studio workspace
 - Local audio import from PC
 - Local Sound Library panel inside Studio
+- Generated legal starter WAV samples
 - 16-step Pattern Maker
 - Pattern playback using browser audio
 - Timeline track list
 - Mixer controls
+- Mixer pan playback
 - Save project to browser local storage
 - Load saved project
 - Clear project
 - Export project JSON
 - Export pattern WAV
+- Export mix WAV with pattern and playable timeline tracks
 - Duplicate old pages redirect to /studio
 
 ## Main Studio Sections
@@ -44,9 +47,14 @@ rebuild/one-studio
    - PC files must be re-imported after refresh because browsers do not permanently expose local file paths
 
 3. Sound Library
-   - Shows local sound-library items
-   - Placeholder sounds appear until real legal audio files are added
-   - Sound-library paths can be saved and reloaded if they point to real files inside public/sound-library
+   - Includes generated legal starter sounds
+   - Kick
+   - Clap
+   - Hi-Hat
+   - Log Drum
+   - Chord Stab
+   - Riser
+   - Sound-library paths can save and reload because they exist inside public/sound-library
 
 4. Pattern Maker
    - Kick
@@ -61,6 +69,7 @@ rebuild/one-studio
 5. Timeline
    - Shows imported tracks
    - Shows sound-library tracks
+   - Shows track duration
    - Supports preview and remove
 
 6. Mixer
@@ -71,7 +80,8 @@ rebuild/one-studio
 
 7. Export
    - Project JSON export
-   - Pattern WAV export
+   - WAV export with pattern
+   - WAV export includes playable timeline tracks
 
 ## Legal Sound Rule
 
@@ -123,21 +133,21 @@ npm run lint
 6. Use Mixer controls
 7. Click Save to save the project in the browser
 8. Click Load to restore saved project data
-9. Click Export WAV to export the pattern as audio
+9. Click Export WAV to export the pattern and playable timeline tracks
 10. Click Export JSON to export project data
 
 ## Current Limitations
 
 - Imported PC audio files cannot permanently reload after browser refresh
-- Placeholder Sound Library items are not real audio yet
-- WAV export currently renders the pattern instruments, not imported MP3/WAV tracks
+- Timeline tracks currently start from the beginning of the export
+- Advanced drag-and-drop arrangement is planned later
 - Desktop installer is planned later
-- Advanced arrangement, MIDI export and plugin support are planned later
+- Advanced MIDI export and plugin support are planned later
 
 ## Recommended Next Steps
 
-1. Add real legal sample files into public/sound-library
-2. Update the sound-library manifest to point to real WAV/MP3/OGG files
-3. Add better timeline arrangement
-4. Add stronger mixer/export engine
+1. Add timeline start position controls
+2. Add loop/duplicate arrangement tools
+3. Add stronger mixer/export engine
+4. Add MIDI export
 5. Package as a desktop app later
