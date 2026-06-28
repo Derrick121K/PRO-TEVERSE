@@ -302,6 +302,23 @@ function scheduleRenderPatternSound(
   scheduleRenderTone(context, 523.25, startTime, 0.16, "square", 0.08)
 }
 
+type DesktopWindowState = {
+  x: number
+  y: number
+  width: number
+  height: number
+  visible: boolean
+  z: number
+}
+
+type DesktopDragState = {
+  windowId: string
+  startX: number
+  startY: number
+  originX: number
+  originY: number
+}
+
 export default function StudioPage() {
   const fileInputRef = useRef<HTMLInputElement | null>(null)
   const previewAudioRef = useRef<HTMLAudioElement | null>(null)
@@ -315,6 +332,18 @@ export default function StudioPage() {
   const [songKey, setSongKey] = useState("C minor")
   const [projectName, setProjectName] = useState("PRO-TEVERSE Offline Project")
   const [tracks, setTracks] = useState<AudioTrack[]>([])
+  const [desktopWindows, setDesktopWindows] = useState<Record<string, DesktopWindowState>>(() => ({
+    browser: { x: 18, y: 152, width: 270, height: 560, visible: true, z: 10 },
+    arrangement: { x: 304, y: 152, width: 780, height: 560, visible: true, z: 11 },
+    inspector: { x: 1100, y: 152, width: 300, height: 560, visible: true, z: 12 },
+    mixer: { x: 304, y: 728, width: 600, height: 230, visible: true, z: 13 },
+    plugins: { x: 920, y: 728, width: 480, height: 230, visible: true, z: 14 },
+    ai: { x: 18, y: 728, width: 270, height: 230, visible: true, z: 15 },
+  }))
+  const [desktopDrag, setDesktopDrag] = useState<DesktopDragState | null>(null)
+  const [desktopZ, setDesktopZ] = useState(30)
+  const [desktopSelectedTrackId, setDesktopSelectedTrackId] = useState<string | null>(null)
+  const [desktopStatus, setDesktopStatus] = useState("Desktop studio ready.")
   const [rows, setRows] = useState<StepRow[]>(presetRows)
   const [playingTrackId, setPlayingTrackId] = useState<string | null>(null)
   const [isTransportPlaying, setIsTransportPlaying] = useState(false)
@@ -336,7 +365,7 @@ export default function StudioPage() {
   }, [rows])
 
   useEffect(() => {
-    return () => {
+  return () => {
       if (patternTimerRef.current !== null) {
         window.clearInterval(patternTimerRef.current)
       }
@@ -962,6 +991,118 @@ if (previewAudioRef.current) {
     setMessage(`${track.name} duplicated one bar later at ${duplicateStart.toFixed(2)}s.`)
   }
 
+  function focusDesktopWindow(windowId: string) {
+    setDesktopZ((current) => {
+      const nextZ = current + 1
+
+      setDesktopWindows((windows) => ({
+        ...windows,
+        [windowId]: {
+          ...windows[windowId],
+          z: nextZ,
+        },
+      }))
+
+      return nextZ
+    })
+  }
+
+  function toggleDesktopWindow(windowId: string) {
+    setDesktopWindows((windows) => ({
+      ...windows,
+      [windowId]: {
+        ...windows[windowId],
+        visible: !windows[windowId]?.visible,
+      },
+    }))
+  }
+
+  function resetDesktopLayout() {
+    setDesktopWindows({
+      browser: { x: 18, y: 152, width: 270, height: 560, visible: true, z: 10 },
+      arrangement: { x: 304, y: 152, width: 780, height: 560, visible: true, z: 11 },
+      inspector: { x: 1100, y: 152, width: 300, height: 560, visible: true, z: 12 },
+      mixer: { x: 304, y: 728, width: 600, height: 230, visible: true, z: 13 },
+      plugins: { x: 920, y: 728, width: 480, height: 230, visible: true, z: 14 },
+      ai: { x: 18, y: 728, width: 270, height: 230, visible: true, z: 15 },
+    })
+    setDesktopStatus("Desktop layout reset.")
+  }
+
+  function beginDesktopDrag(windowId: string, clientX: number, clientY: number) {
+    const target = desktopWindows[windowId]
+    if (!target) return
+
+    focusDesktopWindow(windowId)
+    setDesktopDrag({
+      windowId,
+      startX: clientX,
+      startY: clientY,
+      originX: target.x,
+      originY: target.y,
+    })
+  }
+
+  function dragDesktopWindow(clientX: number, clientY: number) {
+    if (!desktopDrag) return
+
+    const nextX = Math.max(0, desktopDrag.originX + clientX - desktopDrag.startX)
+    const nextY = Math.max(112, desktopDrag.originY + clientY - desktopDrag.startY)
+
+    setDesktopWindows((windows) => ({
+      ...windows,
+      [desktopDrag.windowId]: {
+        ...windows[desktopDrag.windowId],
+        x: nextX,
+        y: nextY,
+      },
+    }))
+  }
+
+  function stopDesktopDrag() {
+    setDesktopDrag(null)
+  }
+
+  function updateDesktopTrack(trackId: string, patch: Partial<AudioTrack>) {
+    setTracks((current) =>
+      current.map((track) => (track.id === trackId ? { ...track, ...patch } : track))
+    )
+  }
+
+  function addFirstLibrarySoundToDesktop() {
+    const item = filteredLibraryItems[0]
+
+    if (!item) {
+      setDesktopStatus("No sound is available in the current library filter.")
+      return
+    }
+
+    addLibraryItemToTimeline(item)
+    setDesktopStatus(`${item.name} added to arrangement.`)
+  }
+
+  async function previewFirstLibrarySoundFromDesktop() {
+    const item = filteredLibraryItems[0]
+
+    if (!item) {
+      setDesktopStatus("No sound is available to preview.")
+      return
+    }
+
+    await previewLibraryItem(item)
+    setDesktopStatus(`Previewing ${item.name}.`)
+  }
+
+  async function exportDesktopWav() {
+    await exportPatternWav()
+    setDesktopStatus("Exporting WAV mix.")
+  }
+
+  function exportDesktopJson() {
+    exportProjectJson()
+    setDesktopStatus("Exported project JSON.")
+  }
+
   async function exportPatternWav() {
     if (isRenderingWav) return
 
@@ -1119,231 +1260,422 @@ if (previewAudioRef.current) {
 
     setMessage("Project JSON exported.")
   }
-
+  const desktopSelectedTrack =
+    tracks.find((track) => track.id === desktopSelectedTrackId) ?? tracks[0]
   return (
     <main className="min-h-screen bg-slate-950 text-white">
-<section className="pro-daw-force-shell">
-            <div className="pro-daw-force-topbar">
-              <div>
-                <h2>PRO-TEEVERSE</h2>
-                <p>Create. Connect. Conquer.</p>
+      <section
+        className="pro-daw-desktop"
+        onMouseMove={(event) => dragDesktopWindow(event.clientX, event.clientY)}
+        onMouseUp={stopDesktopDrag}
+        onMouseLeave={stopDesktopDrag}
+      >
+        <div className="pro-daw-topbar">
+          <div className="pro-daw-brand-block">
+            <h1>PRO-TEEVERSE</h1>
+            <p>Create. Connect. Conquer.</p>
+          </div>
+
+          <div className="pro-daw-main-menu">
+            {["File", "Edit", "View", "Tools", "Help"].map((item) => (
+              <button key={item}>{item}</button>
+            ))}
+          </div>
+
+          <div className="pro-daw-layout-actions">
+            {[
+              ["browser", "Browser"],
+              ["arrangement", "Arrangement"],
+              ["inspector", "Inspector"],
+              ["mixer", "Mixer"],
+              ["plugins", "Plugins"],
+              ["ai", "AI"],
+            ].map(([id, label]) => (
+              <button key={id} onClick={() => toggleDesktopWindow(id)}>
+                {label}
+              </button>
+            ))}
+            <button onClick={resetDesktopLayout}>Reset Layout</button>
+          </div>
+        </div>
+
+        <div className="pro-daw-transport-bar">
+          <div className="pro-daw-project-info">
+            <strong>{projectName}</strong>
+            <span>{bpm} BPM / 4-4 / {songKey}</span>
+          </div>
+
+          <div className="pro-daw-transport-actions">
+            <button onClick={startPatternPlayback}>Play</button>
+            <button onClick={stopPatternPlayback}>Stop</button>
+            <button className="record">Rec</button>
+            <button onClick={saveProject}>Save</button>
+          </div>
+
+          <div className="pro-daw-fast-actions">
+            <button onClick={addFirstLibrarySoundToDesktop}>Add Sound</button>
+            <button onClick={previewFirstLibrarySoundFromDesktop}>Preview</button>
+            <button onClick={exportDesktopWav}>Export WAV</button>
+            <button onClick={exportDesktopJson}>Export JSON</button>
+          </div>
+
+          <div className="pro-daw-status-chip">
+            <strong>1.1.00</strong>
+            <span>{desktopStatus}</span>
+          </div>
+        </div>
+
+        <div className="pro-daw-window-layer">
+          {desktopWindows.browser?.visible && (
+            <section
+              className="pro-daw-window"
+              style={{
+                left: desktopWindows.browser.x,
+                top: desktopWindows.browser.y,
+                width: desktopWindows.browser.width,
+                height: desktopWindows.browser.height,
+                zIndex: desktopWindows.browser.z,
+              }}
+              onMouseDown={() => focusDesktopWindow("browser")}
+            >
+              <div
+                className="pro-daw-window-title"
+                onMouseDown={(event) => beginDesktopDrag("browser", event.clientX, event.clientY)}
+              >
+                <strong>Browser</strong>
+                <span>Sounds / Plugins / Projects</span>
               </div>
 
-              <nav>
-                {["FILE", "EDIT", "VIEW", "TOOLS", "HELP"].map((item) => (
-                  <button key={item}>{item}</button>
-                ))}
-              </nav>
+              <div className="pro-daw-window-body">
+                <input
+                  value={libraryQuery}
+                  onChange={(event) => setLibraryQuery(event.target.value)}
+                  placeholder="Search kick, bass, vocal..."
+                  className="pro-daw-search-input"
+                />
 
-              <div className="pro-daw-force-profile">D</div>
-            </div>
-
-            <div className="pro-daw-force-transport">
-              <div className="pro-daw-force-project">
-                <strong>{projectName}</strong>
-                <span>{bpm} BPM / 4/4 / {songKey}</span>
-              </div>
-
-              <div className="pro-daw-force-controls">
-                <button onClick={startPatternPlayback}>Play</button>
-                <button onClick={stopPatternPlayback}>Stop</button>
-                <button className="record">Rec</button>
-              </div>
-
-              <div className="pro-daw-force-clock">
-                <strong>1.1.00</strong>
-                <span>READY</span>
-              </div>
-
-              <div className="pro-daw-force-actions">
-                <button onClick={() => filteredLibraryItems[0] && addLibraryItemToTimeline(filteredLibraryItems[0])}>
-                  Add Sound
-                </button>
-                <button onClick={exportPatternWav}>
-                  Export WAV
-                </button>
-                <button onClick={exportProjectJson}>
-                  Export JSON
-                </button>
-              </div>
-
-              <div className="pro-daw-force-stats">
-                <span>CPU 12%</span>
-                <span>RAM 34%</span>
-                <span>DISK 8%</span>
-              </div>
-            </div>
-
-            <div className="pro-daw-force-grid">
-              <aside className="pro-daw-force-browser">
-                <div className="browser-search">Search sounds, plugins, projects...</div>
-
-                {[
-                  "Dashboard",
-                  "Sound Library",
-                  "Loops & Samples",
-                  "Presets",
-                  "Instruments",
-                  "Audio Effects",
-                  "MIDI Effects",
-                  "Plugins",
-                  "Projects",
-                  "User Library",
-                ].map((item) => (
-                  <button
-                    key={item}
-                    className={item === "Sound Library" ? "active" : ""}
-                  >
-                    {item}
-                  </button>
-                ))}
-
-                <div className="browser-collections">
-                  <p>Collections</p>
-                  {["Drums", "Bass", "Synths", "Vocals", "FX", "My Collection"].map((item) => (
-                    <span key={item}>{item}</span>
-                  ))}
-                </div>
-              </aside>
-
-              <main className="pro-daw-force-arrange">
-                <div className="arrange-ruler">
-                  {["1", "9", "17", "25", "33", "41", "49", "57", "65", "73"].map((bar) => (
-                    <span key={bar}>{bar}</span>
-                  ))}
-                </div>
-
-                <div className="arrange-sections">
-                  {["INTRO", "VERSE", "PRE CHORUS", "CHORUS", "VERSE 2", "BREAKDOWN", "OUTRO"].map((section) => (
-                    <span key={section}>{section}</span>
-                  ))}
-                </div>
-
-                <div className="arrange-lanes">
-                  {rows.map((row, rowIndex) => (
-                    <div key={row.id} className="arrange-lane">
-                      <div className="lane-head">
-                        <strong>{row.name}</strong>
-                        <small>{row.role}</small>
-                        <div>
-                          <button>M</button>
-                          <button>S</button>
-                        </div>
+                <div className="pro-daw-browser-list">
+                  {filteredLibraryItems.slice(0, 8).map((item) => (
+                    <div key={item.id} className="pro-daw-browser-item">
+                      <div>
+                        <strong>{item.name}</strong>
+                        <span>{item.category} / legal sound</span>
                       </div>
 
-                      <div className="lane-body">
-                        {row.steps.map((active, stepIndex) =>
-                          active ? (
-                            <span
-                              key={`${row.id}-${stepIndex}`}
-                              className={`midi-clip role-${row.role}`}
-                              style={{
-                                left: `${stepIndex * 6.1}%`,
-                                width: row.role === "hat" ? "3%" : "6%",
-                                top: `${10 + (rowIndex % 2) * 16}px`,
-                              }}
-                            />
-                          ) : null
-                        )}
+                      <div>
+                        <button onClick={() => void previewLibraryItem(item)}>Preview</button>
+                        <button onClick={() => addLibraryItemToTimeline(item)}>Add</button>
                       </div>
                     </div>
                   ))}
+                </div>
+              </div>
+            </section>
+          )}
 
-                  {tracks.map((track, index) => {
-                    const repeatCount = normalizeRepeatCount(track.repeatCount ?? 0)
-                    const left = Math.min(88, (track.startSeconds ?? 0) * 8)
-                    const width = Math.max(8, Math.min(30, (track.duration ?? 1) * 10))
+          {desktopWindows.arrangement?.visible && (
+            <section
+              className="pro-daw-window pro-daw-arrangement-window"
+              style={{
+                left: desktopWindows.arrangement.x,
+                top: desktopWindows.arrangement.y,
+                width: desktopWindows.arrangement.width,
+                height: desktopWindows.arrangement.height,
+                zIndex: desktopWindows.arrangement.z,
+              }}
+              onMouseDown={() => focusDesktopWindow("arrangement")}
+            >
+              <div
+                className="pro-daw-window-title"
+                onMouseDown={(event) => beginDesktopDrag("arrangement", event.clientX, event.clientY)}
+              >
+                <strong>Arrangement + Pattern Grid</strong>
+                <span>16-step clips / timeline tracks</span>
+              </div>
 
-                    return (
-                      <div key={track.id} className="arrange-lane">
-                        <div className="lane-head">
-                          <strong>{track.name}</strong>
-                          <small>{formatSeconds(track.duration)}</small>
-                          <div>
-                            <button>{track.muted ? "M!" : "M"}</button>
-                            <button>{track.solo ? "S!" : "S"}</button>
-                          </div>
-                        </div>
+              <div className="pro-daw-ruler-row">
+                {Array.from({ length: 16 }).map((_, index) => (
+                  <span key={index}>{index + 1}</span>
+                ))}
+              </div>
 
-                        <div className="lane-body">
-                          {Array.from({ length: repeatCount + 1 }).map((_, repeatIndex) => (
-                            <span
-                              key={`${track.id}-${repeatIndex}`}
-                              className="audio-clip"
-                              style={{
-                                left: `${Math.min(92, left + repeatIndex * oneBarSeconds * 8)}%`,
-                                width: `${width}%`,
-                                top: `${12 + (index % 2) * 14}px`,
-                              }}
-                            >
-                              {track.fileName}
-                            </span>
-                          ))}
-                        </div>
+              <div className="pro-daw-arrangement-body">
+                {rows.map((row) => (
+                  <div key={row.id} className="pro-daw-pattern-row">
+                    <div className="pro-daw-pattern-label">
+                      <strong>{row.name}</strong>
+                      <span>{row.role}</span>
+                    </div>
+
+                    <div className="pro-daw-pattern-steps">
+                      {row.steps.map((active, stepIndex) => (
+                        <button
+                          key={`${row.id}-${stepIndex}`}
+                          onClick={() => toggleStep(row.id, stepIndex)}
+                          className={active ? `active role-${row.role}` : ""}
+                        >
+                          {stepIndex + 1}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+
+                <div className="pro-daw-timeline-divider">Timeline Clips</div>
+
+                {tracks.length === 0 ? (
+                  <div className="pro-daw-empty-state">
+                    Add a sound from Browser to create timeline clips.
+                  </div>
+                ) : (
+                  tracks.map((track) => (
+                    <div key={track.id} className="pro-daw-track-clip-row">
+                      <div className="pro-daw-pattern-label">
+                        <strong>{track.name}</strong>
+                        <span>{formatSeconds(track.duration)}</span>
                       </div>
-                    )
-                  })}
-                </div>
-              </main>
 
-              <aside className="pro-daw-force-inspector">
-                <div className="inspector-title">
-                  <strong>INSPECTOR</strong>
-                  <span>TRACK</span>
-                </div>
+                      <button
+                        className="pro-daw-track-clip"
+                        style={{
+                          marginLeft: `${Math.min(55, (track.startSeconds ?? 0) * 8)}%`,
+                          width: `${Math.max(12, Math.min(45, (track.duration ?? 1) * 16))}%`,
+                        }}
+                        onClick={() => setDesktopSelectedTrackId(track.id)}
+                      >
+                        {track.fileName}
+                      </button>
+                    </div>
+                  ))
+                )}
+              </div>
+            </section>
+          )}
 
-                <div className="inspector-card">
-                  <p>Current Project</p>
-                  <strong>{projectName}</strong>
-                  <span>{tracks.length} track(s) / {activeStepCount} active step(s)</span>
-                </div>
+          {desktopWindows.inspector?.visible && (
+            <section
+              className="pro-daw-window"
+              style={{
+                left: desktopWindows.inspector.x,
+                top: desktopWindows.inspector.y,
+                width: desktopWindows.inspector.width,
+                height: desktopWindows.inspector.height,
+                zIndex: desktopWindows.inspector.z,
+              }}
+              onMouseDown={() => focusDesktopWindow("inspector")}
+            >
+              <div
+                className="pro-daw-window-title"
+                onMouseDown={(event) => beginDesktopDrag("inspector", event.clientX, event.clientY)}
+              >
+                <strong>Inspector</strong>
+                <span>Selected track properties</span>
+              </div>
 
-                <div className="inspector-knobs">
-                  <div>
-                    <span>Gain</span>
-                    <strong>0.0 dB</strong>
+              <div className="pro-daw-window-body">
+                {desktopSelectedTrack ? (
+                  <>
+                    <div className="pro-daw-inspector-card">
+                      <strong>{desktopSelectedTrack.name}</strong>
+                      <span>{desktopSelectedTrack.fileName}</span>
+                    </div>
+
+                    <label className="pro-daw-control">
+                      Volume {Math.round(desktopSelectedTrack.volume * 100)}%
+                      <input
+                        type="range"
+                        min={0}
+                        max={1}
+                        step={0.01}
+                        value={desktopSelectedTrack.volume}
+                        onChange={(event) =>
+                          updateDesktopTrack(desktopSelectedTrack.id, {
+                            volume: Number(event.target.value),
+                          })
+                        }
+                      />
+                    </label>
+
+                    <label className="pro-daw-control">
+                      Pan {desktopSelectedTrack.pan}
+                      <input
+                        type="range"
+                        min={-1}
+                        max={1}
+                        step={0.05}
+                        value={desktopSelectedTrack.pan}
+                        onChange={(event) =>
+                          updateDesktopTrack(desktopSelectedTrack.id, {
+                            pan: Number(event.target.value),
+                          })
+                        }
+                      />
+                    </label>
+
+                    <label className="pro-daw-control">
+                      Start {(desktopSelectedTrack.startSeconds ?? 0).toFixed(2)}s
+                      <input
+                        type="number"
+                        min={0}
+                        step={0.25}
+                        value={desktopSelectedTrack.startSeconds ?? 0}
+                        onChange={(event) =>
+                          updateDesktopTrack(desktopSelectedTrack.id, {
+                            startSeconds: normalizeStartSeconds(Number(event.target.value)),
+                          })
+                        }
+                      />
+                    </label>
+
+                    <label className="pro-daw-control">
+                      Loop repeats {normalizeRepeatCount(desktopSelectedTrack.repeatCount ?? 0)}
+                      <input
+                        type="number"
+                        min={0}
+                        max={32}
+                        step={1}
+                        value={normalizeRepeatCount(desktopSelectedTrack.repeatCount ?? 0)}
+                        onChange={(event) =>
+                          updateDesktopTrack(desktopSelectedTrack.id, {
+                            repeatCount: normalizeRepeatCount(Number(event.target.value)),
+                          })
+                        }
+                      />
+                    </label>
+                  </>
+                ) : (
+                  <div className="pro-daw-empty-state">Select a timeline clip to inspect it.</div>
+                )}
+              </div>
+            </section>
+          )}
+
+          {desktopWindows.mixer?.visible && (
+            <section
+              className="pro-daw-window"
+              style={{
+                left: desktopWindows.mixer.x,
+                top: desktopWindows.mixer.y,
+                width: desktopWindows.mixer.width,
+                height: desktopWindows.mixer.height,
+                zIndex: desktopWindows.mixer.z,
+              }}
+              onMouseDown={() => focusDesktopWindow("mixer")}
+            >
+              <div
+                className="pro-daw-window-title"
+                onMouseDown={(event) => beginDesktopDrag("mixer", event.clientX, event.clientY)}
+              >
+                <strong>Mixer</strong>
+                <span>Volume / pan / mute / solo</span>
+              </div>
+
+              <div className="pro-daw-mixer-body">
+                {tracks.length === 0 ? (
+                  <div className="pro-daw-empty-state">Add timeline tracks to show mixer channels.</div>
+                ) : (
+                  tracks.map((track) => (
+                    <div key={track.id} className="pro-daw-channel">
+                      <strong>{track.name}</strong>
+                      <input
+                        type="range"
+                        min={0}
+                        max={1}
+                        step={0.01}
+                        value={track.volume}
+                        onChange={(event) =>
+                          updateDesktopTrack(track.id, { volume: Number(event.target.value) })
+                        }
+                      />
+                      <input
+                        type="range"
+                        min={-1}
+                        max={1}
+                        step={0.05}
+                        value={track.pan}
+                        onChange={(event) =>
+                          updateDesktopTrack(track.id, { pan: Number(event.target.value) })
+                        }
+                      />
+                      <div>
+                        <button onClick={() => updateDesktopTrack(track.id, { muted: !track.muted })}>
+                          {track.muted ? "Muted" : "Mute"}
+                        </button>
+                        <button onClick={() => updateDesktopTrack(track.id, { solo: !track.solo })}>
+                          {track.solo ? "Soloed" : "Solo"}
+                        </button>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            </section>
+          )}
+
+          {desktopWindows.plugins?.visible && (
+            <section
+              className="pro-daw-window"
+              style={{
+                left: desktopWindows.plugins.x,
+                top: desktopWindows.plugins.y,
+                width: desktopWindows.plugins.width,
+                height: desktopWindows.plugins.height,
+                zIndex: desktopWindows.plugins.z,
+              }}
+              onMouseDown={() => focusDesktopWindow("plugins")}
+            >
+              <div
+                className="pro-daw-window-title"
+                onMouseDown={(event) => beginDesktopDrag("plugins", event.clientX, event.clientY)}
+              >
+                <strong>Plugin Rack</strong>
+                <span>Device chain</span>
+              </div>
+
+              <div className="pro-daw-device-row">
+                {["EQ", "Compressor", "Reverb", "Delay", "Limiter"].map((device) => (
+                  <div key={device} className="pro-daw-device-card">
+                    <strong>{device}</strong>
+                    <span />
+                    <span />
+                    <span />
                   </div>
-                  <div>
-                    <span>Pan</span>
-                    <strong>Center</strong>
-                  </div>
-                </div>
+                ))}
+              </div>
+            </section>
+          )}
 
-                <div className="inspector-eq">
-                  <i />
-                  <i />
-                  <i />
-                  <i />
-                  <i />
-                </div>
+          {desktopWindows.ai?.visible && (
+            <section
+              className="pro-daw-window"
+              style={{
+                left: desktopWindows.ai.x,
+                top: desktopWindows.ai.y,
+                width: desktopWindows.ai.width,
+                height: desktopWindows.ai.height,
+                zIndex: desktopWindows.ai.z,
+              }}
+              onMouseDown={() => focusDesktopWindow("ai")}
+            >
+              <div
+                className="pro-daw-window-title"
+                onMouseDown={(event) => beginDesktopDrag("ai", event.clientX, event.clientY)}
+              >
+                <strong>AI Studio</strong>
+                <span>Assistant tools</span>
+              </div>
 
-                <div className="inspector-meter">
-                  <i />
-                  <i />
-                  <i />
-                </div>
-              </aside>
-            </div>
+              <div className="pro-daw-ai-grid">
+                {["Song Builder", "Beat Maker", "Chord Ideas", "Melody Ideas", "Mix Assist", "Master Assist"].map((tool) => (
+                  <button key={tool}>{tool}</button>
+                ))}
+              </div>
+            </section>
+          )}
+        </div>
+      </section>
 
-            <div className="pro-daw-force-devices">
-              {["EQ Eight", "Compressor", "Reverb", "Limiter", "Master"].map((device) => (
-                <div key={device}>
-                  <strong>{device}</strong>
-                  <span />
-                  <span />
-                  <span />
-                </div>
-              ))}
-            </div>
-
-            <div className="pro-daw-force-tabs">
-              {["Arrange", "Mixer", "Sampler", "Piano Roll", "Score", "Automation"].map((tab) => (
-                <button key={tab}>{tab}</button>
-              ))}
-            </div>
-          </section>
-
-      <section className="border-b border-white/10 bg-black/30 px-4 py-4 backdrop-blur-xl">
+<section className="border-b border-white/10 bg-black/30 px-4 py-4 backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div>
             <p className="text-xs uppercase tracking-[0.35em] text-cyan-300">
@@ -1540,8 +1872,7 @@ if (previewAudioRef.current) {
               ) : (
                 filteredLibraryItems.map((item) => {
                   const playable = canPreviewSoundPath(item.path)
-
-                  return (
+  return (
                     <div key={item.id} className="rounded-2xl border border-white/10 bg-slate-900 p-3">
                       <div className="flex items-start justify-between gap-2">
                         <div>
