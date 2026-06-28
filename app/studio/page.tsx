@@ -1128,9 +1128,9 @@ if (previewAudioRef.current) {
             <p className="text-xs uppercase tracking-[0.35em] text-cyan-300">
               PRO-TEVERSE One Studio
             </p>
-            <h1 className="mt-2 text-3xl font-black">Offline Music Studio</h1>
+            <h1 className="mt-2 text-3xl font-black">Modern Offline Music Studio</h1>
             <p className="mt-1 text-sm text-slate-400">
-              One clean workspace for import, pattern making, timeline, mixer and export.
+              Import, program, arrange, mix, save and export in one familiar studio workflow.
             </p>
           </div>
 
@@ -1282,7 +1282,7 @@ if (previewAudioRef.current) {
             </p>
 
             <p className="mt-3 text-sm leading-6 text-slate-300">
-              Browse local legal sounds. Placeholder README files must be replaced with real licensed audio files.
+              Browse generated and local legal sounds, then add them directly to your timeline.
             </p>
 
             <label className="mt-4 flex items-center gap-2 rounded-xl border border-white/10 bg-slate-900 px-3 py-2">
@@ -1366,7 +1366,7 @@ if (previewAudioRef.current) {
                   Pattern Maker
                 </p>
                 <p className="mt-1 text-xs text-slate-400">
-                  Build a simple 16-step drum, bass, chord and melody pattern.
+                  Build a 16-step beat, bass, chord and melody pattern with quick presets.
                 </p>
               </div>
 
@@ -1686,7 +1686,8 @@ if (previewAudioRef.current) {
               <p>9. Duplicate/nudge timeline controls added.</p>
               <p>10. Timeline start display polished.</p>
               <p>11. Timeline loop repeat controls added.</p>
-              <p>12. Desktop installer later.</p>
+              <p>12. Modern UI/UX polish added.</p>
+              <p>13. Desktop installer later.</p>
             </div>
           </div>
 
