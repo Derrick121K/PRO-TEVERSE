@@ -542,6 +542,26 @@ export default function StudioPage() {
     setPlayingLibraryId(null)
   }
 
+  function loadTrackDuration(trackId: string, audioUrl?: string) {
+    if (!audioUrl) return
+
+    const audio = new Audio(audioUrl)
+
+    audio.onloadedmetadata = () => {
+      if (!Number.isFinite(audio.duration)) return
+
+      setTracks((current) =>
+        current.map((item) =>
+          item.id === trackId ? { ...item, duration: audio.duration } : item
+        )
+      )
+    }
+
+    audio.onerror = () => {
+      setMessage("Could not read track duration. The audio may still play.")
+    }
+  }
+
   async function importAudio(file: File) {
     if (!supportedAudioExtensions.test(file.name)) {
       setMessage("Unsupported file. Please use WAV, MP3, OGG, M4A, AAC or FLAC.")
@@ -565,15 +585,7 @@ export default function StudioPage() {
 
     setTracks((current) => [...current, track])
     setMessage(`${file.name} imported as an audio track.`)
-
-    const audio = new Audio(audioUrl)
-    audio.onloadedmetadata = () => {
-      setTracks((current) =>
-        current.map((item) =>
-          item.id === id ? { ...item, duration: audio.duration } : item
-        )
-      )
-    }
+    loadTrackDuration(id, audioUrl)
   }
 
   async function playTrack(track: AudioTrack) {
@@ -659,6 +671,7 @@ export default function StudioPage() {
     }
 
     setTracks((current) => [...current, track])
+    if (playable) loadTrackDuration(id, item.path)
     setMessage(
       playable
         ? `${item.name} added from Sound Library.`
@@ -769,6 +782,9 @@ export default function StudioPage() {
         : []
 
       setTracks(loadedTracks)
+      loadedTracks.forEach((track) => {
+        if (track.audioUrl && !track.duration) loadTrackDuration(track.id, track.audioUrl)
+      })
       setCurrentStep(null)
       setIsTransportPlaying(false)
       setMessage(`Loaded saved project: ${parsed.projectName || "PRO-TEVERSE Offline Project"}. Re-import PC audio if any track has no playback.`)
@@ -1312,7 +1328,8 @@ export default function StudioPage() {
               <p>2. Sound library panel added.</p>
               <p>3. Save/load project added.</p>
               <p>4. Pattern WAV export added.</p>
-              <p>5. Desktop installer later.</p>
+              <p>5. Sound-library duration loading added.</p>
+              <p>6. Desktop installer later.</p>
             </div>
           </div>
 
