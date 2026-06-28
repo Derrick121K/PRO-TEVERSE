@@ -124,7 +124,8 @@ function serializeTrackForSave(track: AudioTrack) {
 
 function normalizeStartSeconds(value: number) {
   if (!Number.isFinite(value)) return 0
-  return Math.max(0, Math.min(600, value))
+  const clamped = Math.max(0, Math.min(600, value))
+  return Math.round(clamped * 100) / 100
 }
 
 function formatSeconds(seconds?: number) {
@@ -535,7 +536,7 @@ export default function StudioPage() {
 
   const oneBarSeconds = useMemo(() => {
     const safeBpm = Math.max(40, Math.min(220, bpm))
-    return (60 / safeBpm) * 4
+    return normalizeStartSeconds((60 / safeBpm) * 4)
   }, [bpm])
 
   const filteredLibraryItems = useMemo(() => {
@@ -1546,7 +1547,7 @@ if (previewAudioRef.current) {
                         min={0}
                         max={600}
                         step={0.25}
-                        value={track.startSeconds ?? 0}
+                        value={Number((track.startSeconds ?? 0).toFixed(2))}
                         onChange={(event) => {
                           const startSeconds = normalizeStartSeconds(Number(event.target.value))
 
@@ -1565,7 +1566,7 @@ if (previewAudioRef.current) {
                       min={0}
                       max={32}
                       step={0.25}
-                      value={track.startSeconds ?? 0}
+                      value={Number((track.startSeconds ?? 0).toFixed(2))}
                       onChange={(event) => {
                         const startSeconds = normalizeStartSeconds(Number(event.target.value))
 
@@ -1599,6 +1600,27 @@ if (previewAudioRef.current) {
                       >
                         Duplicate +1 Bar
                       </button>
+
+                      <button
+                        onClick={() => nudgeTimelineTrack(track, -oneBarSeconds)}
+                        className="rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2 text-xs font-bold text-slate-200 hover:bg-white/[0.08]"
+                      >
+                        -1 Bar
+                      </button>
+
+                      <button
+                        onClick={() => updateTrackStartSeconds(track.id, 0)}
+                        className="rounded-xl border border-emerald-400/30 bg-emerald-400/10 px-3 py-2 text-xs font-bold text-emerald-100 hover:bg-emerald-400/20"
+                      >
+                        Reset 0s
+                      </button>
+
+                      <button
+                        onClick={() => nudgeTimelineTrack(track, oneBarSeconds)}
+                        className="rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2 text-xs font-bold text-slate-200 hover:bg-white/[0.08]"
+                      >
+                        +1 Bar
+                      </button>
                     </div>
                   </div>
                 ))}
@@ -1616,7 +1638,8 @@ if (previewAudioRef.current) {
               <p>7. Timeline tracks added to WAV export.</p>
               <p>8. Timeline start positions added.</p>
               <p>9. Duplicate/nudge timeline controls added.</p>
-              <p>10. Desktop installer later.</p>
+              <p>10. Timeline start display polished.</p>
+              <p>11. Desktop installer later.</p>
             </div>
           </div>
 
