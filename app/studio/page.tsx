@@ -901,7 +901,7 @@ if (previewAudioRef.current) {
     if (isRenderingWav) return
 
     setIsRenderingWav(true)
-    setMessage("Rendering pattern WAV...")
+    setMessage("Rendering pattern and timeline WAV...")
 
     try {
       const OfflineAudioContextConstructor =
@@ -917,7 +917,22 @@ if (previewAudioRef.current) {
       const safeBpm = Math.max(40, Math.min(220, bpm))
       const stepSeconds = 60 / safeBpm / 4
       const barsToRender = 8
-      const renderSeconds = stepSeconds * stepCount * barsToRender + 0.6
+      const patternSeconds = stepSeconds * stepCount * barsToRender
+      const hasSolo = tracks.some((track) => track.solo)
+
+      const playableTracks = tracks.filter(
+        (track) =>
+          track.audioUrl &&
+          !track.muted &&
+          (!hasSolo || track.solo)
+      )
+
+      const longestTrackSeconds = playableTracks.reduce(
+        (longest, track) => Math.max(longest, track.duration || 0),
+        0
+      )
+
+      const renderSeconds = Math.max(patternSeconds + 0.6, longestTrackSeconds + 0.6)
       const frameCount = Math.ceil(sampleRate * renderSeconds)
       const offlineContext = new OfflineAudioContextConstructor(2, frameCount, sampleRate)
 
@@ -933,6 +948,41 @@ if (previewAudioRef.current) {
         }
       }
 
+      const failedTracks: string[] = []
+
+      await Promise.all(
+        playableTracks.map(async (track) => {
+          try {
+            const response = await fetch(track.audioUrl as string)
+            const arrayBuffer = await response.arrayBuffer()
+            const decoded = await offlineContext.decodeAudioData(arrayBuffer.slice(0))
+            const source = offlineContext.createBufferSource()
+            const gain = offlineContext.createGain()
+            const panner =
+              typeof offlineContext.createStereoPanner === "function"
+                ? offlineContext.createStereoPanner()
+                : null
+
+            source.buffer = decoded
+            gain.gain.value = track.volume
+
+            if (panner) {
+              panner.pan.value = Math.max(-1, Math.min(1, track.pan))
+              source.connect(gain)
+              gain.connect(panner)
+              panner.connect(offlineContext.destination)
+            } else {
+              source.connect(gain)
+              gain.connect(offlineContext.destination)
+            }
+
+            source.start(0)
+          } catch {
+            failedTracks.push(track.name)
+          }
+        })
+      )
+
       const renderedBuffer = await offlineContext.startRendering()
       const wav = audioBufferToWav(renderedBuffer)
       const blob = new Blob([wav], { type: "audio/wav" })
@@ -940,11 +990,16 @@ if (previewAudioRef.current) {
       const link = document.createElement("a")
 
       link.href = url
-      link.download = `${projectName.replace(/[^a-z0-9]+/gi, "-").toLowerCase()}-pattern.wav`
+      link.download = `${projectName.replace(/[^a-z0-9]+/gi, "-").toLowerCase()}-mix.wav`
       link.click()
 
       URL.revokeObjectURL(url)
-      setMessage(`Pattern WAV exported: ${barsToRender} bars at ${safeBpm} BPM.`)
+
+      if (failedTracks.length > 0) {
+        setMessage(`WAV exported with pattern and ${playableTracks.length - failedTracks.length} timeline tracks. Some tracks failed: ${failedTracks.join(", ")}.`)
+      } else {
+        setMessage(`WAV exported with pattern and ${playableTracks.length} timeline track(s).`)
+      }
     } catch {
       setMessage("WAV export failed. Try stopping playback first, then export again.")
     } finally {
@@ -1423,7 +1478,8 @@ if (previewAudioRef.current) {
               <p>4. Pattern WAV export added.</p>
               <p>5. Sound-library duration loading added.</p>
               <p>6. Mixer pan playback added.</p>
-              <p>7. Desktop installer later.</p>
+              <p>7. Timeline tracks added to WAV export.</p>
+              <p>8. Desktop installer later.</p>
             </div>
           </div>
 
