@@ -8,73 +8,82 @@ Rebuild PRO-TEVERSE into one simple, working offline music studio instead of man
 
 /studio
 
-This will become the main and only production workspace.
+This is now the main production workspace.
 
-## Old Routes
+## Completed Steps
 
-These pages will later be redirected to /studio:
+1. Created rebuild branch
+   - Branch: rebuild/one-studio
 
-- /pro-studio
-- /fl-studio
-- /ai-creator
-- /zip-studio
-- /sound-library
-- /export
+2. Rebuilt /studio as the main workspace
+   - Project setup
+   - Import audio
+   - Pattern maker
+   - Timeline
+   - Mixer
+   - Export controls
 
-## Final Studio Sections
+3. Redirected duplicate pages
+   - /pro-studio redirects to /studio
+   - /fl-studio redirects to /studio
+   - /ai-creator redirects to /studio
+   - /zip-studio redirects to /studio
+   - /sound-library redirects to /studio
+   - /export redirects to /studio
 
-1. Header / Transport
-   - Play
-   - Stop
-   - BPM
-   - Key
-   - Save project
-   - Export
+4. Added real pattern playback
+   - Kick
+   - Clap
+   - Hat
+   - Bass
+   - Chords
+   - Melody tone
+   - Active step highlight
 
-2. Import Audio
-   - Choose local WAV/MP3/OGG/M4A/AAC/FLAC
-   - Create audio track
-   - Create clip
-   - Preview sound
+5. Added Sound Library inside Studio
+   - Search
+   - Category filter
+   - Placeholder warning
+   - Add to Timeline
 
-3. Sound Library
-   - Legal local samples only
-   - No cracked packs
-   - No paid FL Studio sounds copied into the repo
-   - User can add their own samples to public/sound-library
+6. Added Save / Load / Clear project
+   - Saves to browser localStorage
+   - Loads project name, BPM, key, pattern and tracks
+   - Preserves sound-library paths
+   - Warns when PC-imported audio needs re-importing
 
-4. Pattern Maker
-   - Drum pattern
-   - Bass pattern
-   - Chord pattern
-   - Melody pattern
-   - Amapiano / hip-hop / house presets
+7. Added Pattern WAV Export
+   - Renders 8 bars
+   - Uses current BPM
+   - Exports a .wav file
 
-5. Timeline
-   - Tracks
-   - Clips
-   - Pattern blocks
-   - Audio blocks
+## Current Working Features
 
-6. Mixer
-   - Volume
-   - Pan
-   - Mute
-   - Solo
-   - Basic effects placeholders
+- One Studio route
+- Local audio import
+- Pattern playback
+- Pattern WAV export
+- Project JSON export
+- Save/load project
+- Sound Library panel
+- Timeline
+- Mixer
+- Duplicate page redirects
 
-7. Export
-   - Project JSON
-   - MIDI where possible
-   - WAV renderer as a later engine step
+## Remaining Work
 
-## Important Rules
+1. Add real legal audio samples to public/sound-library
+2. Improve arrangement timeline
+3. Improve mixer engine
+4. Add better WAV export with imported audio tracks
+5. Add MIDI export
+6. Add desktop installer later
 
-- Offline-first
-- No Suno API
-- No cloud dependency
-- No copyrighted paid sample packs
-- No cracked plugins
-- Build must pass
-- TypeScript lint must pass
-- Every step must be committed
+## Build Rules
+
+Every step must pass:
+
+npm run build
+npm run lint
+
+Every step must be committed and pushed.
