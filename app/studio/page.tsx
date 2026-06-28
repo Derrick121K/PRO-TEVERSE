@@ -1603,6 +1603,28 @@ if (previewAudioRef.current) {
                       className="mt-3 w-full"
                     />
 
+                    <div className="mt-3 rounded-2xl border border-white/10 bg-slate-950 p-3">
+                      <div className="flex items-center justify-between gap-3">
+                        <div>
+                          <p className="text-xs font-bold text-slate-200">Loop Repeats</p>
+                          <p className="text-xs text-slate-500">
+                            Plays {normalizeRepeatCount(track.repeatCount ?? 0) + 1} time(s), one bar apart.
+                          </p>
+                        </div>
+
+                        <input
+                          type="number"
+                          min={0}
+                          max={32}
+                          step={1}
+                          value={normalizeRepeatCount(track.repeatCount ?? 0)}
+                          onChange={(event) =>
+                            updateTrackRepeatCount(track.id, Number(event.target.value))
+                          }
+                          className="w-20 rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-sm outline-none"
+                        />
+                      </div>
+                    </div>
                     <div className="mt-3 grid grid-cols-3 gap-2">
                       <button
                         onClick={() => nudgeTimelineTrack(track, -0.25)}
