@@ -5425,3 +5425,57 @@ body {
   color: #ffffff !important;
   font-size: 0.68rem !important;
 }
+/* PRO-TEEVERSE PHASE 2B-C DEEP TOOL CONTROLS V1 */
+.pro-arrangement-toolbar > div:last-child,
+.pro-linked-piano-actions,
+.pro-linked-automation-actions {
+  max-height: 56px !important;
+  overflow-y: auto !important;
+}
+
+.pro-arrangement-toolbar button,
+.pro-linked-piano-actions button,
+.pro-linked-automation-actions button {
+  white-space: nowrap !important;
+}
+
+.pro-linked-mixer-strips section {
+  cursor: pointer !important;
+  transition:
+    transform 140ms ease,
+    border-color 140ms ease,
+    background 140ms ease,
+    box-shadow 140ms ease !important;
+}
+
+.pro-linked-mixer-strips section:hover {
+  transform: translateY(-2px) !important;
+  border-color: rgba(185,131,255,0.45) !important;
+}
+
+.pro-linked-mixer-strips section.selected {
+  border-color: rgba(185,131,255,0.75) !important;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(185,131,255,0.20), transparent 7rem),
+    rgba(138,92,255,0.12) !important;
+  box-shadow: 0 0 22px rgba(138,92,255,0.16) !important;
+}
+
+.pro-linked-mixer-controls button.active {
+  background: linear-gradient(180deg, rgba(138,92,255,0.55), rgba(36,27,61,0.95)) !important;
+  border-color: rgba(185,131,255,0.75) !important;
+}
+
+.pro-linked-mixer-controls label {
+  border: 1px solid rgba(255,255,255,0.06) !important;
+  border-radius: 0.75rem !important;
+  background: rgba(255,255,255,0.035) !important;
+  padding: 0.55rem !important;
+}
+
+.pro-arrangement-inspector label {
+  border: 1px solid rgba(255,255,255,0.06) !important;
+  border-radius: 0.65rem !important;
+  background: rgba(255,255,255,0.035) !important;
+  padding: 0.5rem !important;
+}
