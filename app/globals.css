@@ -3446,3 +3446,254 @@ body {
     grid-template-columns: 220px minmax(280px, 1fr) !important;
   }
 }
+/* PRO-TEEVERSE FL STYLE MULTI EDITOR WINDOWS V1 */
+
+/* The old big mode banner is too heavy; every mode now has its own window. */
+.pro-daw-mode-console {
+  display: none !important;
+}
+
+.pro-daw-desktop {
+  background:
+    radial-gradient(circle at 12% 0%, rgba(138,92,255,0.22), transparent 26rem),
+    radial-gradient(circle at 85% 5%, rgba(0,208,132,0.08), transparent 22rem),
+    linear-gradient(180deg, #080910 0%, #05060a 100%) !important;
+  font-synthesis: none !important;
+}
+
+.pro-daw-topbar,
+.pro-daw-transport-bar,
+.pro-daw-tab-dock,
+.pro-daw-bottom-mode-dock {
+  backdrop-filter: blur(16px) !important;
+}
+
+.pro-daw-window {
+  border: 1px solid rgba(185,131,255,0.20) !important;
+  background:
+    linear-gradient(180deg, rgba(27,29,40,0.99), rgba(13,15,22,0.99)) !important;
+  box-shadow:
+    0 24px 60px rgba(0,0,0,0.55),
+    inset 0 1px 0 rgba(255,255,255,0.06) !important;
+}
+
+.pro-daw-window-title {
+  background:
+    linear-gradient(90deg, rgba(138,92,255,0.34), rgba(24,26,36,0.98) 55%, rgba(0,208,132,0.08)) !important;
+  border-bottom: 1px solid rgba(255,255,255,0.07) !important;
+}
+
+.pro-daw-window-title strong {
+  letter-spacing: 0.02em !important;
+  text-transform: uppercase !important;
+}
+
+.pro-daw-window-body {
+  background:
+    linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(255,255,255,0.025) 1px, transparent 1px),
+    rgba(8,9,16,0.55) !important;
+  background-size: 36px 100%, 100% 36px !important;
+}
+
+.pro-daw-editor-window {
+  min-width: 300px !important;
+  min-height: 180px !important;
+}
+
+.pro-daw-editor-fill {
+  min-height: 100% !important;
+  height: 100% !important;
+}
+
+/* Cleaner browser cards */
+.pro-daw-browser-item {
+  position: relative !important;
+  overflow: hidden !important;
+  border-color: rgba(185,131,255,0.15) !important;
+}
+
+.pro-daw-browser-item::before {
+  content: "" !important;
+  position: absolute !important;
+  left: 0 !important;
+  bottom: 0 !important;
+  width: 100% !important;
+  height: 18px !important;
+  opacity: 0.5 !important;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(185,131,255,0.65) 0 4px,
+      transparent 4px 9px
+    ) !important;
+  animation: proMiniWave 2s linear infinite !important;
+}
+
+.pro-daw-browser-item > * {
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+/* Arrangement should feel more like FL playlist clips */
+.pro-daw-pattern-steps button {
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.pro-daw-pattern-steps button.active::after {
+  content: "" !important;
+  position: absolute !important;
+  left: 8% !important;
+  right: 8% !important;
+  bottom: 5px !important;
+  height: 4px !important;
+  border-radius: 999px !important;
+  background: rgba(255,255,255,0.55) !important;
+  box-shadow: 0 0 12px rgba(255,255,255,0.35) !important;
+}
+
+.pro-daw-track-clip {
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(255,255,255,0.25) 0 3px,
+      transparent 3px 8px
+    ),
+    linear-gradient(90deg, #8a5cff, #b983ff) !important;
+  box-shadow: 0 0 22px rgba(138,92,255,0.28) !important;
+}
+
+/* Plugin rack: each plugin opens its own editor */
+.pro-daw-fl-plugin-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(132px, 1fr)) !important;
+  gap: 0.55rem !important;
+  padding: 0.65rem !important;
+}
+
+.pro-daw-plugin-button {
+  cursor: pointer !important;
+  text-align: left !important;
+  color: #ffffff !important;
+  transition:
+    transform 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease !important;
+}
+
+.pro-daw-plugin-button:hover {
+  transform: translateY(-2px) scale(1.015) !important;
+  border-color: rgba(185,131,255,0.55) !important;
+  box-shadow: 0 18px 34px rgba(138,92,255,0.20) !important;
+}
+
+.pro-daw-plugin-button small {
+  display: block !important;
+  margin-top: 0.25rem !important;
+  color: #a9a9b2 !important;
+  font-size: 0.58rem !important;
+}
+
+/* Sampler */
+.pro-daw-sampler-window .pro-daw-sampler-mode {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(88px, 1fr)) !important;
+  gap: 0.6rem !important;
+}
+
+.pro-daw-sampler-mode button {
+  min-height: 72px !important;
+  border-radius: 1rem !important;
+  transform-style: preserve-3d !important;
+  background:
+    radial-gradient(circle at 35% 20%, rgba(185,131,255,0.48), transparent 46%),
+    linear-gradient(145deg, #24263a, #10121a) !important;
+}
+
+.pro-daw-sampler-mode button:active {
+  transform: translateY(2px) scale(0.98) !important;
+}
+
+/* Piano Roll */
+.pro-daw-piano-roll-window .pro-daw-piano-mode {
+  min-height: 220px !important;
+}
+
+.pro-daw-piano-mode {
+  border: 1px solid rgba(185,131,255,0.16) !important;
+  box-shadow: inset 0 0 40px rgba(138,92,255,0.08) !important;
+}
+
+.pro-daw-piano-mode i {
+  cursor: grab !important;
+}
+
+.pro-daw-piano-mode i:nth-of-type(3n) {
+  background: linear-gradient(90deg, #00d084, #8a5cff) !important;
+}
+
+.pro-daw-piano-mode i:nth-of-type(4n) {
+  background: linear-gradient(90deg, #ffc857, #b983ff) !important;
+}
+
+/* Score */
+.pro-daw-score-window .pro-daw-score-mode {
+  min-height: 150px !important;
+  box-shadow: inset 0 0 32px rgba(15,23,42,0.10) !important;
+}
+
+/* Automation */
+.pro-daw-automation-window .pro-daw-automation-mode {
+  min-height: 210px !important;
+}
+
+.pro-daw-automation-mode {
+  border: 1px solid rgba(185,131,255,0.16) !important;
+  box-shadow: inset 0 0 40px rgba(185,131,255,0.08) !important;
+}
+
+/* Bottom mode tabs must feel clickable and useful */
+.pro-daw-bottom-tabs button {
+  position: relative !important;
+}
+
+.pro-daw-bottom-tabs button.active::after {
+  content: "" !important;
+  position: absolute !important;
+  left: 14% !important;
+  right: 14% !important;
+  bottom: -4px !important;
+  height: 3px !important;
+  border-radius: 999px !important;
+  background: #b983ff !important;
+  box-shadow: 0 0 14px rgba(185,131,255,0.8) !important;
+}
+
+/* Better movement + usability */
+.pro-daw-window,
+.pro-daw-device-card,
+.pro-daw-sampler-mode button,
+.pro-daw-section-block,
+.pro-daw-track-clip {
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease,
+    border-color 160ms ease,
+    background 160ms ease !important;
+}
+
+.pro-daw-window:hover {
+  border-color: rgba(185,131,255,0.32) !important;
+}
+
+/* Responsive: keep editors usable on laptop screens */
+@media (max-width: 1180px) {
+  .pro-daw-fl-plugin-grid {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)) !important;
+  }
+
+  .pro-daw-sampler-window .pro-daw-sampler-mode {
+    grid-template-columns: repeat(auto-fit, minmax(78px, 1fr)) !important;
+  }
+}

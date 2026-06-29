@@ -343,6 +343,10 @@ export default function StudioPage() {
     mixer: { x: 270, y: 268, width: 320, height: 150, visible: true, z: 13 },
     plugins: { x: 600, y: 268, width: 320, height: 150, visible: true, z: 14 },
     ai: { x: 930, y: 268, width: 315, height: 150, visible: true, z: 15 },
+    sampler: { x: 18, y: 118, width: 330, height: 250, visible: false, z: 16 },
+    pianoRoll: { x: 360, y: 118, width: 620, height: 300, visible: false, z: 17 },
+    score: { x: 360, y: 430, width: 620, height: 210, visible: false, z: 18 },
+    automation: { x: 990, y: 118, width: 350, height: 300, visible: false, z: 19 },
   }))
   const [desktopDrag, setDesktopDrag] = useState<DesktopDragState | null>(null)
   const [desktopZ, setDesktopZ] = useState(30)
@@ -1068,6 +1072,10 @@ if (previewAudioRef.current) {
       mixer: { x: 270, y: 268, width: 320, height: 150, visible: true, z: 13 },
       plugins: { x: 600, y: 268, width: 320, height: 150, visible: true, z: 14 },
       ai: { x: 930, y: 268, width: 315, height: 150, visible: true, z: 15 },
+      sampler: { x: 18, y: 118, width: 330, height: 250, visible: false, z: 16 },
+      pianoRoll: { x: 360, y: 118, width: 620, height: 300, visible: false, z: 17 },
+      score: { x: 360, y: 430, width: 620, height: 210, visible: false, z: 18 },
+      automation: { x: 990, y: 118, width: 350, height: 300, visible: false, z: 19 },
     })
     setDesktopStatus("Desktop layout reset and saved.")
   }
@@ -1109,6 +1117,10 @@ if (previewAudioRef.current) {
       mixer: { x: 270, y: 268, width: 320, height: 150, visible: true, z: 13 },
       plugins: { x: 600, y: 268, width: 320, height: 150, visible: true, z: 14 },
       ai: { x: 930, y: 268, width: 315, height: 150, visible: true, z: 15 },
+      sampler: { x: 18, y: 118, width: 330, height: 250, visible: false, z: 16 },
+      pianoRoll: { x: 360, y: 118, width: 620, height: 300, visible: false, z: 17 },
+      score: { x: 360, y: 430, width: 620, height: 210, visible: false, z: 18 },
+      automation: { x: 990, y: 118, width: 350, height: 300, visible: false, z: 19 },
     }
   }
 
@@ -1204,8 +1216,36 @@ if (previewAudioRef.current) {
       }
     })
   }
+  function openDesktopWindow(windowId: string) {
+    const fallback = getDesktopWindowDefaults()[windowId]
+    if (!fallback) return
+
+    setDesktopZ((current) => {
+      const nextZ = current + 1
+
+      setDesktopWindows((windows) => ({
+        ...windows,
+        [windowId]: {
+          ...(windows[windowId] ?? fallback),
+          visible: true,
+          z: nextZ,
+        },
+      }))
+
+      return nextZ
+    })
+
+    setDesktopStatus(`${windowId} window opened.`)
+  }
   function selectDesktopMode(mode: DesktopMode) {
     setDesktopMode(mode)
+
+    if (mode === "Arrange") openDesktopWindow("arrangement")
+    if (mode === "Mixer") openDesktopWindow("mixer")
+    if (mode === "Sampler") openDesktopWindow("sampler")
+    if (mode === "Piano Roll") openDesktopWindow("pianoRoll")
+    if (mode === "Score") openDesktopWindow("score")
+    if (mode === "Automation") openDesktopWindow("automation")
     setDesktopStatus(`${mode} workspace opened.`)
 
     if (mode === "Mixer") {
@@ -1457,6 +1497,10 @@ if (previewAudioRef.current) {
               ["mixer", "Mixer"],
               ["plugins", "Plugins"],
               ["ai", "AI"],
+              ["sampler", "Sampler"],
+              ["pianoRoll", "Piano Roll"],
+              ["score", "Score"],
+              ["automation", "Automation"],
             ].map(([id, label]) => (
               <button key={id} onClick={() => toggleDesktopWindow(id)}
               onDoubleClick={() => resetDesktopWindow(id)}>
@@ -1502,6 +1546,10 @@ if (previewAudioRef.current) {
             ["mixer", "Mixer"],
             ["plugins", "Plugin Rack"],
             ["ai", "AI Studio"],
+            ["sampler", "Sampler"],
+            ["pianoRoll", "Piano Roll"],
+            ["score", "Score"],
+            ["automation", "Automation"],
           ].map(([id, label]) => (
             <button
               key={id}
@@ -1623,7 +1671,7 @@ if (previewAudioRef.current) {
                 {[0, 1, 2, 3, 4].map((line) => (
                   <span key={line} />
                 ))}
-                {["♩", "♪", "♫", "♬", "♩", "♪", "♫"].map((note, index) => (
+                {["Ã¢â„¢Â©", "Ã¢â„¢Âª", "Ã¢â„¢Â«", "Ã¢â„¢Â¬", "Ã¢â„¢Â©", "Ã¢â„¢Âª", "Ã¢â„¢Â«"].map((note, index) => (
                   <b key={`${note}-${index}`} style={{ left: `${10 + index * 12}%`, top: `${20 + (index % 4) * 14}%` }}>
                     {note}
                   </b>
@@ -1961,14 +2009,28 @@ if (previewAudioRef.current) {
                 <span>Device chain</span>
               </div>
 
-              <div className="pro-daw-device-row">
-                {["EQ", "Compressor", "Reverb", "Delay", "Limiter"].map((device) => (
-                  <div key={device} className="pro-daw-device-card">
+              <div className="pro-daw-device-row pro-daw-fl-plugin-grid">
+                {[
+                  ["Fruity EQ", "automation"],
+                  ["Compressor", "automation"],
+                  ["Reverb Space", "automation"],
+                  ["Delay Echo", "automation"],
+                  ["Sampler Channel", "sampler"],
+                  ["Bass Piano Roll", "pianoRoll"],
+                  ["Chord Piano Roll", "pianoRoll"],
+                  ["Melody Piano Roll", "pianoRoll"],
+                ].map(([device, windowId]) => (
+                  <button
+                    key={device}
+                    className="pro-daw-device-card pro-daw-plugin-button"
+                    onClick={() => openDesktopWindow(windowId)}
+                  >
                     <strong>{device}</strong>
+                    <small>{windowId === "pianoRoll" ? "Open notes" : windowId === "sampler" ? "Open pads" : "Open curve"}</small>
                     <span />
                     <span />
                     <span />
-                  </div>
+                  </button>
                 ))}
               </div>
             </section>
@@ -2003,7 +2065,165 @@ if (previewAudioRef.current) {
               </div>
             </section>
           )}
-        </div>
+
+          {desktopWindows.sampler?.visible && (
+            <section
+              className="pro-daw-window pro-daw-editor-window pro-daw-sampler-window"
+              style={{
+                left: desktopWindows.sampler.x,
+                top: desktopWindows.sampler.y,
+                width: desktopWindows.sampler.width,
+                height: desktopWindows.sampler.height,
+                zIndex: desktopWindows.sampler.z,
+              }}
+              onMouseDown={() => focusDesktopWindow("sampler")}
+              onMouseUp={(event) => syncDesktopWindowSize("sampler", event.currentTarget)}
+            >
+              <div
+                className="pro-daw-window-title"
+                onMouseDown={(event) => beginDesktopDrag("sampler", event.clientX, event.clientY)}
+                onDoubleClick={() => resetDesktopWindow("sampler")}
+              >
+                <strong>Sampler</strong>
+                <span>pads / chops / waveform</span>
+              </div>
+
+              <div className="pro-daw-window-body">
+                <div className="pro-daw-sampler-mode pro-daw-editor-fill">
+                  {["Kick", "Clap", "Hat", "Bass", "Chord", "FX", "Vocal", "Loop"].map((pad, index) => (
+                    <button
+                      key={pad}
+                      onClick={index === 0 ? addFirstLibrarySoundToDesktop : undefined}
+                    >
+                      <span>{pad}</span>
+                      <i />
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </section>
+          )}
+
+          {desktopWindows.pianoRoll?.visible && (
+            <section
+              className="pro-daw-window pro-daw-editor-window pro-daw-piano-roll-window"
+              style={{
+                left: desktopWindows.pianoRoll.x,
+                top: desktopWindows.pianoRoll.y,
+                width: desktopWindows.pianoRoll.width,
+                height: desktopWindows.pianoRoll.height,
+                zIndex: desktopWindows.pianoRoll.z,
+              }}
+              onMouseDown={() => focusDesktopWindow("pianoRoll")}
+              onMouseUp={(event) => syncDesktopWindowSize("pianoRoll", event.currentTarget)}
+            >
+              <div
+                className="pro-daw-window-title"
+                onMouseDown={(event) => beginDesktopDrag("pianoRoll", event.clientX, event.clientY)}
+                onDoubleClick={() => resetDesktopWindow("pianoRoll")}
+              >
+                <strong>Piano Roll</strong>
+                <span>notes / melody / velocity</span>
+              </div>
+
+              <div className="pro-daw-window-body">
+                <div className="pro-daw-piano-mode pro-daw-editor-fill">
+                  {["C", "D", "E", "F", "G", "A", "B", "C2"].map((note) => (
+                    <span key={note}>{note}</span>
+                  ))}
+                  {Array.from({ length: 22 }).map((_, index) => (
+                    <i
+                      key={index}
+                      style={{
+                        left: `${7 + index * 4.1}%`,
+                        top: `${14 + ((index * 17) % 68)}%`,
+                        width: `${5 + (index % 4) * 3}%`,
+                      }}
+                    />
+                  ))}
+                </div>
+              </div>
+            </section>
+          )}
+
+          {desktopWindows.score?.visible && (
+            <section
+              className="pro-daw-window pro-daw-editor-window pro-daw-score-window"
+              style={{
+                left: desktopWindows.score.x,
+                top: desktopWindows.score.y,
+                width: desktopWindows.score.width,
+                height: desktopWindows.score.height,
+                zIndex: desktopWindows.score.z,
+              }}
+              onMouseDown={() => focusDesktopWindow("score")}
+              onMouseUp={(event) => syncDesktopWindowSize("score", event.currentTarget)}
+            >
+              <div
+                className="pro-daw-window-title"
+                onMouseDown={(event) => beginDesktopDrag("score", event.clientX, event.clientY)}
+                onDoubleClick={() => resetDesktopWindow("score")}
+              >
+                <strong>Score</strong>
+                <span>notation / chords / writing</span>
+              </div>
+
+              <div className="pro-daw-window-body">
+                <div className="pro-daw-score-mode pro-daw-editor-fill">
+                  {[0, 1, 2, 3, 4].map((line) => (
+                    <span key={line} />
+                  ))}
+                  {["â™©", "â™ª", "â™«", "â™¬", "â™©", "â™ª", "â™«", "â™¬"].map((note, index) => (
+                    <b
+                      key={`${note}-${index}`}
+                      style={{
+                        left: `${8 + index * 10.8}%`,
+                        top: `${20 + (index % 4) * 14}%`,
+                      }}
+                    >
+                      {note}
+                    </b>
+                  ))}
+                </div>
+              </div>
+            </section>
+          )}
+
+          {desktopWindows.automation?.visible && (
+            <section
+              className="pro-daw-window pro-daw-editor-window pro-daw-automation-window"
+              style={{
+                left: desktopWindows.automation.x,
+                top: desktopWindows.automation.y,
+                width: desktopWindows.automation.width,
+                height: desktopWindows.automation.height,
+                zIndex: desktopWindows.automation.z,
+              }}
+              onMouseDown={() => focusDesktopWindow("automation")}
+              onMouseUp={(event) => syncDesktopWindowSize("automation", event.currentTarget)}
+            >
+              <div
+                className="pro-daw-window-title"
+                onMouseDown={(event) => beginDesktopDrag("automation", event.clientX, event.clientY)}
+                onDoubleClick={() => resetDesktopWindow("automation")}
+              >
+                <strong>Automation</strong>
+                <span>curves / movement / parameters</span>
+              </div>
+
+              <div className="pro-daw-window-body">
+                <div className="pro-daw-automation-mode pro-daw-editor-fill">
+                  <svg viewBox="0 0 600 160" role="img" aria-label="Automation curve">
+                    <path d="M10 125 C90 30 135 32 195 105 S315 152 385 55 S505 5 590 90" />
+                    <circle cx="10" cy="125" r="5" />
+                    <circle cx="195" cy="105" r="5" />
+                    <circle cx="385" cy="55" r="5" />
+                    <circle cx="590" cy="90" r="5" />
+                  </svg>
+                </div>
+              </div>
+            </section>
+          )}        </div>
       </section>
 
 <section className="border-b border-white/10 bg-black/30 px-4 py-4 backdrop-blur-xl">
