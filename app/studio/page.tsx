@@ -333,12 +333,12 @@ export default function StudioPage() {
   const [projectName, setProjectName] = useState("PRO-TEVERSE Offline Project")
   const [tracks, setTracks] = useState<AudioTrack[]>([])
   const [desktopWindows, setDesktopWindows] = useState<Record<string, DesktopWindowState>>(() => ({
-    browser: { x: 4, y: 6, width: 268, height: 585, visible: true, z: 10 },
-    arrangement: { x: 276, y: 6, width: 760, height: 365, visible: true, z: 11 },
-    inspector: { x: 1040, y: 6, width: 315, height: 365, visible: true, z: 12 },
-    mixer: { x: 276, y: 377, width: 365, height: 214, visible: true, z: 13 },
-    plugins: { x: 646, y: 377, width: 390, height: 214, visible: true, z: 14 },
-    ai: { x: 1040, y: 377, width: 315, height: 214, visible: true, z: 15 },
+    browser: { x: 4, y: 4, width: 260, height: 420, visible: true, z: 10 },
+    arrangement: { x: 270, y: 4, width: 650, height: 255, visible: true, z: 11 },
+    inspector: { x: 930, y: 4, width: 315, height: 255, visible: true, z: 12 },
+    mixer: { x: 270, y: 268, width: 320, height: 150, visible: true, z: 13 },
+    plugins: { x: 600, y: 268, width: 320, height: 150, visible: true, z: 14 },
+    ai: { x: 930, y: 268, width: 315, height: 150, visible: true, z: 15 },
   }))
   const [desktopDrag, setDesktopDrag] = useState<DesktopDragState | null>(null)
   const [desktopZ, setDesktopZ] = useState(30)
@@ -1019,12 +1019,12 @@ if (previewAudioRef.current) {
 
   function resetDesktopLayout() {
     setDesktopWindows({
-      browser: { x: 4, y: 6, width: 268, height: 585, visible: true, z: 10 },
-      arrangement: { x: 276, y: 6, width: 760, height: 365, visible: true, z: 11 },
-      inspector: { x: 1040, y: 6, width: 315, height: 365, visible: true, z: 12 },
-      mixer: { x: 276, y: 377, width: 365, height: 214, visible: true, z: 13 },
-      plugins: { x: 646, y: 377, width: 390, height: 214, visible: true, z: 14 },
-      ai: { x: 1040, y: 377, width: 315, height: 214, visible: true, z: 15 },
+      browser: { x: 4, y: 4, width: 260, height: 420, visible: true, z: 10 },
+      arrangement: { x: 270, y: 4, width: 650, height: 255, visible: true, z: 11 },
+      inspector: { x: 930, y: 4, width: 315, height: 255, visible: true, z: 12 },
+      mixer: { x: 270, y: 268, width: 320, height: 150, visible: true, z: 13 },
+      plugins: { x: 600, y: 268, width: 320, height: 150, visible: true, z: 14 },
+      ai: { x: 930, y: 268, width: 315, height: 150, visible: true, z: 15 },
     })
     setDesktopStatus("Desktop layout reset.")
   }
@@ -1302,7 +1302,7 @@ if (previewAudioRef.current) {
         <div className="pro-daw-transport-bar">
           <div className="pro-daw-project-info">
             <strong>{projectName}</strong>
-            <span>{bpm} BPM / 4-4 / {songKey}</span>
+            <span>{bpm} BPM / 4/4 / {songKey}</span>
           </div>
 
           <div className="pro-daw-transport-actions">
@@ -1344,6 +1344,24 @@ if (previewAudioRef.current) {
             </button>
           ))}
           <button onClick={resetDesktopLayout}>Reset Layout</button>
+        </div>
+        <div className="pro-daw-bottom-mode-dock">
+          <div className="pro-daw-bottom-brand">
+            <strong>PRO-TEEVERSE</strong>
+            <span>v1.0.0</span>
+          </div>
+
+          <div className="pro-daw-bottom-tabs">
+            {["Arrange", "Mixer", "Sampler", "Piano Roll", "Score", "Automation"].map((tab) => (
+              <button key={tab}>{tab}</button>
+            ))}
+          </div>
+
+          <div className="pro-daw-bottom-stats">
+            <span>CPU 12%</span>
+            <span>RAM 34%</span>
+            <span>DISK 8%</span>
+          </div>
         </div>
         <div className="pro-daw-window-layer">
           {desktopWindows.browser?.visible && (

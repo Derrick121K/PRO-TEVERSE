@@ -2615,3 +2615,421 @@ body {
     flex: 0 0 auto !important;
   }
 }
+/* PRO-TEEVERSE EXACT COMPACT DAW VIEWPORT V1 */
+html,
+body {
+  margin: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  overflow: hidden !important;
+  background: #05060a !important;
+}
+
+.pro-daw-desktop {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 2147483647 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+  background:
+    radial-gradient(circle at 12% 0%, rgba(138, 92, 255, 0.26), transparent 26rem),
+    linear-gradient(180deg, #0c0d14 0%, #05060a 100%) !important;
+  color: #ffffff !important;
+}
+
+/* Hide old One Studio content behind the real DAW shell */
+.pro-daw-desktop ~ * {
+  display: none !important;
+}
+
+.pro-daw-topbar {
+  flex: 0 0 44px !important;
+  height: 44px !important;
+  min-height: 44px !important;
+  display: grid !important;
+  grid-template-columns: 250px 270px minmax(0, 1fr) !important;
+  align-items: center !important;
+  gap: 0.75rem !important;
+  padding: 0 0.65rem !important;
+  background: #080910 !important;
+  border-bottom: 1px solid rgba(185, 131, 255, 0.16) !important;
+}
+
+.pro-daw-brand-block h1 {
+  margin: 0 !important;
+  font-size: 1.45rem !important;
+  line-height: 1 !important;
+  color: #b983ff !important;
+  text-shadow: 0 0 22px rgba(138, 92, 255, 0.7) !important;
+}
+
+.pro-daw-brand-block p {
+  margin: 0.15rem 0 0 !important;
+  font-size: 0.52rem !important;
+  letter-spacing: 0.3em !important;
+  color: #a9a9b2 !important;
+}
+
+.pro-daw-main-menu,
+.pro-daw-layout-actions,
+.pro-daw-transport-actions,
+.pro-daw-fast-actions {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  gap: 0.35rem !important;
+  overflow-x: auto !important;
+  scrollbar-width: none !important;
+}
+
+.pro-daw-main-menu::-webkit-scrollbar,
+.pro-daw-layout-actions::-webkit-scrollbar,
+.pro-daw-transport-actions::-webkit-scrollbar,
+.pro-daw-fast-actions::-webkit-scrollbar {
+  display: none !important;
+}
+
+.pro-daw-main-menu {
+  justify-content: center !important;
+}
+
+.pro-daw-layout-actions {
+  justify-content: flex-end !important;
+}
+
+.pro-daw-main-menu button,
+.pro-daw-layout-actions button,
+.pro-daw-transport-actions button,
+.pro-daw-fast-actions button {
+  flex: 0 0 auto !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+  border-radius: 999px !important;
+  background: rgba(255,255,255,0.035) !important;
+  color: #e5e7eb !important;
+  padding: 0.38rem 0.58rem !important;
+  font-size: 0.64rem !important;
+  font-weight: 900 !important;
+}
+
+.pro-daw-main-menu button {
+  border-color: transparent !important;
+  background: transparent !important;
+}
+
+.pro-daw-transport-bar {
+  flex: 0 0 52px !important;
+  height: 52px !important;
+  min-height: 52px !important;
+  display: grid !important;
+  grid-template-columns: 245px 215px minmax(0, 1fr) 220px !important;
+  align-items: center !important;
+  gap: 0.65rem !important;
+  padding: 0 0.65rem !important;
+  background: #11121a !important;
+  border-bottom: 1px solid rgba(255,255,255,0.08) !important;
+}
+
+.pro-daw-project-info,
+.pro-daw-status-chip {
+  min-height: 38px !important;
+  border-radius: 0.6rem !important;
+  background: #171821 !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+  padding: 0.45rem 0.65rem !important;
+}
+
+.pro-daw-project-info strong,
+.pro-daw-status-chip strong {
+  color: #d8b4fe !important;
+  font-size: 0.75rem !important;
+}
+
+.pro-daw-project-info span,
+.pro-daw-status-chip span {
+  color: #a9a9b2 !important;
+  font-size: 0.62rem !important;
+}
+
+.pro-daw-tab-dock {
+  flex: 0 0 34px !important;
+  height: 34px !important;
+  min-height: 34px !important;
+  display: flex !important;
+  align-items: end !important;
+  gap: 0.3rem !important;
+  padding: 0 0.65rem !important;
+  overflow-x: auto !important;
+  background: #0c0d13 !important;
+  border-bottom: 1px solid rgba(185, 131, 255, 0.20) !important;
+  scrollbar-width: none !important;
+}
+
+.pro-daw-tab-dock::-webkit-scrollbar {
+  display: none !important;
+}
+
+.pro-daw-tab-dock button {
+  flex: 0 0 auto !important;
+  height: 30px !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+  border-bottom: 0 !important;
+  border-radius: 0.55rem 0.55rem 0 0 !important;
+  background: #161722 !important;
+  color: #b8b8c4 !important;
+  padding: 0 0.7rem !important;
+  font-size: 0.66rem !important;
+  font-weight: 900 !important;
+}
+
+.pro-daw-tab-dock button.active {
+  background: linear-gradient(180deg, rgba(138,92,255,0.48), #241b3d) !important;
+  color: #ffffff !important;
+  border-color: rgba(185,131,255,0.48) !important;
+}
+
+.pro-daw-window-layer {
+  position: relative !important;
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+  padding-bottom: 42px !important;
+  background:
+    linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(255,255,255,0.03) 1px, transparent 1px),
+    #0d0f16 !important;
+  background-size: 48px 100%, 100% 48px !important;
+}
+
+.pro-daw-window {
+  border-radius: 0.45rem !important;
+  border: 1px solid rgba(185, 131, 255, 0.16) !important;
+  background: rgba(20, 22, 31, 0.985) !important;
+  box-shadow:
+    0 18px 42px rgba(0,0,0,0.48),
+    inset 0 1px 0 rgba(255,255,255,0.04) !important;
+}
+
+.pro-daw-window-title {
+  height: 30px !important;
+  min-height: 30px !important;
+  padding: 0 0.55rem !important;
+  background: linear-gradient(90deg, rgba(138,92,255,0.28), rgba(20,22,31,0.98)) !important;
+  cursor: move !important;
+}
+
+.pro-daw-window-title strong {
+  font-size: 0.7rem !important;
+}
+
+.pro-daw-window-title span {
+  font-size: 0.58rem !important;
+}
+
+.pro-daw-window-body,
+.pro-daw-arrangement-body,
+.pro-daw-mixer-body {
+  padding: 0.5rem !important;
+}
+
+.pro-daw-search-input {
+  height: 34px !important;
+  padding: 0 0.65rem !important;
+  font-size: 0.72rem !important;
+}
+
+.pro-daw-browser-item {
+  border-radius: 0.55rem !important;
+  padding: 0.45rem !important;
+  background: #151722 !important;
+}
+
+.pro-daw-browser-item strong,
+.pro-daw-channel strong,
+.pro-daw-device-card strong {
+  font-size: 0.68rem !important;
+}
+
+.pro-daw-browser-item span {
+  font-size: 0.6rem !important;
+}
+
+.pro-daw-browser-item button {
+  padding: 0.32rem 0.45rem !important;
+  font-size: 0.6rem !important;
+}
+
+.pro-daw-ruler-row {
+  height: 26px !important;
+  background: #10121a !important;
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 5 !important;
+}
+
+.pro-daw-ruler-row span {
+  padding: 0.3rem 0 !important;
+  font-size: 0.58rem !important;
+}
+
+.pro-daw-pattern-row,
+.pro-daw-track-clip-row {
+  min-width: 860px !important;
+  grid-template-columns: 150px 1fr !important;
+}
+
+.pro-daw-pattern-label {
+  background: #151722 !important;
+  padding: 0.42rem !important;
+}
+
+.pro-daw-pattern-label strong {
+  font-size: 0.68rem !important;
+}
+
+.pro-daw-pattern-label span {
+  font-size: 0.58rem !important;
+}
+
+.pro-daw-pattern-steps {
+  gap: 0.18rem !important;
+  padding: 0.28rem !important;
+  background:
+    linear-gradient(90deg, rgba(185,131,255,0.07) 1px, transparent 1px),
+    #0e1017 !important;
+  background-size: 48px 100% !important;
+}
+
+.pro-daw-pattern-steps button {
+  min-height: 1.55rem !important;
+  border-radius: 0.28rem !important;
+  background: #1a1b23 !important;
+  font-size: 0.58rem !important;
+}
+
+.pro-daw-pattern-steps button.active {
+  border-color: rgba(255,255,255,0.25) !important;
+  transform: translateY(-1px) !important;
+}
+
+.pro-daw-timeline-divider {
+  padding: 0.45rem !important;
+  font-size: 0.62rem !important;
+}
+
+.pro-daw-empty-state {
+  padding: 0.75rem !important;
+  font-size: 0.68rem !important;
+}
+
+.pro-daw-channel,
+.pro-daw-device-card {
+  min-width: 112px !important;
+  border-radius: 0.55rem !important;
+  background: #151722 !important;
+  padding: 0.5rem !important;
+}
+
+.pro-daw-mixer-body,
+.pro-daw-device-row {
+  overflow-x: auto !important;
+  align-items: stretch !important;
+  gap: 0.45rem !important;
+}
+
+.pro-daw-ai-grid {
+  grid-template-columns: 1fr !important;
+  padding: 0.5rem !important;
+  gap: 0.35rem !important;
+}
+
+.pro-daw-ai-grid button {
+  min-height: 28px !important;
+  font-size: 0.62rem !important;
+}
+
+.pro-daw-bottom-mode-dock {
+  position: fixed !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  z-index: 2147483647 !important;
+  height: 42px !important;
+  display: grid !important;
+  grid-template-columns: 240px minmax(0, 1fr) 240px !important;
+  align-items: center !important;
+  gap: 0.75rem !important;
+  padding: 0 0.75rem !important;
+  background: #080910 !important;
+  border-top: 1px solid rgba(185, 131, 255, 0.20) !important;
+}
+
+.pro-daw-bottom-brand {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.6rem !important;
+  color: #b983ff !important;
+}
+
+.pro-daw-bottom-brand strong {
+  font-size: 0.8rem !important;
+}
+
+.pro-daw-bottom-brand span,
+.pro-daw-bottom-stats span {
+  font-size: 0.62rem !important;
+  color: #a9a9b2 !important;
+}
+
+.pro-daw-bottom-tabs {
+  display: flex !important;
+  justify-content: center !important;
+  gap: 0.45rem !important;
+  overflow-x: auto !important;
+  scrollbar-width: none !important;
+}
+
+.pro-daw-bottom-tabs::-webkit-scrollbar {
+  display: none !important;
+}
+
+.pro-daw-bottom-tabs button {
+  flex: 0 0 auto !important;
+  border: 1px solid rgba(185,131,255,0.20) !important;
+  border-radius: 0.55rem !important;
+  background: rgba(255,255,255,0.035) !important;
+  color: #d8b4fe !important;
+  padding: 0.45rem 0.75rem !important;
+  font-size: 0.64rem !important;
+  font-weight: 900 !important;
+}
+
+.pro-daw-bottom-stats {
+  display: flex !important;
+  justify-content: flex-end !important;
+  gap: 0.7rem !important;
+}
+
+@media (max-width: 1180px) {
+  .pro-daw-topbar,
+  .pro-daw-transport-bar,
+  .pro-daw-bottom-mode-dock {
+    display: flex !important;
+    overflow-x: auto !important;
+  }
+
+  .pro-daw-brand-block,
+  .pro-daw-project-info,
+  .pro-daw-status-chip {
+    min-width: 220px !important;
+  }
+
+  .pro-daw-main-menu,
+  .pro-daw-layout-actions,
+  .pro-daw-transport-actions,
+  .pro-daw-fast-actions,
+  .pro-daw-bottom-brand,
+  .pro-daw-bottom-tabs,
+  .pro-daw-bottom-stats {
+    flex: 0 0 auto !important;
+  }
+}
