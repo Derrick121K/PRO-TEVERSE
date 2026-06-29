@@ -4119,3 +4119,54 @@ body {
     opacity: 1;
   }
 }
+/* PRO-TEEVERSE REMOVE DUPLICATE WINDOW BUTTON ROW V1 */
+/* Keep top black window buttons and bottom editor mode dock. Hide the duplicate middle purple row. */
+
+.pro-daw-tab-dock {
+  display: none !important;
+}
+
+.pro-daw-window-layer {
+  padding-top: 0 !important;
+}
+
+/* Make the top window button row clean, scrollable and professional. */
+.pro-daw-topbar {
+  overflow: hidden !important;
+}
+
+.pro-daw-topbar > div:last-child {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.35rem !important;
+  overflow-x: auto !important;
+  scrollbar-width: thin !important;
+  padding-right: 0.35rem !important;
+}
+
+.pro-daw-topbar > div:last-child::-webkit-scrollbar {
+  height: 5px !important;
+}
+
+.pro-daw-topbar > div:last-child::-webkit-scrollbar-thumb {
+  background: rgba(185,131,255,0.5) !important;
+  border-radius: 999px !important;
+}
+
+.pro-daw-topbar button {
+  white-space: nowrap !important;
+}
+
+/* Bottom dock remains the main workflow switcher. */
+.pro-daw-bottom-mode-dock {
+  z-index: 2147483646 !important;
+}
+
+.pro-daw-bottom-tabs {
+  overflow-x: auto !important;
+  scrollbar-width: thin !important;
+}
+
+.pro-daw-bottom-tabs button {
+  flex: 0 0 auto !important;
+}
