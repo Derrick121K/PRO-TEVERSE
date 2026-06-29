@@ -4910,3 +4910,85 @@ body {
   background: linear-gradient(180deg, rgba(138,92,255,0.55), rgba(36,27,61,0.95)) !important;
   border-color: rgba(185,131,255,0.75) !important;
 }
+/* PRO-TEEVERSE FORCE UPDATED ARRANGEMENT UI V1 */
+.pro-daw-window-body:has(.pro-daw-linked-arrangement) {
+  padding: 0 !important;
+  overflow: hidden !important;
+  position: relative !important;
+  background: #07080f !important;
+}
+
+.pro-daw-window-body:has(.pro-daw-linked-arrangement) > *:not(.pro-daw-linked-arrangement) {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+.pro-daw-window-body:has(.pro-daw-linked-arrangement) > .pro-daw-linked-arrangement {
+  display: grid !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 50 !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.pro-daw-arrangement-window {
+  min-width: 900px !important;
+  min-height: 500px !important;
+  resize: both !important;
+}
+
+.pro-daw-linked-arrangement {
+  grid-template-columns: 230px minmax(560px, 1fr) 190px !important;
+  border: 1px solid rgba(185,131,255,0.18) !important;
+}
+
+.pro-arrange-track-list {
+  background:
+    radial-gradient(circle at 0% 0%, rgba(138,92,255,0.16), transparent 15rem),
+    linear-gradient(180deg, #11131c, #080a11) !important;
+}
+
+.pro-arrange-main {
+  background:
+    linear-gradient(90deg, rgba(255,255,255,0.045) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(255,255,255,0.035) 1px, transparent 1px),
+    #080a12 !important;
+  background-size: 48px 100%, 100% 32px !important;
+}
+
+.pro-arrange-commandbar {
+  min-height: 52px !important;
+  background:
+    linear-gradient(90deg, rgba(138,92,255,0.18), rgba(8,10,18,0.96)) !important;
+}
+
+.pro-arrange-playlist {
+  background:
+    linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px),
+    #070911 !important;
+  background-size: 6.25% 100% !important;
+}
+
+.pro-arrange-lane {
+  min-height: 62px !important;
+}
+
+.pro-arrange-lane > div {
+  min-height: 62px !important;
+}
+
+.pro-arrange-clip {
+  top: 10px !important;
+  height: 42px !important;
+  border-radius: 0.5rem !important;
+}
+
+.pro-arrange-inspector {
+  background:
+    radial-gradient(circle at 100% 0%, rgba(0,208,132,0.10), transparent 13rem),
+    linear-gradient(180deg, #10121a, #080a11) !important;
+}
