@@ -4369,3 +4369,544 @@ body {
   accent-color: #b983ff !important;
   width: 100% !important;
 }
+/* PRO-TEEVERSE PHASE 2B-B CONNECT VISIBLE TOOL WINDOWS V1 */
+
+/* Hide older placeholder visuals inside windows after linked real controls are injected. */
+.pro-daw-window-body:has(.pro-daw-linked-arrangement) > *:not(.pro-daw-linked-arrangement),
+.pro-daw-window-body:has(.pro-daw-linked-sampler) > *:not(.pro-daw-linked-sampler),
+.pro-daw-window-body:has(.pro-daw-linked-piano) > *:not(.pro-daw-linked-piano),
+.pro-daw-window-body:has(.pro-daw-linked-automation) > *:not(.pro-daw-linked-automation),
+.pro-daw-window-body:has(.pro-daw-linked-mixer) > *:not(.pro-daw-linked-mixer) {
+  display: none !important;
+}
+
+.pro-daw-arrangement-window {
+  min-width: 820px !important;
+  min-height: 430px !important;
+}
+
+.pro-daw-linked-arrangement {
+  height: 100% !important;
+  min-height: 420px !important;
+  display: grid !important;
+  grid-template-columns: 220px minmax(520px, 1fr) 180px !important;
+  background:
+    linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(255,255,255,0.03) 1px, transparent 1px),
+    #090b12 !important;
+  background-size: 42px 100%, 100% 32px !important;
+  overflow: hidden !important;
+}
+
+.pro-arrange-track-list,
+.pro-arrange-inspector {
+  background: rgba(14,16,24,0.94) !important;
+  border-right: 1px solid rgba(255,255,255,0.06) !important;
+  padding: 0.65rem !important;
+  overflow: auto !important;
+}
+
+.pro-arrange-inspector {
+  border-right: 0 !important;
+  border-left: 1px solid rgba(255,255,255,0.06) !important;
+  display: grid !important;
+  align-content: start !important;
+  gap: 0.55rem !important;
+  color: #a9a9b2 !important;
+  font-size: 0.66rem !important;
+}
+
+.pro-arrange-inspector strong {
+  color: #ffffff !important;
+  font-size: 0.72rem !important;
+  text-transform: uppercase !important;
+}
+
+.pro-arrange-track-head,
+.pro-arrange-commandbar {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 0.6rem !important;
+}
+
+.pro-arrange-track-head {
+  margin-bottom: 0.55rem !important;
+}
+
+.pro-arrange-track-head strong,
+.pro-arrange-commandbar strong {
+  color: #ffffff !important;
+  text-transform: uppercase !important;
+  font-size: 0.72rem !important;
+  letter-spacing: 0.04em !important;
+}
+
+.pro-arrange-track-head button,
+.pro-arrange-actions button,
+.pro-linked-piano-actions button,
+.pro-linked-automation-actions button,
+.pro-linked-mixer-controls button {
+  border: 1px solid rgba(255,255,255,0.09) !important;
+  border-radius: 0.6rem !important;
+  background: rgba(255,255,255,0.06) !important;
+  color: #ffffff !important;
+  font-size: 0.58rem !important;
+  font-weight: 900 !important;
+  padding: 0.42rem 0.55rem !important;
+  cursor: pointer !important;
+}
+
+.pro-arrange-actions button:hover,
+.pro-arrange-track-head button:hover,
+.pro-linked-piano-actions button:hover,
+.pro-linked-automation-actions button:hover,
+.pro-linked-mixer-controls button:hover {
+  border-color: rgba(185,131,255,0.55) !important;
+  background: rgba(138,92,255,0.22) !important;
+}
+
+.pro-arrange-track-list > button {
+  width: 100% !important;
+  display: grid !important;
+  grid-template-columns: 38px 1fr auto !important;
+  align-items: center !important;
+  gap: 0.55rem !important;
+  margin-bottom: 0.45rem !important;
+  border: 1px solid rgba(255,255,255,0.07) !important;
+  border-radius: 0.75rem !important;
+  background: rgba(255,255,255,0.04) !important;
+  color: #ffffff !important;
+  padding: 0.55rem !important;
+  text-align: left !important;
+  cursor: pointer !important;
+}
+
+.pro-arrange-track-list > button.active {
+  border-color: rgba(185,131,255,0.55) !important;
+  background: rgba(138,92,255,0.18) !important;
+}
+
+.pro-arrange-track-icon {
+  width: 32px !important;
+  height: 32px !important;
+  display: grid !important;
+  place-items: center !important;
+  border-radius: 0.65rem !important;
+  background: linear-gradient(145deg, rgba(138,92,255,0.35), rgba(0,208,132,0.12)) !important;
+  color: #ffffff !important;
+  font-size: 0.55rem !important;
+  font-weight: 1000 !important;
+}
+
+.pro-arrange-track-list strong {
+  display: block !important;
+  color: #ffffff !important;
+  font-size: 0.68rem !important;
+}
+
+.pro-arrange-track-list small,
+.pro-arrange-track-list em,
+.pro-arrange-commandbar span {
+  color: #a9a9b2 !important;
+  font-size: 0.58rem !important;
+  font-style: normal !important;
+}
+
+.pro-arrange-main {
+  min-width: 0 !important;
+  display: grid !important;
+  grid-template-rows: 48px 28px minmax(0, 1fr) !important;
+  overflow: hidden !important;
+}
+
+.pro-arrange-commandbar {
+  padding: 0.55rem 0.7rem !important;
+  border-bottom: 1px solid rgba(255,255,255,0.06) !important;
+  background: rgba(11,13,20,0.86) !important;
+}
+
+.pro-arrange-actions {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 0.35rem !important;
+  justify-content: flex-end !important;
+}
+
+.pro-arrange-ruler {
+  display: grid !important;
+  grid-template-columns: repeat(16, minmax(32px, 1fr)) !important;
+  border-bottom: 1px solid rgba(255,255,255,0.06) !important;
+  background: rgba(5,6,10,0.66) !important;
+}
+
+.pro-arrange-ruler span {
+  border-right: 1px solid rgba(255,255,255,0.055) !important;
+  color: #a9a9b2 !important;
+  font-size: 0.55rem !important;
+  font-weight: 900 !important;
+  display: grid !important;
+  place-items: center !important;
+}
+
+.pro-arrange-playlist {
+  overflow: auto !important;
+}
+
+.pro-arrange-lane {
+  min-height: 56px !important;
+  display: grid !important;
+  grid-template-columns: 76px minmax(640px, 1fr) !important;
+  border-bottom: 1px solid rgba(255,255,255,0.055) !important;
+}
+
+.pro-arrange-lane > strong {
+  display: grid !important;
+  align-items: center !important;
+  padding-left: 0.6rem !important;
+  color: #d1d5db !important;
+  font-size: 0.62rem !important;
+  background: rgba(255,255,255,0.025) !important;
+}
+
+.pro-arrange-lane > div {
+  position: relative !important;
+  min-height: 56px !important;
+  background:
+    linear-gradient(90deg, rgba(255,255,255,0.055) 1px, transparent 1px) !important;
+  background-size: 6.25% 100% !important;
+}
+
+.pro-arrange-clip {
+  position: absolute !important;
+  top: 9px !important;
+  height: 38px !important;
+  border: 1px solid rgba(255,255,255,0.14) !important;
+  border-radius: 0.42rem !important;
+  color: #ffffff !important;
+  font-size: 0.58rem !important;
+  font-weight: 900 !important;
+  overflow: hidden !important;
+  cursor: pointer !important;
+  text-align: left !important;
+  padding: 0.35rem !important;
+  box-shadow: 0 10px 24px rgba(0,0,0,0.26) !important;
+}
+
+.pro-arrange-clip span {
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+.pro-arrange-clip i {
+  position: absolute !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 5px !important;
+  height: 10px !important;
+  opacity: 0.6 !important;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(255,255,255,0.65) 0 3px,
+      transparent 3px 7px
+    ) !important;
+}
+
+.pro-arrange-clip.purple {
+  background: linear-gradient(90deg, rgba(138,92,255,0.92), rgba(185,131,255,0.78)) !important;
+}
+
+.pro-arrange-clip.green {
+  background: linear-gradient(90deg, rgba(0,208,132,0.84), rgba(8,145,178,0.72)) !important;
+}
+
+.pro-arrange-clip.gold {
+  background: linear-gradient(90deg, rgba(255,200,87,0.88), rgba(245,158,11,0.72)) !important;
+}
+
+.pro-arrange-clip.selected {
+  outline: 2px solid rgba(255,255,255,0.75) !important;
+  box-shadow:
+    0 0 0 3px rgba(185,131,255,0.22),
+    0 14px 28px rgba(0,0,0,0.32) !important;
+}
+
+.pro-arrange-lane.automation {
+  min-height: 86px !important;
+  background: rgba(138,92,255,0.05) !important;
+}
+
+.pro-arrange-lane.automation > div {
+  min-height: 86px !important;
+}
+
+.pro-arrange-lane.automation > div::before {
+  content: "" !important;
+  position: absolute !important;
+  left: 3% !important;
+  right: 3% !important;
+  top: 48% !important;
+  border-top: 3px solid rgba(185,131,255,0.55) !important;
+  transform: skewY(-5deg) !important;
+  filter: drop-shadow(0 0 10px rgba(185,131,255,0.4)) !important;
+}
+
+.pro-arrange-lane.automation button {
+  position: absolute !important;
+  width: 13px !important;
+  height: 13px !important;
+  border-radius: 999px !important;
+  border: 2px solid rgba(255,255,255,0.65) !important;
+  background: #00d084 !important;
+  transform: translate(-50%, -50%) !important;
+  cursor: pointer !important;
+}
+
+.pro-arrange-lane.automation button.selected {
+  background: #ffc857 !important;
+}
+
+/* Linked Sampler */
+.pro-daw-linked-sampler,
+.pro-daw-linked-piano,
+.pro-daw-linked-automation,
+.pro-daw-linked-mixer {
+  height: 100% !important;
+  min-height: 210px !important;
+  padding: 0.75rem !important;
+  overflow: auto !important;
+  display: grid !important;
+  align-content: start !important;
+  gap: 0.7rem !important;
+}
+
+.pro-daw-linked-sampler header,
+.pro-daw-linked-piano header,
+.pro-daw-linked-automation header,
+.pro-daw-linked-mixer header {
+  display: flex !important;
+  justify-content: space-between !important;
+  gap: 0.6rem !important;
+  align-items: center !important;
+}
+
+.pro-daw-linked-sampler header strong,
+.pro-daw-linked-piano header strong,
+.pro-daw-linked-automation header strong,
+.pro-daw-linked-mixer header strong {
+  color: #ffffff !important;
+  font-size: 0.78rem !important;
+  text-transform: uppercase !important;
+}
+
+.pro-daw-linked-sampler header span,
+.pro-daw-linked-piano header span,
+.pro-daw-linked-automation header span,
+.pro-daw-linked-mixer header span {
+  color: #a9a9b2 !important;
+  font-size: 0.62rem !important;
+}
+
+.pro-linked-pad-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(88px, 1fr)) !important;
+  gap: 0.65rem !important;
+}
+
+.pro-linked-pad-grid button {
+  min-height: 74px !important;
+  border: 1px solid rgba(185,131,255,0.18) !important;
+  border-radius: 1rem !important;
+  background:
+    radial-gradient(circle at 35% 20%, rgba(185,131,255,0.45), transparent 48%),
+    linear-gradient(145deg, rgba(36,38,58,0.98), rgba(13,15,22,0.98)) !important;
+  color: #ffffff !important;
+  cursor: pointer !important;
+  overflow: hidden !important;
+  display: grid !important;
+  align-content: center !important;
+  gap: 0.25rem !important;
+}
+
+.pro-linked-pad-grid button span {
+  height: 14px !important;
+  border-radius: 999px !important;
+  background:
+    repeating-linear-gradient(90deg, rgba(255,255,255,0.75) 0 3px, transparent 3px 7px) !important;
+}
+
+.pro-linked-pad-grid button small {
+  color: #a9a9b2 !important;
+  font-size: 0.55rem !important;
+}
+
+.pro-linked-pad-grid button.active {
+  border-color: rgba(0,208,132,0.7) !important;
+  box-shadow: 0 0 22px rgba(0,208,132,0.22) !important;
+}
+
+/* Linked Piano */
+.pro-linked-piano-actions,
+.pro-linked-automation-actions {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 0.4rem !important;
+}
+
+.pro-linked-piano-grid {
+  position: relative !important;
+  min-height: 230px !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+  border-radius: 0.9rem !important;
+  overflow: hidden !important;
+  background:
+    linear-gradient(90deg, rgba(255,255,255,0.055) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(255,255,255,0.055) 1px, transparent 1px),
+    #090b12 !important;
+  background-size: 42px 100%, 100% 25px !important;
+}
+
+.pro-linked-piano-grid > span {
+  display: block !important;
+  height: 25px !important;
+  width: 38px !important;
+  border-right: 1px solid rgba(255,255,255,0.08) !important;
+  color: #a9a9b2 !important;
+  font-size: 0.55rem !important;
+  font-weight: 900 !important;
+  padding-left: 0.35rem !important;
+  line-height: 25px !important;
+  background: rgba(255,255,255,0.035) !important;
+}
+
+.pro-linked-piano-grid button {
+  position: absolute !important;
+  height: 18px !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+  background: linear-gradient(90deg, #8a5cff, #b983ff) !important;
+  color: #ffffff !important;
+  font-size: 0.55rem !important;
+  font-weight: 1000 !important;
+  cursor: pointer !important;
+  box-shadow: 0 0 18px rgba(185,131,255,0.34) !important;
+}
+
+.pro-linked-piano-grid button.active {
+  background: linear-gradient(90deg, #00d084, #ffc857) !important;
+}
+
+/* Linked Automation */
+.pro-linked-automation-map {
+  position: relative !important;
+  min-height: 230px !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+  border-radius: 0.9rem !important;
+  overflow: hidden !important;
+  background:
+    linear-gradient(90deg, rgba(255,255,255,0.055) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(255,255,255,0.055) 1px, transparent 1px),
+    #090b12 !important;
+  background-size: 42px 100%, 100% 28px !important;
+}
+
+.pro-linked-automation-map::before {
+  content: "" !important;
+  position: absolute !important;
+  inset: 20px 18px 20px 18px !important;
+  border-top: 4px solid rgba(185,131,255,0.55) !important;
+  border-radius: 999px !important;
+  transform: skewY(-8deg) !important;
+  filter: drop-shadow(0 0 12px rgba(185,131,255,0.38)) !important;
+}
+
+.pro-linked-automation-map button {
+  position: absolute !important;
+  width: 16px !important;
+  height: 16px !important;
+  border: 2px solid rgba(255,255,255,0.7) !important;
+  border-radius: 999px !important;
+  background: #00d084 !important;
+  transform: translate(-50%, -50%) !important;
+  cursor: pointer !important;
+  box-shadow: 0 0 18px rgba(0,208,132,0.5) !important;
+}
+
+.pro-linked-automation-map button.active {
+  background: #ffc857 !important;
+  box-shadow: 0 0 18px rgba(255,200,87,0.65) !important;
+}
+
+/* Linked Mixer */
+.pro-linked-mixer-strips {
+  display: grid !important;
+  grid-template-columns: repeat(5, minmax(70px, 1fr)) !important;
+  gap: 0.55rem !important;
+}
+
+.pro-linked-mixer-strips section {
+  min-height: 150px !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+  border-radius: 0.85rem !important;
+  background: rgba(255,255,255,0.045) !important;
+  display: grid !important;
+  grid-template-rows: auto 1fr auto !important;
+  gap: 0.35rem !important;
+  padding: 0.55rem !important;
+  text-align: center !important;
+}
+
+.pro-linked-mixer-strips strong {
+  color: #ffffff !important;
+  font-size: 0.62rem !important;
+}
+
+.pro-linked-mixer-strips span {
+  color: #a9a9b2 !important;
+  font-size: 0.58rem !important;
+}
+
+.pro-linked-meter {
+  position: relative !important;
+  border-radius: 0.55rem !important;
+  overflow: hidden !important;
+  background: #05060a !important;
+}
+
+.pro-linked-meter i {
+  position: absolute !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  border-radius: 0.55rem !important;
+  background: linear-gradient(180deg, #ffc857, #00d084 55%, #8a5cff) !important;
+  animation: proMeterBounce 0.72s ease-in-out infinite alternate !important;
+}
+
+.pro-linked-mixer-controls {
+  display: grid !important;
+  gap: 0.55rem !important;
+}
+
+.pro-linked-mixer-controls label {
+  display: grid !important;
+  gap: 0.3rem !important;
+  color: #e5e7eb !important;
+  font-size: 0.62rem !important;
+  font-weight: 900 !important;
+}
+
+.pro-linked-mixer-controls input {
+  accent-color: #b983ff !important;
+}
+
+.pro-linked-mixer-controls div {
+  display: flex !important;
+  gap: 0.45rem !important;
+}
+
+.pro-linked-mixer-controls button.active {
+  background: linear-gradient(180deg, rgba(138,92,255,0.55), rgba(36,27,61,0.95)) !important;
+  border-color: rgba(185,131,255,0.75) !important;
+}
