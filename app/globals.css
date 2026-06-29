@@ -3033,3 +3033,93 @@ body {
     flex: 0 0 auto !important;
   }
 }
+/* PRO-TEEVERSE MOVABLE WINDOW RESET RESIZE SCROLL V1 */
+.pro-daw-window-layer {
+  overflow: auto !important;
+  scrollbar-width: thin !important;
+  scrollbar-color: rgba(185, 131, 255, 0.65) rgba(8, 9, 16, 0.9) !important;
+}
+
+.pro-daw-window-layer::-webkit-scrollbar,
+.pro-daw-window-body::-webkit-scrollbar,
+.pro-daw-arrangement-body::-webkit-scrollbar,
+.pro-daw-mixer-body::-webkit-scrollbar,
+.pro-daw-device-row::-webkit-scrollbar {
+  width: 9px !important;
+  height: 9px !important;
+}
+
+.pro-daw-window-layer::-webkit-scrollbar-track,
+.pro-daw-window-body::-webkit-scrollbar-track,
+.pro-daw-arrangement-body::-webkit-scrollbar-track,
+.pro-daw-mixer-body::-webkit-scrollbar-track,
+.pro-daw-device-row::-webkit-scrollbar-track {
+  background: rgba(8, 9, 16, 0.9) !important;
+}
+
+.pro-daw-window-layer::-webkit-scrollbar-thumb,
+.pro-daw-window-body::-webkit-scrollbar-thumb,
+.pro-daw-arrangement-body::-webkit-scrollbar-thumb,
+.pro-daw-mixer-body::-webkit-scrollbar-thumb,
+.pro-daw-device-row::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(185, 131, 255, 0.75), rgba(138, 92, 255, 0.55)) !important;
+  border-radius: 999px !important;
+}
+
+.pro-daw-window {
+  resize: both !important;
+  overflow: auto !important;
+  min-width: 230px !important;
+  min-height: 130px !important;
+  max-width: calc(100vw - 18px) !important;
+  max-height: calc(100vh - 150px) !important;
+}
+
+.pro-daw-window::after {
+  content: "↘" !important;
+  position: absolute !important;
+  right: 6px !important;
+  bottom: 3px !important;
+  z-index: 20 !important;
+  color: rgba(185, 131, 255, 0.85) !important;
+  font-size: 0.8rem !important;
+  pointer-events: none !important;
+}
+
+.pro-daw-window-title {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 30 !important;
+}
+
+.pro-daw-window-title::after {
+  content: "drag / double-click reset" !important;
+  margin-left: auto !important;
+  color: rgba(169, 169, 178, 0.62) !important;
+  font-size: 0.56rem !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.04em !important;
+}
+
+.pro-daw-window-body,
+.pro-daw-arrangement-body,
+.pro-daw-mixer-body,
+.pro-daw-device-row,
+.pro-daw-ai-grid {
+  overflow: auto !important;
+  min-height: 0 !important;
+}
+
+.pro-daw-arrangement-window {
+  min-width: 520px !important;
+  min-height: 220px !important;
+}
+
+.pro-daw-tab-dock button {
+  cursor: pointer !important;
+}
+
+.pro-daw-tab-dock button::after {
+  content: "" !important;
+}

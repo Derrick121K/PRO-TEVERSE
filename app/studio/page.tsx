@@ -1029,6 +1029,38 @@ if (previewAudioRef.current) {
     setDesktopStatus("Desktop layout reset.")
   }
 
+  function getDesktopWindowDefaults(): Record<string, DesktopWindowState> {
+    return {
+      browser: { x: 4, y: 4, width: 260, height: 420, visible: true, z: 10 },
+      arrangement: { x: 270, y: 4, width: 650, height: 255, visible: true, z: 11 },
+      inspector: { x: 930, y: 4, width: 315, height: 255, visible: true, z: 12 },
+      mixer: { x: 270, y: 268, width: 320, height: 150, visible: true, z: 13 },
+      plugins: { x: 600, y: 268, width: 320, height: 150, visible: true, z: 14 },
+      ai: { x: 930, y: 268, width: 315, height: 150, visible: true, z: 15 },
+    }
+  }
+
+  function resetDesktopWindow(windowId: string) {
+    const target = getDesktopWindowDefaults()[windowId]
+    if (!target) return
+
+    setDesktopZ((current) => {
+      const nextZ = current + 1
+
+      setDesktopWindows((windows) => ({
+        ...windows,
+        [windowId]: {
+          ...target,
+          visible: true,
+          z: nextZ,
+        },
+      }))
+
+      return nextZ
+    })
+
+    setDesktopStatus(`${windowId.charAt(0).toUpperCase()}${windowId.slice(1)} window reset.`)
+  }
   function beginDesktopDrag(windowId: string, clientX: number, clientY: number) {
     const target = desktopWindows[windowId]
     if (!target) return
@@ -1046,8 +1078,22 @@ if (previewAudioRef.current) {
   function dragDesktopWindow(clientX: number, clientY: number) {
     if (!desktopDrag) return
 
-    const nextX = Math.max(0, desktopDrag.originX + clientX - desktopDrag.startX)
-    const nextY = Math.max(112, desktopDrag.originY + clientY - desktopDrag.startY)
+    const target = desktopWindows[desktopDrag.windowId]
+    if (!target) return
+
+    const safeBottomDock = 48
+    const maxX = Math.max(0, window.innerWidth - target.width)
+    const maxY = Math.max(0, window.innerHeight - target.height - safeBottomDock)
+
+    const nextX = Math.min(
+      maxX,
+      Math.max(0, desktopDrag.originX + clientX - desktopDrag.startX),
+    )
+
+    const nextY = Math.min(
+      maxY,
+      Math.max(0, desktopDrag.originY + clientY - desktopDrag.startY),
+    )
 
     setDesktopWindows((windows) => ({
       ...windows,
@@ -1058,7 +1104,6 @@ if (previewAudioRef.current) {
       },
     }))
   }
-
   function stopDesktopDrag() {
     setDesktopDrag(null)
   }
@@ -1291,7 +1336,8 @@ if (previewAudioRef.current) {
               ["plugins", "Plugins"],
               ["ai", "AI"],
             ].map(([id, label]) => (
-              <button key={id} onClick={() => toggleDesktopWindow(id)}>
+              <button key={id} onClick={() => toggleDesktopWindow(id)}
+              onDoubleClick={() => resetDesktopWindow(id)}>
                 {label}
               </button>
             ))}
@@ -1339,6 +1385,7 @@ if (previewAudioRef.current) {
               key={id}
               className={desktopWindows[id]?.visible ? "active" : ""}
               onClick={() => toggleDesktopWindow(id)}
+              onDoubleClick={() => resetDesktopWindow(id)}
             >
               {label}
             </button>
@@ -1379,6 +1426,7 @@ if (previewAudioRef.current) {
               <div
                 className="pro-daw-window-title"
                 onMouseDown={(event) => beginDesktopDrag("browser", event.clientX, event.clientY)}
+                onDoubleClick={() => resetDesktopWindow("browser")}
               >
                 <strong>Browser</strong>
                 <span>Sounds / Plugins / Projects</span>
@@ -1426,6 +1474,7 @@ if (previewAudioRef.current) {
               <div
                 className="pro-daw-window-title"
                 onMouseDown={(event) => beginDesktopDrag("arrangement", event.clientX, event.clientY)}
+                onDoubleClick={() => resetDesktopWindow("arrangement")}
               >
                 <strong>Arrangement / Step Sequencer</strong>
                 <span>Patterns, clips, bars and timeline lanes</span>
@@ -1505,6 +1554,7 @@ if (previewAudioRef.current) {
               <div
                 className="pro-daw-window-title"
                 onMouseDown={(event) => beginDesktopDrag("inspector", event.clientX, event.clientY)}
+                onDoubleClick={() => resetDesktopWindow("inspector")}
               >
                 <strong>Inspector</strong>
                 <span>Selected track properties</span>
@@ -1603,6 +1653,7 @@ if (previewAudioRef.current) {
               <div
                 className="pro-daw-window-title"
                 onMouseDown={(event) => beginDesktopDrag("mixer", event.clientX, event.clientY)}
+                onDoubleClick={() => resetDesktopWindow("mixer")}
               >
                 <strong>Mixer</strong>
                 <span>Volume / pan / mute / solo</span>
@@ -1665,6 +1716,7 @@ if (previewAudioRef.current) {
               <div
                 className="pro-daw-window-title"
                 onMouseDown={(event) => beginDesktopDrag("plugins", event.clientX, event.clientY)}
+                onDoubleClick={() => resetDesktopWindow("plugins")}
               >
                 <strong>Plugin Rack</strong>
                 <span>Device chain</span>
@@ -1698,6 +1750,7 @@ if (previewAudioRef.current) {
               <div
                 className="pro-daw-window-title"
                 onMouseDown={(event) => beginDesktopDrag("ai", event.clientX, event.clientY)}
+                onDoubleClick={() => resetDesktopWindow("ai")}
               >
                 <strong>AI Studio</strong>
                 <span>Assistant tools</span>
