@@ -3897,3 +3897,225 @@ body {
     filter: drop-shadow(0 0 12px rgba(138,92,255,0.12));
   }
 }
+/* PRO-TEEVERSE PHASE 2A 3D TOOL UI V1 */
+.pro-daw-desktop {
+  perspective: 1400px !important;
+  background:
+    radial-gradient(circle at 15% 0%, rgba(138, 92, 255, 0.24), transparent 28rem),
+    radial-gradient(circle at 88% 10%, rgba(0, 208, 132, 0.12), transparent 24rem),
+    linear-gradient(180deg, #07080f 0%, #030409 100%) !important;
+}
+
+.pro-daw-window {
+  transform-style: preserve-3d !important;
+  animation: proToolWindowIn 360ms ease both !important;
+}
+
+@keyframes proToolWindowIn {
+  from {
+    transform: rotateX(3deg) translateY(12px) scale(0.985);
+    opacity: 0;
+  }
+  to {
+    transform: rotateX(0deg) translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+.pro-daw-window::before {
+  content: "" !important;
+  position: absolute !important;
+  inset: 34px 10px auto auto !important;
+  width: 92px !important;
+  height: 56px !important;
+  opacity: 0.16 !important;
+  background-repeat: no-repeat !important;
+  background-size: contain !important;
+  background-position: center !important;
+  filter: drop-shadow(0 12px 22px rgba(138,92,255,0.35)) !important;
+  pointer-events: none !important;
+}
+
+.pro-daw-window:hover {
+  transform: translateY(-1px) rotateX(0.4deg) !important;
+}
+
+.pro-daw-window-title {
+  min-height: 30px !important;
+  background:
+    linear-gradient(90deg, rgba(138,92,255,0.42), rgba(16,18,26,0.98) 52%, rgba(0,208,132,0.10)) !important;
+}
+
+.pro-daw-window-title strong {
+  text-shadow: 0 0 14px rgba(185,131,255,0.36) !important;
+}
+
+.pro-daw-window-body {
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.05),
+    inset 0 0 46px rgba(138,92,255,0.055) !important;
+}
+
+/* Tool images per professional editor */
+.pro-daw-arrangement-window::before {
+  background-image: url("/proteeverse-ui/arrange.svg") !important;
+}
+
+.pro-daw-mixer-window::before {
+  background-image: url("/proteeverse-ui/mixer.svg") !important;
+}
+
+.pro-daw-sampler-window::before {
+  background-image: url("/proteeverse-ui/sampler.svg") !important;
+}
+
+.pro-daw-piano-roll-window::before {
+  background-image: url("/proteeverse-ui/piano.svg") !important;
+}
+
+.pro-daw-score-window::before {
+  background-image: url("/proteeverse-ui/score.svg") !important;
+}
+
+.pro-daw-automation-window::before {
+  background-image: url("/proteeverse-ui/automation.svg") !important;
+}
+
+/* Plugin and browser visual polish */
+.pro-daw-browser-item,
+.pro-daw-device-card,
+.pro-daw-plugin-button,
+.pro-daw-sampler-mode button,
+.pro-daw-pattern-steps button {
+  transform-style: preserve-3d !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.07),
+    0 10px 24px rgba(0,0,0,0.24) !important;
+}
+
+.pro-daw-browser-item:hover,
+.pro-daw-device-card:hover,
+.pro-daw-plugin-button:hover,
+.pro-daw-sampler-mode button:hover,
+.pro-daw-pattern-steps button:hover {
+  transform: translateY(-2px) translateZ(12px) scale(1.015) !important;
+  border-color: rgba(185,131,255,0.52) !important;
+}
+
+/* Better waveform/audio movement */
+.pro-daw-track-clip,
+.pro-daw-sampler-mode button i,
+.pro-daw-browser-item::before {
+  animation-duration: 1.25s !important;
+}
+
+.pro-daw-track-clip::after {
+  content: "" !important;
+  position: absolute !important;
+  inset: 0 !important;
+  background:
+    linear-gradient(90deg, transparent, rgba(255,255,255,0.22), transparent) !important;
+  transform: translateX(-100%) !important;
+  animation: proClipLightSweep 2.4s ease-in-out infinite !important;
+  pointer-events: none !important;
+}
+
+@keyframes proClipLightSweep {
+  0%, 35% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  80%, 100% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+/* Bottom dock should feel like a real desktop app */
+.pro-daw-bottom-mode-dock {
+  background:
+    linear-gradient(180deg, rgba(18,20,30,0.94), rgba(4,5,10,0.98)) !important;
+  border-top: 1px solid rgba(185,131,255,0.22) !important;
+  box-shadow: 0 -18px 44px rgba(0,0,0,0.4) !important;
+}
+
+.pro-daw-bottom-tabs button {
+  min-width: 88px !important;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.025)) !important;
+}
+
+.pro-daw-bottom-tabs button:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 12px 22px rgba(138,92,255,0.18) !important;
+}
+
+/* Plugin cards get a pro rack look */
+.pro-daw-fl-plugin-grid {
+  background:
+    radial-gradient(circle at 20% 0%, rgba(185,131,255,0.12), transparent 18rem),
+    linear-gradient(180deg, rgba(12,14,22,0.98), rgba(6,7,12,0.98)) !important;
+}
+
+.pro-daw-plugin-button {
+  min-height: 92px !important;
+  border-radius: 0.95rem !important;
+  background:
+    linear-gradient(145deg, rgba(36,38,58,0.98), rgba(13,15,22,0.98)) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.pro-daw-plugin-button::before {
+  content: "" !important;
+  position: absolute !important;
+  right: 8px !important;
+  top: 8px !important;
+  width: 42px !important;
+  height: 42px !important;
+  border-radius: 14px !important;
+  background:
+    radial-gradient(circle at 35% 30%, rgba(185,131,255,0.9), rgba(138,92,255,0.18) 60%, transparent 62%) !important;
+  opacity: 0.7 !important;
+}
+
+/* Sampler pads feel touchable */
+.pro-daw-sampler-mode button {
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.pro-daw-sampler-mode button::after {
+  content: "" !important;
+  position: absolute !important;
+  inset: 8px !important;
+  border-radius: 0.75rem !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+  pointer-events: none !important;
+}
+
+/* Piano roll note depth */
+.pro-daw-piano-mode i {
+  box-shadow:
+    0 8px 18px rgba(0,0,0,0.28),
+    0 0 18px rgba(185,131,255,0.35) !important;
+}
+
+/* Automation points should feel interactive */
+.pro-daw-automation-mode circle {
+  animation: proAutomationPointPulse 1.2s ease-in-out infinite alternate !important;
+}
+
+@keyframes proAutomationPointPulse {
+  from {
+    r: 4;
+    opacity: 0.75;
+  }
+  to {
+    r: 7;
+    opacity: 1;
+  }
+}
