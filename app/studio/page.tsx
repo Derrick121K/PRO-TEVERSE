@@ -304,6 +304,8 @@ function scheduleRenderPatternSound(
 
 const DESKTOP_LAYOUT_STORAGE_KEY = "proteverse-desktop-daw-layout"
 
+type DesktopMode = "Arrange" | "Mixer" | "Sampler" | "Piano Roll" | "Score" | "Automation"
+
 type DesktopWindowState = {
   x: number
   y: number
@@ -346,6 +348,7 @@ export default function StudioPage() {
   const [desktopZ, setDesktopZ] = useState(30)
   const [desktopSelectedTrackId, setDesktopSelectedTrackId] = useState<string | null>(null)
   const [desktopStatus, setDesktopStatus] = useState("Desktop studio ready.")
+  const [desktopMode, setDesktopMode] = useState<DesktopMode>("Arrange")
   const [desktopLayoutReady, setDesktopLayoutReady] = useState(false)
   const [rows, setRows] = useState<StepRow[]>(presetRows)
   const [playingTrackId, setPlayingTrackId] = useState<string | null>(null)
@@ -1201,6 +1204,32 @@ if (previewAudioRef.current) {
       }
     })
   }
+  function selectDesktopMode(mode: DesktopMode) {
+    setDesktopMode(mode)
+    setDesktopStatus(`${mode} workspace opened.`)
+
+    if (mode === "Mixer") {
+      setDesktopWindows((windows) => ({
+        ...windows,
+        mixer: { ...windows.mixer, visible: true },
+      }))
+    }
+
+    if (mode === "Sampler") {
+      setDesktopWindows((windows) => ({
+        ...windows,
+        browser: { ...windows.browser, visible: true },
+      }))
+    }
+
+    if (mode === "Automation") {
+      setDesktopWindows((windows) => ({
+        ...windows,
+        arrangement: { ...windows.arrangement, visible: true },
+        inspector: { ...windows.inspector, visible: true },
+      }))
+    }
+  }
   function updateDesktopTrack(trackId: string, patch: Partial<AudioTrack>) {
     setTracks((current) =>
       current.map((track) => (track.id === trackId ? { ...track, ...patch } : track))
@@ -1492,8 +1521,14 @@ if (previewAudioRef.current) {
           </div>
 
           <div className="pro-daw-bottom-tabs">
-            {["Arrange", "Mixer", "Sampler", "Piano Roll", "Score", "Automation"].map((tab) => (
-              <button key={tab}>{tab}</button>
+            {(["Arrange", "Mixer", "Sampler", "Piano Roll", "Score", "Automation"] as DesktopMode[]).map((tab) => (
+              <button
+                key={tab}
+                className={desktopMode === tab ? "active" : ""}
+                onClick={() => selectDesktopMode(tab)}
+              >
+                {tab}
+              </button>
             ))}
           </div>
 
@@ -1503,6 +1538,112 @@ if (previewAudioRef.current) {
             <span>DISK 8%</span>
           </div>
         </div>
+
+        <section className="pro-daw-mode-console">
+          <div className="pro-daw-mode-head">
+            <div>
+              <strong>{desktopMode}</strong>
+              <span>
+                {desktopMode === "Arrange" && "Timeline, clips, sections and pattern blocks"}
+                {desktopMode === "Mixer" && "Meters, channel strips, gain, pan and master dynamics"}
+                {desktopMode === "Sampler" && "Pads, waveform preview, sample tools and sound triggering"}
+                {desktopMode === "Piano Roll" && "Notes, velocity, scale helper and melody editing"}
+                {desktopMode === "Score" && "Readable music notation and chord sketching"}
+                {desktopMode === "Automation" && "Curves, lanes, movement and parameter control"}
+              </span>
+            </div>
+
+            <div className="pro-daw-mode-wave" aria-hidden="true">
+              {Array.from({ length: 28 }).map((_, index) => (
+                <i key={index} style={{ animationDelay: `${index * 0.035}s` }} />
+              ))}
+            </div>
+          </div>
+
+          <div className="pro-daw-mode-stage">
+            {desktopMode === "Arrange" && (
+              <div className="pro-daw-arrange-mode">
+                {["Intro", "Verse", "Pre", "Hook", "Bridge", "Outro"].map((section, index) => (
+                  <div key={section} className="pro-daw-section-block">
+                    <strong>{section}</strong>
+                    <span>{index * 8 + 1}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {desktopMode === "Mixer" && (
+              <div className="pro-daw-mixer-mode">
+                {["Kick", "Clap", "Hat", "Bass", "Chords", "Melody", "Master"].map((channel, index) => (
+                  <div key={channel} className="pro-daw-meter-channel">
+                    <div className="pro-daw-meter">
+                      <i style={{ height: `${35 + ((index * 13) % 55)}%` }} />
+                    </div>
+                    <strong>{channel}</strong>
+                    <span>{index === 6 ? "0.0 dB" : "-6 dB"}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {desktopMode === "Sampler" && (
+              <div className="pro-daw-sampler-mode">
+                {["Kick", "Clap", "Hat", "Bass", "Chord", "FX", "Vocal", "Loop"].map((pad, index) => (
+                  <button
+                    key={pad}
+                    onClick={index === 0 ? addFirstLibrarySoundToDesktop : undefined}
+                  >
+                    <span>{pad}</span>
+                    <i />
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {desktopMode === "Piano Roll" && (
+              <div className="pro-daw-piano-mode">
+                {["C", "D", "E", "F", "G", "A", "B", "C2"].map((note) => (
+                  <span key={note}>{note}</span>
+                ))}
+                {Array.from({ length: 18 }).map((_, index) => (
+                  <i
+                    key={index}
+                    style={{
+                      left: `${8 + index * 4.8}%`,
+                      top: `${18 + ((index * 17) % 58)}%`,
+                      width: `${5 + (index % 3) * 4}%`,
+                    }}
+                  />
+                ))}
+              </div>
+            )}
+
+            {desktopMode === "Score" && (
+              <div className="pro-daw-score-mode">
+                {[0, 1, 2, 3, 4].map((line) => (
+                  <span key={line} />
+                ))}
+                {["♩", "♪", "♫", "♬", "♩", "♪", "♫"].map((note, index) => (
+                  <b key={`${note}-${index}`} style={{ left: `${10 + index * 12}%`, top: `${20 + (index % 4) * 14}%` }}>
+                    {note}
+                  </b>
+                ))}
+              </div>
+            )}
+
+            {desktopMode === "Automation" && (
+              <div className="pro-daw-automation-mode">
+                <svg viewBox="0 0 600 140" role="img" aria-label="Automation curve">
+                  <path d="M10 110 C90 30 130 30 190 95 S310 145 380 55 S500 5 590 85" />
+                  <circle cx="10" cy="110" r="5" />
+                  <circle cx="190" cy="95" r="5" />
+                  <circle cx="380" cy="55" r="5" />
+                  <circle cx="590" cy="85" r="5" />
+                </svg>
+              </div>
+            )}
+          </div>
+        </section>
         <div className="pro-daw-window-layer">
           {desktopWindows.browser?.visible && (
             <section

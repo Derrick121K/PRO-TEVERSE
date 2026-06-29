@@ -3123,3 +3123,326 @@ body {
 .pro-daw-tab-dock button::after {
   content: "" !important;
 }
+/* PRO-TEEVERSE DYNAMIC MODE WORKSPACES V1 */
+.pro-daw-mode-console {
+  flex: 0 0 132px !important;
+  height: 132px !important;
+  display: grid !important;
+  grid-template-rows: 42px 1fr !important;
+  background:
+    radial-gradient(circle at 18% 0%, rgba(138,92,255,0.20), transparent 20rem),
+    linear-gradient(180deg, #101014, #0a0b10) !important;
+  border-bottom: 1px solid rgba(185,131,255,0.18) !important;
+  overflow: hidden !important;
+  perspective: 900px !important;
+}
+
+.pro-daw-mode-head {
+  display: grid !important;
+  grid-template-columns: 260px 1fr !important;
+  align-items: center !important;
+  gap: 1rem !important;
+  padding: 0 0.75rem !important;
+  border-bottom: 1px solid rgba(255,255,255,0.06) !important;
+}
+
+.pro-daw-mode-head strong {
+  display: block !important;
+  color: #ffffff !important;
+  font-size: 0.82rem !important;
+  font-weight: 1000 !important;
+}
+
+.pro-daw-mode-head span {
+  display: block !important;
+  margin-top: 0.12rem !important;
+  color: #a9a9b2 !important;
+  font-size: 0.62rem !important;
+}
+
+.pro-daw-mode-wave {
+  height: 28px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: 3px !important;
+  overflow: hidden !important;
+}
+
+.pro-daw-mode-wave i {
+  width: 4px !important;
+  height: 10px !important;
+  border-radius: 999px !important;
+  background: linear-gradient(180deg, #b983ff, #8a5cff) !important;
+  box-shadow: 0 0 16px rgba(185,131,255,0.55) !important;
+  animation: proWavePulse 0.9s ease-in-out infinite alternate !important;
+}
+
+@keyframes proWavePulse {
+  from {
+    transform: scaleY(0.25);
+    opacity: 0.45;
+  }
+  to {
+    transform: scaleY(1.85);
+    opacity: 1;
+  }
+}
+
+.pro-daw-mode-stage {
+  position: relative !important;
+  overflow: hidden !important;
+  padding: 0.65rem 0.75rem !important;
+}
+
+.pro-daw-arrange-mode,
+.pro-daw-mixer-mode,
+.pro-daw-sampler-mode {
+  height: 100% !important;
+  display: flex !important;
+  align-items: stretch !important;
+  gap: 0.55rem !important;
+  overflow-x: auto !important;
+}
+
+.pro-daw-section-block {
+  min-width: 150px !important;
+  border: 1px solid rgba(185,131,255,0.22) !important;
+  border-radius: 0.75rem !important;
+  background:
+    linear-gradient(135deg, rgba(138,92,255,0.26), rgba(26,27,35,0.95)) !important;
+  padding: 0.7rem !important;
+  transform: rotateX(5deg) translateZ(0) !important;
+  box-shadow: 0 14px 28px rgba(0,0,0,0.32) !important;
+}
+
+.pro-daw-section-block strong {
+  display: block !important;
+  color: #ffffff !important;
+  font-size: 0.75rem !important;
+}
+
+.pro-daw-section-block span {
+  display: block !important;
+  margin-top: 0.4rem !important;
+  color: #b983ff !important;
+  font-size: 0.62rem !important;
+  font-weight: 900 !important;
+}
+
+.pro-daw-meter-channel {
+  min-width: 82px !important;
+  display: grid !important;
+  grid-template-rows: 1fr auto auto !important;
+  gap: 0.25rem !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+  border-radius: 0.75rem !important;
+  background: #151722 !important;
+  padding: 0.45rem !important;
+  text-align: center !important;
+}
+
+.pro-daw-meter {
+  position: relative !important;
+  overflow: hidden !important;
+  border-radius: 0.45rem !important;
+  background: #090b12 !important;
+}
+
+.pro-daw-meter i {
+  position: absolute !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  border-radius: 0.45rem !important;
+  background: linear-gradient(180deg, #ffc857, #00d084 55%, #8a5cff) !important;
+  animation: proMeterBounce 0.72s ease-in-out infinite alternate !important;
+}
+
+@keyframes proMeterBounce {
+  from {
+    filter: brightness(0.75);
+    transform: scaleY(0.72);
+  }
+  to {
+    filter: brightness(1.2);
+    transform: scaleY(1);
+  }
+}
+
+.pro-daw-meter-channel strong,
+.pro-daw-meter-channel span {
+  font-size: 0.58rem !important;
+}
+
+.pro-daw-sampler-mode button {
+  min-width: 92px !important;
+  border: 1px solid rgba(185,131,255,0.25) !important;
+  border-radius: 0.85rem !important;
+  background:
+    radial-gradient(circle at 30% 20%, rgba(185,131,255,0.35), transparent 55%),
+    #151722 !important;
+  color: #ffffff !important;
+  font-size: 0.66rem !important;
+  font-weight: 1000 !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 12px 28px rgba(0,0,0,0.28) !important;
+  transform: translateZ(0) !important;
+  transition: transform 150ms ease, box-shadow 150ms ease !important;
+}
+
+.pro-daw-sampler-mode button:hover {
+  transform: translateY(-2px) scale(1.03) !important;
+  box-shadow: 0 16px 34px rgba(138,92,255,0.22) !important;
+}
+
+.pro-daw-sampler-mode button i {
+  display: block !important;
+  height: 18px !important;
+  margin-top: 0.35rem !important;
+  border-radius: 999px !important;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(185,131,255,0.8) 0 3px,
+      transparent 3px 7px
+    ) !important;
+  animation: proMiniWave 1.4s linear infinite !important;
+}
+
+@keyframes proMiniWave {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 38px 0;
+  }
+}
+
+.pro-daw-piano-mode {
+  position: relative !important;
+  height: 100% !important;
+  border-radius: 0.8rem !important;
+  overflow: hidden !important;
+  background:
+    linear-gradient(90deg, rgba(255,255,255,0.055) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(185,131,255,0.10) 1px, transparent 1px),
+    #0e1017 !important;
+  background-size: 42px 100%, 100% 22px !important;
+}
+
+.pro-daw-piano-mode span {
+  display: inline-grid !important;
+  place-items: center !important;
+  width: 42px !important;
+  height: 100% !important;
+  border-right: 1px solid rgba(255,255,255,0.08) !important;
+  color: #a9a9b2 !important;
+  font-size: 0.62rem !important;
+  font-weight: 900 !important;
+}
+
+.pro-daw-piano-mode i {
+  position: absolute !important;
+  height: 16px !important;
+  border-radius: 999px !important;
+  background: linear-gradient(90deg, #8a5cff, #b983ff) !important;
+  box-shadow: 0 0 18px rgba(185,131,255,0.45) !important;
+  animation: proNoteFloat 2.2s ease-in-out infinite alternate !important;
+}
+
+@keyframes proNoteFloat {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-4px);
+  }
+}
+
+.pro-daw-score-mode {
+  position: relative !important;
+  height: 100% !important;
+  border-radius: 0.8rem !important;
+  background: #f8fafc !important;
+  overflow: hidden !important;
+}
+
+.pro-daw-score-mode span {
+  position: relative !important;
+  display: block !important;
+  height: 12px !important;
+  border-bottom: 1px solid rgba(15,23,42,0.35) !important;
+  margin: 0 1rem !important;
+}
+
+.pro-daw-score-mode b {
+  position: absolute !important;
+  color: #1a1b23 !important;
+  font-size: 1.2rem !important;
+  animation: proScoreGlow 1.8s ease-in-out infinite alternate !important;
+}
+
+@keyframes proScoreGlow {
+  from {
+    opacity: 0.55;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.pro-daw-automation-mode {
+  height: 100% !important;
+  border-radius: 0.8rem !important;
+  background:
+    linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(255,255,255,0.04) 1px, transparent 1px),
+    #0e1017 !important;
+  background-size: 42px 100%, 100% 24px !important;
+  overflow: hidden !important;
+}
+
+.pro-daw-automation-mode svg {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.pro-daw-automation-mode path {
+  fill: none !important;
+  stroke: #b983ff !important;
+  stroke-width: 6 !important;
+  stroke-linecap: round !important;
+  filter: drop-shadow(0 0 10px rgba(185,131,255,0.55)) !important;
+  stroke-dasharray: 900 !important;
+  stroke-dashoffset: 900 !important;
+  animation: proDrawCurve 2.2s ease forwards infinite alternate !important;
+}
+
+.pro-daw-automation-mode circle {
+  fill: #00d084 !important;
+  filter: drop-shadow(0 0 8px rgba(0,208,132,0.7)) !important;
+}
+
+@keyframes proDrawCurve {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.pro-daw-bottom-tabs button.active {
+  background: linear-gradient(180deg, rgba(138,92,255,0.55), #241b3d) !important;
+  color: #ffffff !important;
+  border-color: rgba(185,131,255,0.55) !important;
+  box-shadow: 0 0 18px rgba(138,92,255,0.25) !important;
+}
+
+@media (max-width: 1180px) {
+  .pro-daw-mode-console {
+    flex-basis: 120px !important;
+    height: 120px !important;
+  }
+
+  .pro-daw-mode-head {
+    grid-template-columns: 220px minmax(280px, 1fr) !important;
+  }
+}
