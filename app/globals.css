@@ -4992,3 +4992,436 @@ body {
     radial-gradient(circle at 100% 0%, rgba(0,208,132,0.10), transparent 13rem),
     linear-gradient(180deg, #10121a, #080a11) !important;
 }
+/* PRO-TEEVERSE PRO ARRANGEMENT PLAYLIST UI V1 */
+.pro-arrangement-pro-window {
+  min-width: 960px !important;
+  min-height: 520px !important;
+}
+
+.pro-arrangement-pro-window .pro-daw-window-body {
+  padding: 0 !important;
+  overflow: hidden !important;
+  background: #07090f !important;
+}
+
+.pro-arrangement-pro-shell {
+  height: 100% !important;
+  display: grid !important;
+  grid-template-columns: 72px 220px minmax(520px, 1fr) 210px !important;
+  overflow: hidden !important;
+  background:
+    radial-gradient(circle at 12% 0%, rgba(138,92,255,0.16), transparent 22rem),
+    linear-gradient(180deg, #0b0d14, #05060a) !important;
+}
+
+.pro-arrangement-sidebar {
+  border-right: 1px solid rgba(255,255,255,0.06) !important;
+  background: #090b12 !important;
+  padding: 0.45rem !important;
+  display: grid !important;
+  align-content: start !important;
+  gap: 0.4rem !important;
+  overflow: auto !important;
+}
+
+.pro-arrangement-sidebar button {
+  min-height: 54px !important;
+  display: grid !important;
+  place-items: center !important;
+  gap: 0.2rem !important;
+  border: 0 !important;
+  border-radius: 0.65rem !important;
+  background: transparent !important;
+  color: #a9a9b2 !important;
+  cursor: pointer !important;
+}
+
+.pro-arrangement-sidebar button:hover {
+  background: rgba(138,92,255,0.16) !important;
+  color: #ffffff !important;
+}
+
+.pro-arrangement-sidebar button span {
+  width: 28px !important;
+  height: 28px !important;
+  display: grid !important;
+  place-items: center !important;
+  border: 1px solid rgba(255,255,255,0.12) !important;
+  border-radius: 0.55rem !important;
+  font-size: 0.54rem !important;
+  font-weight: 1000 !important;
+}
+
+.pro-arrangement-sidebar button strong {
+  font-size: 0.48rem !important;
+  font-weight: 800 !important;
+}
+
+.pro-arrangement-tracks {
+  border-right: 1px solid rgba(255,255,255,0.06) !important;
+  background: #0d1018 !important;
+  padding: 0.65rem !important;
+  overflow: auto !important;
+}
+
+.pro-arrangement-tracks header {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  margin-bottom: 0.65rem !important;
+}
+
+.pro-arrangement-tracks header strong,
+.pro-arrangement-toolbar strong,
+.pro-arrangement-inspector header strong {
+  color: #ffffff !important;
+  font-size: 0.72rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.04em !important;
+}
+
+.pro-arrangement-tracks header button,
+.pro-arrangement-toolbar button {
+  border: 1px solid rgba(255,255,255,0.10) !important;
+  border-radius: 0.55rem !important;
+  background: rgba(255,255,255,0.06) !important;
+  color: #ffffff !important;
+  font-size: 0.56rem !important;
+  font-weight: 900 !important;
+  padding: 0.42rem 0.55rem !important;
+  cursor: pointer !important;
+}
+
+.pro-arrangement-tracks header button:hover,
+.pro-arrangement-toolbar button:hover {
+  border-color: rgba(185,131,255,0.55) !important;
+  background: rgba(138,92,255,0.20) !important;
+}
+
+.pro-arrangement-tracks > button {
+  width: 100% !important;
+  min-height: 62px !important;
+  display: grid !important;
+  grid-template-columns: 38px 1fr auto !important;
+  align-items: center !important;
+  gap: 0.55rem !important;
+  margin-bottom: 0.45rem !important;
+  border: 1px solid rgba(255,255,255,0.07) !important;
+  border-radius: 0.75rem !important;
+  background: rgba(255,255,255,0.035) !important;
+  color: #ffffff !important;
+  padding: 0.55rem !important;
+  text-align: left !important;
+  cursor: pointer !important;
+}
+
+.pro-arrangement-tracks > button.active {
+  border-color: rgba(185,131,255,0.55) !important;
+  background: rgba(138,92,255,0.18) !important;
+}
+
+.pro-arrangement-track-icon {
+  width: 34px !important;
+  height: 34px !important;
+  display: grid !important;
+  place-items: center !important;
+  border-radius: 0.65rem !important;
+  background: linear-gradient(145deg, rgba(138,92,255,0.34), rgba(0,208,132,0.12)) !important;
+  color: #ffffff !important;
+  font-size: 0.55rem !important;
+  font-weight: 1000 !important;
+}
+
+.pro-arrangement-tracks button span strong {
+  display: block !important;
+  font-size: 0.68rem !important;
+}
+
+.pro-arrangement-tracks button span small,
+.pro-arrangement-tracks button em {
+  color: #a9a9b2 !important;
+  font-size: 0.56rem !important;
+  font-style: normal !important;
+}
+
+.pro-arrangement-playlist-area {
+  min-width: 0 !important;
+  display: grid !important;
+  grid-template-rows: 52px 28px 26px minmax(0, 1fr) 48px !important;
+  overflow: hidden !important;
+  background:
+    linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px),
+    #07090f !important;
+  background-size: 48px 100% !important;
+}
+
+.pro-arrangement-toolbar {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 0.8rem !important;
+  padding: 0.55rem 0.75rem !important;
+  border-bottom: 1px solid rgba(255,255,255,0.06) !important;
+  background: rgba(12,15,24,0.92) !important;
+}
+
+.pro-arrangement-toolbar span {
+  display: block !important;
+  color: #a9a9b2 !important;
+  font-size: 0.58rem !important;
+}
+
+.pro-arrangement-toolbar > div:last-child {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  justify-content: flex-end !important;
+  gap: 0.35rem !important;
+}
+
+.pro-arrangement-ruler {
+  display: grid !important;
+  grid-template-columns: repeat(16, minmax(38px, 1fr)) !important;
+  border-bottom: 1px solid rgba(255,255,255,0.06) !important;
+  background: #0a0d15 !important;
+}
+
+.pro-arrangement-ruler span {
+  display: grid !important;
+  place-items: center !important;
+  border-right: 1px solid rgba(255,255,255,0.05) !important;
+  color: #a9a9b2 !important;
+  font-size: 0.55rem !important;
+  font-weight: 900 !important;
+}
+
+.pro-arrangement-sections {
+  display: grid !important;
+  grid-template-columns: repeat(7, minmax(90px, 1fr)) !important;
+  border-bottom: 1px solid rgba(255,255,255,0.06) !important;
+  background: rgba(185,131,255,0.05) !important;
+}
+
+.pro-arrangement-sections span {
+  display: grid !important;
+  place-items: center !important;
+  border-right: 1px solid rgba(255,255,255,0.06) !important;
+  color: #e5e7eb !important;
+  font-size: 0.54rem !important;
+  font-weight: 900 !important;
+}
+
+.pro-arrangement-lanes {
+  overflow: auto !important;
+}
+
+.pro-arrangement-lane {
+  min-height: 62px !important;
+  display: grid !important;
+  grid-template-columns: 72px minmax(680px, 1fr) !important;
+  border-bottom: 1px solid rgba(255,255,255,0.055) !important;
+}
+
+.pro-arrangement-lane > strong {
+  display: grid !important;
+  align-items: center !important;
+  padding-left: 0.55rem !important;
+  color: #d1d5db !important;
+  font-size: 0.58rem !important;
+  background: rgba(255,255,255,0.025) !important;
+}
+
+.pro-arrangement-lane > div {
+  position: relative !important;
+  min-height: 62px !important;
+  background:
+    linear-gradient(90deg, rgba(255,255,255,0.055) 1px, transparent 1px) !important;
+  background-size: 6.25% 100% !important;
+}
+
+.pro-arrangement-clip {
+  position: absolute !important;
+  top: 10px !important;
+  height: 42px !important;
+  border: 1px solid rgba(255,255,255,0.14) !important;
+  border-radius: 0.46rem !important;
+  color: #ffffff !important;
+  font-size: 0.58rem !important;
+  font-weight: 900 !important;
+  overflow: hidden !important;
+  cursor: pointer !important;
+  text-align: left !important;
+  padding: 0.35rem !important;
+  box-shadow: 0 10px 24px rgba(0,0,0,0.28) !important;
+}
+
+.pro-arrangement-clip span {
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+.pro-arrangement-clip i {
+  position: absolute !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 5px !important;
+  height: 12px !important;
+  opacity: 0.66 !important;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(255,255,255,0.68) 0 3px,
+      transparent 3px 7px
+    ) !important;
+}
+
+.pro-arrangement-clip.purple {
+  background: linear-gradient(90deg, rgba(138,92,255,0.94), rgba(185,131,255,0.78)) !important;
+}
+
+.pro-arrangement-clip.green {
+  background: linear-gradient(90deg, rgba(0,208,132,0.84), rgba(8,145,178,0.72)) !important;
+}
+
+.pro-arrangement-clip.gold {
+  background: linear-gradient(90deg, rgba(255,200,87,0.88), rgba(245,158,11,0.72)) !important;
+}
+
+.pro-arrangement-clip.selected {
+  outline: 2px solid rgba(255,255,255,0.75) !important;
+  box-shadow:
+    0 0 0 3px rgba(185,131,255,0.22),
+    0 14px 28px rgba(0,0,0,0.34) !important;
+}
+
+.pro-arrangement-lane.automation {
+  min-height: 86px !important;
+  background: rgba(138,92,255,0.05) !important;
+}
+
+.pro-arrangement-lane.automation > div {
+  min-height: 86px !important;
+}
+
+.pro-arrangement-lane.automation svg {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  pointer-events: none !important;
+}
+
+.pro-arrangement-lane.automation path {
+  fill: none !important;
+  stroke: rgba(185,131,255,0.7) !important;
+  stroke-width: 4 !important;
+  filter: drop-shadow(0 0 10px rgba(185,131,255,0.36)) !important;
+}
+
+.pro-arrangement-lane.automation button {
+  position: absolute !important;
+  width: 13px !important;
+  height: 13px !important;
+  border-radius: 999px !important;
+  border: 2px solid rgba(255,255,255,0.68) !important;
+  background: #00d084 !important;
+  transform: translate(-50%, -50%) !important;
+  cursor: pointer !important;
+}
+
+.pro-arrangement-lane.automation button.selected {
+  background: #ffc857 !important;
+}
+
+.pro-arrangement-overview {
+  display: grid !important;
+  grid-template-columns: 42px 1fr !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+  border-top: 1px solid rgba(255,255,255,0.06) !important;
+  background: #080a11 !important;
+  padding: 0.55rem !important;
+}
+
+.pro-arrangement-overview > span {
+  height: 2px !important;
+  background: rgba(255,255,255,0.16) !important;
+}
+
+.pro-arrangement-overview > div {
+  position: relative !important;
+  height: 22px !important;
+  border-radius: 0.35rem !important;
+  background: rgba(138,92,255,0.12) !important;
+  overflow: hidden !important;
+}
+
+.pro-arrangement-overview i {
+  position: absolute !important;
+  top: 4px !important;
+  height: 14px !important;
+  border-radius: 0.22rem !important;
+  background: rgba(185,131,255,0.72) !important;
+}
+
+.pro-arrangement-inspector {
+  border-left: 1px solid rgba(255,255,255,0.06) !important;
+  background: #0d1018 !important;
+  padding: 0.75rem !important;
+  overflow: auto !important;
+  display: grid !important;
+  align-content: start !important;
+  gap: 0.65rem !important;
+}
+
+.pro-arrangement-inspector header {
+  display: flex !important;
+  justify-content: space-between !important;
+  gap: 0.5rem !important;
+}
+
+.pro-arrangement-inspector header span {
+  color: #b983ff !important;
+  font-size: 0.62rem !important;
+  font-weight: 900 !important;
+}
+
+.pro-arrangement-wave-card {
+  min-height: 86px !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+  border-radius: 0.8rem !important;
+  background:
+    radial-gradient(circle at 20% 0%, rgba(185,131,255,0.22), transparent 12rem),
+    #080a11 !important;
+  padding: 0.65rem !important;
+  display: grid !important;
+  gap: 0.45rem !important;
+}
+
+.pro-arrangement-wave-card strong {
+  color: #ffffff !important;
+  font-size: 0.68rem !important;
+}
+
+.pro-arrangement-wave-card span {
+  height: 26px !important;
+  border-radius: 999px !important;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(185,131,255,0.75) 0 4px,
+      transparent 4px 9px
+    ) !important;
+  animation: proMiniWave 1.6s linear infinite !important;
+}
+
+.pro-arrangement-inspector label {
+  display: grid !important;
+  gap: 0.25rem !important;
+  color: #a9a9b2 !important;
+  font-size: 0.6rem !important;
+}
+
+.pro-arrangement-inspector label strong {
+  color: #ffffff !important;
+  font-size: 0.68rem !important;
+}
