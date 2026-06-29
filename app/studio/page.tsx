@@ -351,7 +351,8 @@ export default function StudioPage() {
   const [desktopDrag, setDesktopDrag] = useState<DesktopDragState | null>(null)
   const [desktopZ, setDesktopZ] = useState(30)
   const [desktopSelectedTrackId, setDesktopSelectedTrackId] = useState<string | null>(null)
-  const [desktopStatus, setDesktopStatus] = useState("Desktop studio ready.")
+  const [desktopStatus, setDesktopStatus] = useState("Desktop studio ready.")
+  const [desktopWindowRestore, setDesktopWindowRestore] = useState<Record<string, DesktopWindowState | undefined>>({})
   const [desktopMode, setDesktopMode] = useState<DesktopMode>("Arrange")
   const [desktopLayoutReady, setDesktopLayoutReady] = useState(false)
   const [rows, setRows] = useState<StepRow[]>(presetRows)
@@ -1038,6 +1039,105 @@ if (previewAudioRef.current) {
     setMessage(`${track.name} duplicated one bar later at ${duplicateStart.toFixed(2)}s.`)
   }
 
+  function formatDesktopWindowName(windowId: string) {
+    return windowId
+      .replace(/([A-Z])/g, " $1")
+      .replace(/^./, (letter) => letter.toUpperCase())
+  }
+
+  function minimizeDesktopWindow(windowId: string) {
+    setDesktopWindows((windows) => {
+      const target = windows[windowId]
+      if (!target) return windows
+
+      return {
+        ...windows,
+        [windowId]: {
+          ...target,
+          visible: false,
+        },
+      }
+    })
+
+    setDesktopStatus(`${formatDesktopWindowName(windowId)} minimized. Use the top tabs to reopen it.`)
+  }
+
+  function closeDesktopWindow(windowId: string) {
+    setDesktopWindows((windows) => {
+      const target = windows[windowId]
+      if (!target) return windows
+
+      return {
+        ...windows,
+        [windowId]: {
+          ...target,
+          visible: false,
+        },
+      }
+    })
+
+    setDesktopWindowRestore((restore) => {
+      const nextRestore = { ...restore }
+      delete nextRestore[windowId]
+      return nextRestore
+    })
+
+    setDesktopStatus(`${formatDesktopWindowName(windowId)} closed. Use the top tabs to open it again.`)
+  }
+
+  function maximizeDesktopWindow(windowId: string) {
+    const currentWindow = desktopWindows[windowId]
+    if (!currentWindow) return
+
+    const restoreWindow = desktopWindowRestore[windowId]
+
+    if (restoreWindow) {
+      setDesktopWindows((windows) => ({
+        ...windows,
+        [windowId]: {
+          ...restoreWindow,
+          visible: true,
+          z: desktopZ + 1,
+        },
+      }))
+
+      setDesktopWindowRestore((restore) => {
+        const nextRestore = { ...restore }
+        delete nextRestore[windowId]
+        return nextRestore
+      })
+
+      setDesktopZ((current) => current + 1)
+      setDesktopStatus(`${formatDesktopWindowName(windowId)} restored.`)
+      return
+    }
+
+    setDesktopWindowRestore((restore) => ({
+      ...restore,
+      [windowId]: currentWindow,
+    }))
+
+    setDesktopZ((current) => {
+      const nextZ = current + 1
+
+      setDesktopWindows((windows) => ({
+        ...windows,
+        [windowId]: {
+          ...currentWindow,
+          x: 4,
+          y: 4,
+          width: Math.max(320, window.innerWidth - 20),
+          height: Math.max(220, window.innerHeight - 190),
+          visible: true,
+          z: nextZ,
+        },
+      }))
+
+      return nextZ
+    })
+
+    setDesktopStatus(`${formatDesktopWindowName(windowId)} maximized.`)
+  }
   function focusDesktopWindow(windowId: string) {
     setDesktopZ((current) => {
       const nextZ = current + 1
@@ -1659,7 +1759,7 @@ if (previewAudioRef.current) {
                 {[0, 1, 2, 3, 4].map((line) => (
                   <span key={line} />
                 ))}
-                {["ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢Ãƒâ€šÃ‚Â©", "ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢Ãƒâ€šÃ‚Âª", "ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢Ãƒâ€šÃ‚Â«", "ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢Ãƒâ€šÃ‚Â¬", "ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢Ãƒâ€šÃ‚Â©", "ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢Ãƒâ€šÃ‚Âª", "ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢Ãƒâ€šÃ‚Â«"].map((note, index) => (
+                {["ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¾ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â©", "ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¾ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Âª", "ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¾ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â«", "ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¾ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬", "ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¾ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â©", "ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¾ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Âª", "ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¾ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â«"].map((note, index) => (
                   <b key={`${note}-${index}`} style={{ left: `${10 + index * 12}%`, top: `${20 + (index % 4) * 14}%` }}>
                     {note}
                   </b>
@@ -1701,6 +1801,46 @@ if (previewAudioRef.current) {
               >
                 <strong>Browser</strong>
                 <span>Sounds / Plugins / Projects</span>
+                <div
+                  className="pro-daw-window-controls"
+                  onMouseDown={(event) => event.stopPropagation()}
+                  onDoubleClick={(event) => event.stopPropagation()}
+                >
+                  <button
+                    type="button"
+                    title="Minimize"
+                    aria-label="Minimize Browser window"
+                    onClick={(event) => {
+                      event.stopPropagation()
+                      minimizeDesktopWindow("browser")
+                    }}
+                  >
+                    _
+                  </button>
+                  <button
+                    type="button"
+                    title="Maximize / Restore"
+                    aria-label="Maximize or restore Browser window"
+                    onClick={(event) => {
+                      event.stopPropagation()
+                      maximizeDesktopWindow("browser")
+                    }}
+                  >
+                    []
+                  </button>
+                  <button
+                    type="button"
+                    title="Close"
+                    aria-label="Close Browser window"
+                    className="close"
+                    onClick={(event) => {
+                      event.stopPropagation()
+                      closeDesktopWindow("browser")
+                    }}
+                  >
+                    X
+                  </button>
+                </div>
               </div>
 
               <div className="pro-daw-window-body">
@@ -1750,6 +1890,46 @@ if (previewAudioRef.current) {
               >
                 <strong>Arrangement / Step Sequencer</strong>
                 <span>Patterns, clips, bars and timeline lanes</span>
+                <div
+                  className="pro-daw-window-controls"
+                  onMouseDown={(event) => event.stopPropagation()}
+                  onDoubleClick={(event) => event.stopPropagation()}
+                >
+                  <button
+                    type="button"
+                    title="Minimize"
+                    aria-label="Minimize Arrangement window"
+                    onClick={(event) => {
+                      event.stopPropagation()
+                      minimizeDesktopWindow("arrangement")
+                    }}
+                  >
+                    _
+                  </button>
+                  <button
+                    type="button"
+                    title="Maximize / Restore"
+                    aria-label="Maximize or restore Arrangement window"
+                    onClick={(event) => {
+                      event.stopPropagation()
+                      maximizeDesktopWindow("arrangement")
+                    }}
+                  >
+                    []
+                  </button>
+                  <button
+                    type="button"
+                    title="Close"
+                    aria-label="Close Arrangement window"
+                    className="close"
+                    onClick={(event) => {
+                      event.stopPropagation()
+                      closeDesktopWindow("arrangement")
+                    }}
+                  >
+                    X
+                  </button>
+                </div>
               </div>
 
               <div className="pro-daw-ruler-row">
@@ -1831,6 +2011,46 @@ if (previewAudioRef.current) {
               >
                 <strong>Inspector</strong>
                 <span>Selected track properties</span>
+                <div
+                  className="pro-daw-window-controls"
+                  onMouseDown={(event) => event.stopPropagation()}
+                  onDoubleClick={(event) => event.stopPropagation()}
+                >
+                  <button
+                    type="button"
+                    title="Minimize"
+                    aria-label="Minimize Inspector window"
+                    onClick={(event) => {
+                      event.stopPropagation()
+                      minimizeDesktopWindow("inspector")
+                    }}
+                  >
+                    _
+                  </button>
+                  <button
+                    type="button"
+                    title="Maximize / Restore"
+                    aria-label="Maximize or restore Inspector window"
+                    onClick={(event) => {
+                      event.stopPropagation()
+                      maximizeDesktopWindow("inspector")
+                    }}
+                  >
+                    []
+                  </button>
+                  <button
+                    type="button"
+                    title="Close"
+                    aria-label="Close Inspector window"
+                    className="close"
+                    onClick={(event) => {
+                      event.stopPropagation()
+                      closeDesktopWindow("inspector")
+                    }}
+                  >
+                    X
+                  </button>
+                </div>
               </div>
 
               <div className="pro-daw-window-body">
@@ -1931,6 +2151,46 @@ if (previewAudioRef.current) {
               >
                 <strong>Mixer</strong>
                 <span>Volume / pan / mute / solo</span>
+                <div
+                  className="pro-daw-window-controls"
+                  onMouseDown={(event) => event.stopPropagation()}
+                  onDoubleClick={(event) => event.stopPropagation()}
+                >
+                  <button
+                    type="button"
+                    title="Minimize"
+                    aria-label="Minimize Mixer window"
+                    onClick={(event) => {
+                      event.stopPropagation()
+                      minimizeDesktopWindow("mixer")
+                    }}
+                  >
+                    _
+                  </button>
+                  <button
+                    type="button"
+                    title="Maximize / Restore"
+                    aria-label="Maximize or restore Mixer window"
+                    onClick={(event) => {
+                      event.stopPropagation()
+                      maximizeDesktopWindow("mixer")
+                    }}
+                  >
+                    []
+                  </button>
+                  <button
+                    type="button"
+                    title="Close"
+                    aria-label="Close Mixer window"
+                    className="close"
+                    onClick={(event) => {
+                      event.stopPropagation()
+                      closeDesktopWindow("mixer")
+                    }}
+                  >
+                    X
+                  </button>
+                </div>
               </div>
 
               <div className="pro-daw-mixer-body">
@@ -1995,6 +2255,46 @@ if (previewAudioRef.current) {
               >
                 <strong>Plugin Rack</strong>
                 <span>Device chain</span>
+                <div
+                  className="pro-daw-window-controls"
+                  onMouseDown={(event) => event.stopPropagation()}
+                  onDoubleClick={(event) => event.stopPropagation()}
+                >
+                  <button
+                    type="button"
+                    title="Minimize"
+                    aria-label="Minimize Plugin Rack window"
+                    onClick={(event) => {
+                      event.stopPropagation()
+                      minimizeDesktopWindow("plugins")
+                    }}
+                  >
+                    _
+                  </button>
+                  <button
+                    type="button"
+                    title="Maximize / Restore"
+                    aria-label="Maximize or restore Plugin Rack window"
+                    onClick={(event) => {
+                      event.stopPropagation()
+                      maximizeDesktopWindow("plugins")
+                    }}
+                  >
+                    []
+                  </button>
+                  <button
+                    type="button"
+                    title="Close"
+                    aria-label="Close Plugin Rack window"
+                    className="close"
+                    onClick={(event) => {
+                      event.stopPropagation()
+                      closeDesktopWindow("plugins")
+                    }}
+                  >
+                    X
+                  </button>
+                </div>
               </div>
 
               <div className="pro-daw-device-row pro-daw-fl-plugin-grid">
@@ -2044,6 +2344,46 @@ if (previewAudioRef.current) {
               >
                 <strong>AI Studio</strong>
                 <span>Assistant tools</span>
+                <div
+                  className="pro-daw-window-controls"
+                  onMouseDown={(event) => event.stopPropagation()}
+                  onDoubleClick={(event) => event.stopPropagation()}
+                >
+                  <button
+                    type="button"
+                    title="Minimize"
+                    aria-label="Minimize AI Studio window"
+                    onClick={(event) => {
+                      event.stopPropagation()
+                      minimizeDesktopWindow("ai")
+                    }}
+                  >
+                    _
+                  </button>
+                  <button
+                    type="button"
+                    title="Maximize / Restore"
+                    aria-label="Maximize or restore AI Studio window"
+                    onClick={(event) => {
+                      event.stopPropagation()
+                      maximizeDesktopWindow("ai")
+                    }}
+                  >
+                    []
+                  </button>
+                  <button
+                    type="button"
+                    title="Close"
+                    aria-label="Close AI Studio window"
+                    className="close"
+                    onClick={(event) => {
+                      event.stopPropagation()
+                      closeDesktopWindow("ai")
+                    }}
+                  >
+                    X
+                  </button>
+                </div>
               </div>
 
               <div className="pro-daw-ai-grid">
@@ -2074,6 +2414,46 @@ if (previewAudioRef.current) {
               >
                 <strong>Sampler</strong>
                 <span>pads / chops / waveform</span>
+                <div
+                  className="pro-daw-window-controls"
+                  onMouseDown={(event) => event.stopPropagation()}
+                  onDoubleClick={(event) => event.stopPropagation()}
+                >
+                  <button
+                    type="button"
+                    title="Minimize"
+                    aria-label="Minimize Sampler window"
+                    onClick={(event) => {
+                      event.stopPropagation()
+                      minimizeDesktopWindow("sampler")
+                    }}
+                  >
+                    _
+                  </button>
+                  <button
+                    type="button"
+                    title="Maximize / Restore"
+                    aria-label="Maximize or restore Sampler window"
+                    onClick={(event) => {
+                      event.stopPropagation()
+                      maximizeDesktopWindow("sampler")
+                    }}
+                  >
+                    []
+                  </button>
+                  <button
+                    type="button"
+                    title="Close"
+                    aria-label="Close Sampler window"
+                    className="close"
+                    onClick={(event) => {
+                      event.stopPropagation()
+                      closeDesktopWindow("sampler")
+                    }}
+                  >
+                    X
+                  </button>
+                </div>
               </div>
 
               <div className="pro-daw-window-body">
@@ -2112,6 +2492,46 @@ if (previewAudioRef.current) {
               >
                 <strong>Piano Roll</strong>
                 <span>notes / melody / velocity</span>
+                <div
+                  className="pro-daw-window-controls"
+                  onMouseDown={(event) => event.stopPropagation()}
+                  onDoubleClick={(event) => event.stopPropagation()}
+                >
+                  <button
+                    type="button"
+                    title="Minimize"
+                    aria-label="Minimize Piano Roll window"
+                    onClick={(event) => {
+                      event.stopPropagation()
+                      minimizeDesktopWindow("pianoRoll")
+                    }}
+                  >
+                    _
+                  </button>
+                  <button
+                    type="button"
+                    title="Maximize / Restore"
+                    aria-label="Maximize or restore Piano Roll window"
+                    onClick={(event) => {
+                      event.stopPropagation()
+                      maximizeDesktopWindow("pianoRoll")
+                    }}
+                  >
+                    []
+                  </button>
+                  <button
+                    type="button"
+                    title="Close"
+                    aria-label="Close Piano Roll window"
+                    className="close"
+                    onClick={(event) => {
+                      event.stopPropagation()
+                      closeDesktopWindow("pianoRoll")
+                    }}
+                  >
+                    X
+                  </button>
+                </div>
               </div>
 
               <div className="pro-daw-window-body">
@@ -2154,6 +2574,46 @@ if (previewAudioRef.current) {
               >
                 <strong>Score</strong>
                 <span>notation / chords / writing</span>
+                <div
+                  className="pro-daw-window-controls"
+                  onMouseDown={(event) => event.stopPropagation()}
+                  onDoubleClick={(event) => event.stopPropagation()}
+                >
+                  <button
+                    type="button"
+                    title="Minimize"
+                    aria-label="Minimize Score window"
+                    onClick={(event) => {
+                      event.stopPropagation()
+                      minimizeDesktopWindow("score")
+                    }}
+                  >
+                    _
+                  </button>
+                  <button
+                    type="button"
+                    title="Maximize / Restore"
+                    aria-label="Maximize or restore Score window"
+                    onClick={(event) => {
+                      event.stopPropagation()
+                      maximizeDesktopWindow("score")
+                    }}
+                  >
+                    []
+                  </button>
+                  <button
+                    type="button"
+                    title="Close"
+                    aria-label="Close Score window"
+                    className="close"
+                    onClick={(event) => {
+                      event.stopPropagation()
+                      closeDesktopWindow("score")
+                    }}
+                  >
+                    X
+                  </button>
+                </div>
               </div>
 
               <div className="pro-daw-window-body">
@@ -2161,7 +2621,7 @@ if (previewAudioRef.current) {
                   {[0, 1, 2, 3, 4].map((line) => (
                     <span key={line} />
                   ))}
-                  {["ÃƒÂ¢Ã¢â€žÂ¢Ã‚Â©", "ÃƒÂ¢Ã¢â€žÂ¢Ã‚Âª", "ÃƒÂ¢Ã¢â€žÂ¢Ã‚Â«", "ÃƒÂ¢Ã¢â€žÂ¢Ã‚Â¬", "ÃƒÂ¢Ã¢â€žÂ¢Ã‚Â©", "ÃƒÂ¢Ã¢â€žÂ¢Ã‚Âª", "ÃƒÂ¢Ã¢â€žÂ¢Ã‚Â«", "ÃƒÂ¢Ã¢â€žÂ¢Ã‚Â¬"].map((note, index) => (
+                  {["ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¾ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â©", "ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¾ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Âª", "ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¾ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â«", "ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¾ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬", "ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¾ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â©", "ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¾ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Âª", "ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¾ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â«", "ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¾ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬"].map((note, index) => (
                     <b
                       key={`${note}-${index}`}
                       style={{
@@ -2197,6 +2657,46 @@ if (previewAudioRef.current) {
               >
                 <strong>Automation</strong>
                 <span>curves / movement / parameters</span>
+                <div
+                  className="pro-daw-window-controls"
+                  onMouseDown={(event) => event.stopPropagation()}
+                  onDoubleClick={(event) => event.stopPropagation()}
+                >
+                  <button
+                    type="button"
+                    title="Minimize"
+                    aria-label="Minimize Automation window"
+                    onClick={(event) => {
+                      event.stopPropagation()
+                      minimizeDesktopWindow("automation")
+                    }}
+                  >
+                    _
+                  </button>
+                  <button
+                    type="button"
+                    title="Maximize / Restore"
+                    aria-label="Maximize or restore Automation window"
+                    onClick={(event) => {
+                      event.stopPropagation()
+                      maximizeDesktopWindow("automation")
+                    }}
+                  >
+                    []
+                  </button>
+                  <button
+                    type="button"
+                    title="Close"
+                    aria-label="Close Automation window"
+                    className="close"
+                    onClick={(event) => {
+                      event.stopPropagation()
+                      closeDesktopWindow("automation")
+                    }}
+                  >
+                    X
+                  </button>
+                </div>
               </div>
 
               <div className="pro-daw-window-body">
