@@ -5794,3 +5794,55 @@ body {
     filter: brightness(1);
   }
 }
+/* PRO-TEEVERSE PHASE 2B-E REAL SAMPLE IMPORT V1 */
+.pro-pad-action-row {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 0.35rem !important;
+}
+
+.pro-pad-import-label {
+  border: 1px solid rgba(255,255,255,0.10) !important;
+  border-radius: 0.6rem !important;
+  background: rgba(0,208,132,0.12) !important;
+  color: #ffffff !important;
+  font-size: 0.58rem !important;
+  font-weight: 900 !important;
+  padding: 0.42rem 0.55rem !important;
+  cursor: pointer !important;
+}
+
+.pro-pad-import-label input {
+  display: none !important;
+}
+
+.pro-pad-import-label:hover {
+  border-color: rgba(0,208,132,0.55) !important;
+  background: rgba(0,208,132,0.20) !important;
+}
+
+.pro-linked-pad-grid-real section.loaded .pro-linked-pad-trigger small {
+  color: #d1fae5 !important;
+}
+
+.pro-linked-pad-grid-real section.loaded .pro-linked-pad-trigger span {
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(0,208,132,0.90) 0 4px,
+      transparent 4px 9px
+    ) !important;
+}
+
+.pro-linked-pad-grid-real section.playing .pro-linked-pad-trigger span {
+  animation: proImportedWaveMove 700ms linear infinite !important;
+}
+
+@keyframes proImportedWaveMove {
+  from {
+    background-position-x: 0;
+  }
+  to {
+    background-position-x: 28px;
+  }
+}
