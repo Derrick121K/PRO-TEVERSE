@@ -302,6 +302,8 @@ function scheduleRenderPatternSound(
   scheduleRenderTone(context, 523.25, startTime, 0.16, "square", 0.08)
 }
 
+const DESKTOP_LAYOUT_STORAGE_KEY = "proteverse-desktop-daw-layout"
+
 type DesktopWindowState = {
   x: number
   y: number
@@ -344,10 +346,48 @@ export default function StudioPage() {
   const [desktopZ, setDesktopZ] = useState(30)
   const [desktopSelectedTrackId, setDesktopSelectedTrackId] = useState<string | null>(null)
   const [desktopStatus, setDesktopStatus] = useState("Desktop studio ready.")
+  const [desktopLayoutReady, setDesktopLayoutReady] = useState(false)
   const [rows, setRows] = useState<StepRow[]>(presetRows)
   const [playingTrackId, setPlayingTrackId] = useState<string | null>(null)
   const [isTransportPlaying, setIsTransportPlaying] = useState(false)
-  const [message, setMessage] = useState("Ready. Import audio, build a pattern, then export your project.")
+  const [message, setMessage] = useState("Ready. Import audio, build a pattern, then export your project.")
+
+  useEffect(() => {
+    try {
+      const savedLayout = window.localStorage.getItem(DESKTOP_LAYOUT_STORAGE_KEY)
+
+      if (savedLayout) {
+        const parsedLayout = JSON.parse(savedLayout) as Partial<
+          Record<string, Partial<DesktopWindowState>>
+        >
+        const defaults = getDesktopWindowDefaults()
+
+        const restoredLayout = Object.fromEntries(
+          Object.entries(defaults).map(([windowId, defaultWindow]) => [
+            windowId,
+            normalizeDesktopWindowLayout(windowId, parsedLayout[windowId], defaultWindow),
+          ]),
+        ) as Record<string, DesktopWindowState>
+
+        setDesktopWindows(restoredLayout)
+        setDesktopStatus("Saved desktop layout restored.")
+      }
+    } catch {
+      setDesktopStatus("Could not restore saved layout. Default layout loaded.")
+    } finally {
+      setDesktopLayoutReady(true)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!desktopLayoutReady) return
+
+    try {
+      window.localStorage.setItem(DESKTOP_LAYOUT_STORAGE_KEY, JSON.stringify(desktopWindows))
+    } catch {
+      setDesktopStatus("Could not save desktop layout.")
+    }
+  }, [desktopWindows, desktopLayoutReady])
   const [isRenderingWav, setIsRenderingWav] = useState(false)
 
   const [libraryQuery, setLibraryQuery] = useState("")
@@ -1026,9 +1066,38 @@ if (previewAudioRef.current) {
       plugins: { x: 600, y: 268, width: 320, height: 150, visible: true, z: 14 },
       ai: { x: 930, y: 268, width: 315, height: 150, visible: true, z: 15 },
     })
-    setDesktopStatus("Desktop layout reset.")
+    setDesktopStatus("Desktop layout reset and saved.")
   }
 
+  function readDesktopNumber(value: unknown, fallback: number) {
+    const parsed = typeof value === "number" ? value : Number(value)
+    return Number.isFinite(parsed) ? parsed : fallback
+  }
+
+  function normalizeDesktopWindowLayout(
+    windowId: string,
+    savedWindow: Partial<DesktopWindowState> | undefined,
+    fallback: DesktopWindowState,
+  ): DesktopWindowState {
+    const maxWidth = Math.max(230, window.innerWidth - 18)
+    const maxHeight = Math.max(130, window.innerHeight - 150)
+    const width = Math.max(230, Math.min(readDesktopNumber(savedWindow?.width, fallback.width), maxWidth))
+    const height = Math.max(130, Math.min(readDesktopNumber(savedWindow?.height, fallback.height), maxHeight))
+    const maxX = Math.max(0, window.innerWidth - width)
+    const maxY = Math.max(0, window.innerHeight - height - 48)
+    const x = Math.max(0, Math.min(readDesktopNumber(savedWindow?.x, fallback.x), maxX))
+    const y = Math.max(0, Math.min(readDesktopNumber(savedWindow?.y, fallback.y), maxY))
+
+    return {
+      ...fallback,
+      x,
+      y,
+      width,
+      height,
+      visible: typeof savedWindow?.visible === "boolean" ? savedWindow.visible : fallback.visible,
+      z: Math.max(1, Math.round(readDesktopNumber(savedWindow?.z, fallback.z))),
+    }
+  }
   function getDesktopWindowDefaults(): Record<string, DesktopWindowState> {
     return {
       browser: { x: 4, y: 4, width: 260, height: 420, visible: true, z: 10 },
@@ -1108,6 +1177,30 @@ if (previewAudioRef.current) {
     setDesktopDrag(null)
   }
 
+  function syncDesktopWindowSize(windowId: string, element: HTMLElement) {
+    const rect = element.getBoundingClientRect()
+
+    setDesktopWindows((windows) => {
+      const currentWindow = windows[windowId]
+      if (!currentWindow) return windows
+
+      const width = Math.max(230, Math.round(rect.width))
+      const height = Math.max(130, Math.round(rect.height))
+      const maxX = Math.max(0, window.innerWidth - width)
+      const maxY = Math.max(0, window.innerHeight - height - 48)
+
+      return {
+        ...windows,
+        [windowId]: {
+          ...currentWindow,
+          width,
+          height,
+          x: Math.min(currentWindow.x, maxX),
+          y: Math.min(currentWindow.y, maxY),
+        },
+      }
+    })
+  }
   function updateDesktopTrack(trackId: string, patch: Partial<AudioTrack>) {
     setTracks((current) =>
       current.map((track) => (track.id === trackId ? { ...track, ...patch } : track))
@@ -1422,6 +1515,7 @@ if (previewAudioRef.current) {
                 zIndex: desktopWindows.browser.z,
               }}
               onMouseDown={() => focusDesktopWindow("browser")}
+              onMouseUp={(event) => syncDesktopWindowSize("browser", event.currentTarget)}
             >
               <div
                 className="pro-daw-window-title"
@@ -1470,6 +1564,7 @@ if (previewAudioRef.current) {
                 zIndex: desktopWindows.arrangement.z,
               }}
               onMouseDown={() => focusDesktopWindow("arrangement")}
+              onMouseUp={(event) => syncDesktopWindowSize("arrangement", event.currentTarget)}
             >
               <div
                 className="pro-daw-window-title"
@@ -1550,6 +1645,7 @@ if (previewAudioRef.current) {
                 zIndex: desktopWindows.inspector.z,
               }}
               onMouseDown={() => focusDesktopWindow("inspector")}
+              onMouseUp={(event) => syncDesktopWindowSize("inspector", event.currentTarget)}
             >
               <div
                 className="pro-daw-window-title"
@@ -1649,6 +1745,7 @@ if (previewAudioRef.current) {
                 zIndex: desktopWindows.mixer.z,
               }}
               onMouseDown={() => focusDesktopWindow("mixer")}
+              onMouseUp={(event) => syncDesktopWindowSize("mixer", event.currentTarget)}
             >
               <div
                 className="pro-daw-window-title"
@@ -1712,6 +1809,7 @@ if (previewAudioRef.current) {
                 zIndex: desktopWindows.plugins.z,
               }}
               onMouseDown={() => focusDesktopWindow("plugins")}
+              onMouseUp={(event) => syncDesktopWindowSize("plugins", event.currentTarget)}
             >
               <div
                 className="pro-daw-window-title"
@@ -1746,6 +1844,7 @@ if (previewAudioRef.current) {
                 zIndex: desktopWindows.ai.z,
               }}
               onMouseDown={() => focusDesktopWindow("ai")}
+              onMouseUp={(event) => syncDesktopWindowSize("ai", event.currentTarget)}
             >
               <div
                 className="pro-daw-window-title"
