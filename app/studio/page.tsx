@@ -343,10 +343,10 @@ export default function StudioPage() {
     mixer: { x: 270, y: 268, width: 320, height: 150, visible: true, z: 13 },
     plugins: { x: 600, y: 268, width: 320, height: 150, visible: true, z: 14 },
     ai: { x: 930, y: 268, width: 315, height: 150, visible: true, z: 15 },
-    sampler: { x: 18, y: 118, width: 330, height: 250, visible: false, z: 16 },
-    pianoRoll: { x: 360, y: 118, width: 620, height: 300, visible: false, z: 17 },
-    score: { x: 360, y: 430, width: 620, height: 210, visible: false, z: 18 },
-    automation: { x: 990, y: 118, width: 350, height: 300, visible: false, z: 19 },
+    sampler: { x: 18, y: 118, width: 330, height: 250, visible: true, z: 16 },
+    pianoRoll: { x: 360, y: 118, width: 620, height: 300, visible: true, z: 17 },
+    score: { x: 360, y: 430, width: 620, height: 210, visible: true, z: 18 },
+    automation: { x: 990, y: 118, width: 350, height: 300, visible: true, z: 19 },
   }))
   const [desktopDrag, setDesktopDrag] = useState<DesktopDragState | null>(null)
   const [desktopZ, setDesktopZ] = useState(30)
@@ -1072,10 +1072,10 @@ if (previewAudioRef.current) {
       mixer: { x: 270, y: 268, width: 320, height: 150, visible: true, z: 13 },
       plugins: { x: 600, y: 268, width: 320, height: 150, visible: true, z: 14 },
       ai: { x: 930, y: 268, width: 315, height: 150, visible: true, z: 15 },
-      sampler: { x: 18, y: 118, width: 330, height: 250, visible: false, z: 16 },
-      pianoRoll: { x: 360, y: 118, width: 620, height: 300, visible: false, z: 17 },
-      score: { x: 360, y: 430, width: 620, height: 210, visible: false, z: 18 },
-      automation: { x: 990, y: 118, width: 350, height: 300, visible: false, z: 19 },
+      sampler: { x: 18, y: 118, width: 330, height: 250, visible: true, z: 16 },
+      pianoRoll: { x: 360, y: 118, width: 620, height: 300, visible: true, z: 17 },
+      score: { x: 360, y: 430, width: 620, height: 210, visible: true, z: 18 },
+      automation: { x: 990, y: 118, width: 350, height: 300, visible: true, z: 19 },
     })
     setDesktopStatus("Desktop layout reset and saved.")
   }
@@ -1117,10 +1117,10 @@ if (previewAudioRef.current) {
       mixer: { x: 270, y: 268, width: 320, height: 150, visible: true, z: 13 },
       plugins: { x: 600, y: 268, width: 320, height: 150, visible: true, z: 14 },
       ai: { x: 930, y: 268, width: 315, height: 150, visible: true, z: 15 },
-      sampler: { x: 18, y: 118, width: 330, height: 250, visible: false, z: 16 },
-      pianoRoll: { x: 360, y: 118, width: 620, height: 300, visible: false, z: 17 },
-      score: { x: 360, y: 430, width: 620, height: 210, visible: false, z: 18 },
-      automation: { x: 990, y: 118, width: 350, height: 300, visible: false, z: 19 },
+      sampler: { x: 18, y: 118, width: 330, height: 250, visible: true, z: 16 },
+      pianoRoll: { x: 360, y: 118, width: 620, height: 300, visible: true, z: 17 },
+      score: { x: 360, y: 430, width: 620, height: 210, visible: true, z: 18 },
+      automation: { x: 990, y: 118, width: 350, height: 300, visible: true, z: 19 },
     }
   }
 
@@ -1216,6 +1216,19 @@ if (previewAudioRef.current) {
       }
     })
   }
+  function getDesktopModeWindowId(mode: DesktopMode) {
+    const modeWindowMap: Record<DesktopMode, string> = {
+      Arrange: "arrangement",
+      Mixer: "mixer",
+      Sampler: "sampler",
+      "Piano Roll": "pianoRoll",
+      Score: "score",
+      Automation: "automation",
+    }
+
+    return modeWindowMap[mode]
+  }
+
   function openDesktopWindow(windowId: string) {
     const fallback = getDesktopWindowDefaults()[windowId]
     if (!fallback) return
@@ -1237,38 +1250,13 @@ if (previewAudioRef.current) {
 
     setDesktopStatus(`${windowId} window opened.`)
   }
+
   function selectDesktopMode(mode: DesktopMode) {
+    const windowId = getDesktopModeWindowId(mode)
+
     setDesktopMode(mode)
-
-    if (mode === "Arrange") openDesktopWindow("arrangement")
-    if (mode === "Mixer") openDesktopWindow("mixer")
-    if (mode === "Sampler") openDesktopWindow("sampler")
-    if (mode === "Piano Roll") openDesktopWindow("pianoRoll")
-    if (mode === "Score") openDesktopWindow("score")
-    if (mode === "Automation") openDesktopWindow("automation")
-    setDesktopStatus(`${mode} workspace opened.`)
-
-    if (mode === "Mixer") {
-      setDesktopWindows((windows) => ({
-        ...windows,
-        mixer: { ...windows.mixer, visible: true },
-      }))
-    }
-
-    if (mode === "Sampler") {
-      setDesktopWindows((windows) => ({
-        ...windows,
-        browser: { ...windows.browser, visible: true },
-      }))
-    }
-
-    if (mode === "Automation") {
-      setDesktopWindows((windows) => ({
-        ...windows,
-        arrangement: { ...windows.arrangement, visible: true },
-        inspector: { ...windows.inspector, visible: true },
-      }))
-    }
+    openDesktopWindow(windowId)
+    setDesktopStatus(`${mode} editor opened.`)
   }
   function updateDesktopTrack(trackId: string, patch: Partial<AudioTrack>) {
     setTracks((current) =>
@@ -1568,7 +1556,7 @@ if (previewAudioRef.current) {
             <span>v1.0.0</span>
           </div>
 
-          <div className="pro-daw-bottom-tabs">
+                    <div className="pro-daw-bottom-tabs">
             {(["Arrange", "Mixer", "Sampler", "Piano Roll", "Score", "Automation"] as DesktopMode[]).map((tab) => (
               <button
                 key={tab}
@@ -1671,7 +1659,7 @@ if (previewAudioRef.current) {
                 {[0, 1, 2, 3, 4].map((line) => (
                   <span key={line} />
                 ))}
-                {["Ã¢â„¢Â©", "Ã¢â„¢Âª", "Ã¢â„¢Â«", "Ã¢â„¢Â¬", "Ã¢â„¢Â©", "Ã¢â„¢Âª", "Ã¢â„¢Â«"].map((note, index) => (
+                {["ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢Ãƒâ€šÃ‚Â©", "ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢Ãƒâ€šÃ‚Âª", "ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢Ãƒâ€šÃ‚Â«", "ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢Ãƒâ€šÃ‚Â¬", "ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢Ãƒâ€šÃ‚Â©", "ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢Ãƒâ€šÃ‚Âª", "ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢Ãƒâ€šÃ‚Â«"].map((note, index) => (
                   <b key={`${note}-${index}`} style={{ left: `${10 + index * 12}%`, top: `${20 + (index % 4) * 14}%` }}>
                     {note}
                   </b>
@@ -2173,7 +2161,7 @@ if (previewAudioRef.current) {
                   {[0, 1, 2, 3, 4].map((line) => (
                     <span key={line} />
                   ))}
-                  {["â™©", "â™ª", "â™«", "â™¬", "â™©", "â™ª", "â™«", "â™¬"].map((note, index) => (
+                  {["ÃƒÂ¢Ã¢â€žÂ¢Ã‚Â©", "ÃƒÂ¢Ã¢â€žÂ¢Ã‚Âª", "ÃƒÂ¢Ã¢â€žÂ¢Ã‚Â«", "ÃƒÂ¢Ã¢â€žÂ¢Ã‚Â¬", "ÃƒÂ¢Ã¢â€žÂ¢Ã‚Â©", "ÃƒÂ¢Ã¢â€žÂ¢Ã‚Âª", "ÃƒÂ¢Ã¢â€žÂ¢Ã‚Â«", "ÃƒÂ¢Ã¢â€žÂ¢Ã‚Â¬"].map((note, index) => (
                     <b
                       key={`${note}-${index}`}
                       style={{
